@@ -7,3 +7,4 @@ luarocks install lsqlite3
 luarocks install bcrypt
 luarocks install luazip
 mkdir temp
+mkdir storages
