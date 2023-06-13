@@ -50,7 +50,9 @@ function login_c.POST(self)
 
 	self.session.user_id = user.id
 
-	return {redirect_to = self:url_for("home")}
+	return {headers = {
+		["HX-Location"] = self:url_for("home"),
+	}}
 end
 
 return login_c
