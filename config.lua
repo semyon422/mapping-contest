@@ -4,6 +4,7 @@ config("development", {
 	server = "nginx",
 	code_cache = "off",
 	num_workers = "1",
+	port = 8180,
 	sqlite = {
 		database = "db.sqlite",
 	}
