@@ -1,0 +1,19 @@
+<nav>
+	<ul>
+		<li><strong>CIS SMC</strong></li>
+	</ul>
+	<ul>
+		<li><a href="/users">Users</a></li>
+		<li><a href="/contests">Contests</a></li>
+		<li><a href="#">Discord</a></li>
+		<% if not session.user_id then %>
+			<li><a href="/login" role="button">Log in</a></li>
+		<% else %>
+			<li>
+				<a href="<%= url_for("user", {user_id = session.user_id}) %>" role="button">
+					Profile
+				</a>
+			</li>
+		<% end %>
+	</ul>
+</nav>

@@ -1,0 +1,20 @@
+<div class="grid">
+	<div></div>
+	<form hx-boost="true" action="/login" method="post">
+		<hgroup>
+			<h1>Login</h1>
+			<h1><a href="/register">Register</a></h1>
+		</hgroup>
+
+		<label for="name">Username</label>
+		<input type="text" id="name" name="name" required value="<%= params.name or "" %>">
+
+		<label for="password">Password</label>
+		<input type="password" id="password" name="password" required value="<%= params.password or "" %>">
+
+		<button type="submit">Submit</button>
+
+		<small id="message"><%= table.concat(errors or {}, "<br>") or "" %></small>
+	</form>
+	<div></div>
+</div>

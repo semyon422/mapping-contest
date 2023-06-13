@@ -1,0 +1,15 @@
+<nav aria-label="breadcrumb">
+	<ul>
+		<% for i, item in ipairs(items) do %>
+			<li>
+				<% if i ~= #items then %>
+					<a href="<%= item[2] %>">
+				<% end %>
+				<%= item[1] %>
+				<% if i ~= #items then %>
+					</a>
+				<% end %>
+			</li>
+		<% end %>
+	</ul>
+</nav>

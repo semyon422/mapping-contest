@@ -1,0 +1,23 @@
+<div class="grid">
+	<div></div>
+	<form hx-boost="true" action="/register" method="post">
+		<h1>Register</h1>
+
+		<label for="name">Username</label>
+		<input type="text" id="name" name="name" required value="<%= params.name or "" %>">
+
+		<label for="osu_url">osu! profile link</label>
+		<input type="text" id="osu_url" name="osu_url" required value="<%= params.osu_url or "" %>">
+
+		<label for="discord">Discord username</label>
+		<input type="text" id="discord" name="discord" required value="<%= params.discord or "" %>">
+
+		<label for="password">Password</label>
+		<input type="password" id="password" name="password" required value="<%= params.password or "" %>">
+
+		<button type="submit">Submit</button>
+
+		<small id="message"><%= table.concat(errors or {}, "<br>") or "" %></small>
+	</form>
+	<div></div>
+</div>

@@ -1,0 +1,188 @@
+<% local contest = ctx.contest %>
+<% render("views.breadcrumb", {items = {{"Home", "/"}, {"Contests", "/contests"}, {
+	contest.name .. (not contest.is_visible and " (hidden)" or "")
+}}}) %>
+
+<section>
+	<hgroup>
+		<h4>
+			<%= contest.name %>
+			<% if policy("contest.PATCH") then %>
+				<a href="#" _="on click toggle @open on #modal_edit_contest">
+					<i class="fas fa-edit"></i>
+				</a>
+			<% end %>
+		</h4>
+		<h5>
+			<%= util.datetime.to_text(contest.started_at)%>
+		</h5>
+	</hgroup>
+	<div class="grid">
+		<div>
+			<p>
+				<%- contest.description %>
+			</p>
+			<a role="button" href="<%= url_for("contest.user_chart_votes", {contest_id = contest.id}) %>">
+				Vote
+			</a>
+			<% if contest.is_submission_open and policy("charts.POST") then %>
+				<a role="button" href="#" _="on click toggle @open on #modal_add_chart">
+					Submit chart
+				</a>
+			<% end %>
+		</div>
+		<div id="tracks" hx-select="#tracks" hx-swap="outerHTML" hx-get hx-trigger="update_tracks">
+			<h6>
+				Tracks
+				<% if policy("contest.tracks.POST") then %>
+					<a href="#" _="on click toggle @open on #modal_add_track">
+						<i class="fas fa-plus"></i>
+					</a>
+				<% end %>
+			</h6>
+			<table>
+				<tbody>
+					<% for _, contest_track in ipairs(contest.contest_tracks) do %>
+						<% local track = contest_track.track %>
+						<tr>
+							<td><a href="<%= url_for("file", {file_id = track.file_id}) %>"><%= track.artist %> - <%= track.title %></a></td>
+							<% if policy("contest.track.DELETE") then %>
+								<td>
+								<a href="#" hx-swap="none" hx-delete="<%= url_for(contest_track) %>"
+									hx-confirm="Are you sure you wish to delete this track?"
+									_="on htmx:afterRequest trigger update_tracks"
+								>
+									<i class="fas fa-times"></i>
+								</a>
+								</td>
+							<% end %>
+						</tr>
+					<% end %>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</section>
+
+<section>
+	<div id="charts" hx-select="#charts" hx-swap="outerHTML" hx-get hx-trigger="update_charts">
+		<h4>Submissions</h4>
+		<table>
+			<thead>
+				<tr>
+				<th scope="col">#</th>
+				<th scope="col">Charter</th>
+				<th scope="col">Track</th>
+				<th scope="col">Date</th>
+				<th scope="col"></th>
+				</tr>
+			</thead>
+			<tbody>
+				<% for i, chart in ipairs(contest.charts) do %>
+					<tr>
+						<th scope="row"><%= i %></th>
+						<td><a href="<%= url_for(chart.charter) %>"><%= chart.charter.name %></a></td>
+						<td><a href="<%= url_for("file", {file_id = chart.file_id}) %>"><%= chart.track.title %></a></td>
+						<td><%= os.date("%c", chart.submitted_at) %></td>
+						<% if policy("chart.DELETE", {ctx = {chart = chart}}) then %>
+							<td>
+							<a href="#" hx-swap="none" hx-delete="<%= url_for(chart) %>"
+								hx-confirm="Are you sure you wish to delete this chart?"
+								_="on htmx:afterRequest trigger update_charts"
+							>
+								<i class="fas fa-times"></i>
+							</a>
+							</td>
+						<% end %>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+</section>
+
+<dialog id="modal_edit_contest">
+	<article>
+		<header>
+			<a href="#" aria-label="Close" class="close" _="on click toggle @open on #modal_edit_contest"></a>
+			Edit contest
+		</header>
+		<form hx-patch hx-target="#edit_errors" autocomplete="off">
+			<label for="name">Name</label>
+			<input id="name" type="text" name="name" required value="<%= contest.name %>">
+
+			<label for="description">Description</label>
+			<textarea id="description" name="description" required maxlength="1024"><%= contest.description %></textarea>
+
+			<label for="started_at">Started at</label>
+			<input id="started_at" type="datetime-local" step="1" name="started_at" value="<%= util.datetime.to_iso(contest.started_at) %>">
+
+			<label for="is_visible">
+				<input type="checkbox" id="is_visible" name="is_visible" role="switch"
+					<%= contest.is_visible and "checked" or "" %>
+				>
+				Visible
+			</label>
+
+			<label for="is_submission_open">
+				<input type="checkbox" id="is_submission_open" name="is_submission_open" role="switch"
+					<%= contest.is_submission_open and "checked" or "" %>
+				>
+				Submission open
+			</label>
+
+			<label for="is_voting_open">
+				<input type="checkbox" id="is_voting_open" name="is_voting_open" role="switch"
+					<%= contest.is_voting_open and "checked" or "" %>
+				>
+				Voting open
+			</label>
+
+			<button>Save</button>
+		</form>
+		<div id="edit_errors"></div>
+	</article>
+</dialog>
+
+<dialog id="modal_add_track">
+	<article>
+		<header>
+			<a href="#" aria-label="Close" class="close" _="on click toggle @open on #modal_add_track"></a>
+			Add track
+		</header>
+		<form hx-post="<%= url_for("contest.tracks", {contest_id = contest.id}) %>" hx-encoding="multipart/form-data"
+			hx-swap="none"
+			_="on htmx:xhr:progress(loaded, total) set #progress.value to (loaded/total)*100
+			on htmx:afterRequest send update_tracks to #tracks then toggle @open on #modal_add_track"
+		>
+			<label for="file">Select .osz file</label>
+			<input type="file" id="file" name="file" required>
+
+			<progress id="progress" value="0" max="100"></progress>
+
+			<button>Upload</button>
+		</form>
+	</article>
+</dialog>
+
+<dialog id="modal_add_chart">
+	<article>
+		<header>
+			<a href="#" aria-label="Close" class="close" _="on click toggle @open on #modal_add_chart"></a>
+			Add chart
+		</header>
+		<form hx-post="<%= url_for("charts") %>" hx-encoding="multipart/form-data"
+			hx-vars='{"contest_id":<%= contest.id %>}'
+			hx-swap="none"
+			_="on htmx:xhr:progress(loaded, total) set #progress.value to (loaded/total)*100
+			on htmx:afterRequest send update_charts to #charts toggle @open on #modal_add_chart"
+		>
+			<label for="file">Select .osz file</label>
+			<input type="file" id="file" name="file" required>
+
+			<progress id="progress" value="0" max="100"></progress>
+
+			<button>Upload</button>
+		</form>
+	</article>
+</dialog>

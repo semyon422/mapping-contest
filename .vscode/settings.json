@@ -1,0 +1,15 @@
+{
+    "Lua.runtime.version": "LuaJIT",
+    "Lua.diagnostics.globals": [
+        "ngx"
+    ],
+    "Lua.workspace.library": [
+        "${3rd}/OpenResty/library",
+        "/home/semyon422/.vscode/extensions/sumneko.lua-3.6.20-linux-x64/server/meta/3574ff3e"
+    ],
+    "Lua.workspace.ignoreDir": [
+        ".vscode",
+        "tree"
+    ],
+    "Lua.completion.autoRequire": false
+}

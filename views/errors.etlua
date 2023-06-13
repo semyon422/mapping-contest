@@ -1,0 +1,3 @@
+<% for _, _error in ipairs(errors) do %>
+<p><%= _error %></p>
+<% end %>

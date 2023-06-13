@@ -1,0 +1,5 @@
+<% render("views.breadcrumb", {items = {{"Home", "/"}, {"Not found"}}}) %>
+
+<section>
+	<h1>Not found</h1>
+</section>

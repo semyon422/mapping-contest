@@ -1,0 +1,9 @@
+#!/bin/bash
+. ./setenv
+luarocks install lapis
+luarocks install inspect
+luarocks install tableshape
+luarocks install lsqlite3
+luarocks install bcrypt
+luarocks install luazip
+mkdir temp

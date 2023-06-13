@@ -1,0 +1,62 @@
+<% render("views.breadcrumb", {items = {{"Home", "/"}, {"Users", "/users"}, {ctx.user.name}}}) %>
+
+<%
+	local Roles = require("enums.roles")
+	local user = ctx.user
+%>
+
+<div id="user" hx-select="#user" hx-swap="outerHTML" hx-get hx-trigger="update_user">
+	<table hx-swap="none" _="on htmx:afterRequest trigger update_user">
+		<tbody>
+			<%
+				local roles_map = {}
+				for _, user_role in ipairs(user.user_roles) do
+					local role = Roles:to_name(user_role.role)
+					roles_map[role] = true
+				end
+			%>
+			<tr>
+				<th>Name</th>
+				<td><a href="<%= url_for(user) %>"><%= user.name %></a></td>
+			</tr>
+			<tr>
+				<th>osu!</th>
+				<td><a href="<%= url_for(user) %>"><%= user.osu_url %></a></td>
+			</tr>
+			<tr>
+				<th>discord</th>
+				<td><a href="<%= url_for(user) %>"><%= user.discord %></a></td>
+			</tr>
+			<tr>
+				<th>Roles</th>
+				<td>
+					<% for i, role_name in ipairs(Roles.list) do %>
+						<% local changable = rule("change_role", {params = {role = role_name}}) %>
+						<% local exist = roles_map[role_name] %>
+						<% if changable then %>
+							<a href="#" class="role_display"
+								hx-<%= exist and "delete" or "put" %>="<%= url_for("user.role", {user_id = user.id, role = role_name}) %>"
+							>
+						<% end %>
+						<% if changable or exist then %>
+							<code
+								class="role_<%= changable and "ch" or "nc" %>_<%= exist and "ex" or "ne" %>"
+							>
+								<%= role_name %>
+							</code>
+						<% end %>
+						<% if changable then %>
+							</a>
+						<% end %>
+					<% end %>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+
+<% if session.user_id == user.id then %>
+	<a href="#" role="button" hx-post="/logout" hx-swap="none" _="on htmx:afterRequest call location.reload()">
+		Log out
+	</a>
+<% end %>
