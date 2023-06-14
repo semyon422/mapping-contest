@@ -1,6 +1,12 @@
+<script>
+function announce() {
+	const event = new Event('verified');
+	document.getElementById("register").dispatchEvent(event);
+}
+</script>
 <div class="grid">
 	<div></div>
-	<form hx-boost="true" action="/register" method="post">
+	<form id="register" hx-boost="true" action="/register" method="post" hx-trigger="verified">
 		<h1>Register</h1>
 
 		<label for="name">Username</label>
@@ -15,7 +21,11 @@
 		<label for="password">Password</label>
 		<input type="password" id="password" name="password" required value="<%= params.password or "" %>">
 
-		<button type="submit">Submit</button>
+		<button type="submit"
+			data-sitekey="<%= ctx.recaptcha_site_key %>"
+			data-callback="announce"
+			data-action="register"
+		>Submit</button>
 
 		<small id="message"><%= table.concat(errors or {}, "<br>") or "" %></small>
 	</form>

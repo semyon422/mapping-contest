@@ -2,6 +2,8 @@ local bcrypt = require("bcrypt")
 local Users = require("models.users")
 local types = require("lapis.validate.types")
 local with_params = require("lapis.validate").with_params
+local config = require("lapis.config").get()
+local util = require("util")
 
 local register_c = {}
 
@@ -9,6 +11,9 @@ function register_c.GET(self)
 	if self.session.user_id then
 		return {redirect_to = self:url_for("home")}
 	end
+
+	self.ctx.recaptcha_site_key = config.recaptcha.site_key
+	self.ctx.is_captcha_enabled = config.is_register_captcha_enabled
 
 	return {render = true}
 end
@@ -23,17 +28,18 @@ register_c.POST = with_params({
 		return {redirect_to = self:url_for("home")}
 	end
 
-	local ctx = self.ctx
-
-	-- local success, message = util.recaptcha_verify(
-	-- 	self.ctx.ip,
-	-- 	params.recaptcha_token,
-	-- 	"register",
-	-- 	0.5
-	-- )
-	-- if not success then
-	-- 	return {json = {message = message}}
-	-- end
+	if config.is_register_captcha_enabled then
+		local success, message = util.recaptcha_verify(
+			self.ctx.ip,
+			params.recaptcha_token,
+			"register",
+			0.5
+		)
+		if not success then
+			self.errors = {message}
+			return {render = true}
+		end
+	end
 
 	local user = Users:find({name = params.name})
 	if user then

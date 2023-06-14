@@ -20,16 +20,22 @@ config("production", {
 --------
 
 config("development", {
+	is_register_enabled = true,
+	is_login_enabled = true,
+	is_register_captcha_enabled = false,
+	is_login_captcha_enabled = false,
 	recaptcha = {
-		is_enabled = false,
 		site_key = "",
 		secret_key = "",
 	},
 })
 
 config("production", {
+	is_register_enabled = true,
+	is_login_enabled = true,
+	is_register_captcha_enabled = true,
+	is_login_captcha_enabled = true,
 	recaptcha = {
-		is_enabled = true,
 		site_key = "",
 		secret_key = "",
 	},

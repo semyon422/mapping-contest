@@ -40,6 +40,8 @@ app:before_filter(function(self)
 	self.request = self
 	local resource = resources[self.route_name]
 
+	self.ctx.ip = self.req.headers["X-Real-IP"]
+
 	load_session_user(self)
 
 	local found = true

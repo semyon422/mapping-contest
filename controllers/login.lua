@@ -1,5 +1,7 @@
 local bcrypt = require("bcrypt")
 local Users = require("models.users")
+local config = require("lapis.config").get()
+local util = require("util")
 
 local login_c = {}
 
@@ -7,6 +9,9 @@ function login_c.GET(self)
 	if self.session.user_id then
 		return {redirect_to = self:url_for("home")}
 	end
+
+	self.ctx.recaptcha_site_key = config.recaptcha.site_key
+	self.ctx.is_captcha_enabled = config.is_login_captcha_enabled
 
 	return {render = true}
 end
@@ -26,20 +31,21 @@ function login_c.POST(self)
 		return {redirect_to = self:url_for("home")}
 	end
 
-	local ctx = self.ctx
 	local params = self.params
 
-	-- if config.is_login_captcha_enabled then
-	-- 	local success, message = util.recaptcha_verify(
-	-- 		self.ctx.ip,
-	-- 		params.recaptcha_token,
-	-- 		"login",
-	-- 		0.5
-	-- 	)
-	-- 	if not success then
-	-- 		return {json = {message = message}}
-	-- 	end
-	-- end
+	if config.is_login_captcha_enabled then
+		local success, message = util.recaptcha_verify(
+			self.ctx.ip,
+			params.recaptcha_token,
+			"login",
+			0.5
+		)
+		print(success, message)
+		if not success then
+			self.errors = {message}
+			return {render = true}
+		end
+	end
 
 	local user, err = login(params.name, params.password)
 
