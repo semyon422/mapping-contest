@@ -27,11 +27,10 @@ local function login(name, password)
 end
 
 function login_c.POST(self)
-	if self.session.user_id then
-		return {redirect_to = self:url_for("home")}
-	end
-
 	local params = self.params
+
+	self.ctx.recaptcha_site_key = config.recaptcha.site_key
+	self.ctx.is_captcha_enabled = config.is_login_captcha_enabled
 
 	if config.is_login_captcha_enabled then
 		local success, message = util.recaptcha_verify(

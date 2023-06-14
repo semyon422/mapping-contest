@@ -22,7 +22,7 @@ function onSubmit(token) {
 
 		<button type="submit"
 			data-sitekey="<%= ctx.recaptcha_site_key %>"
-			data-callback="announce"
+			data-callback="onSubmit"
 			data-action="register"
 		>Submit</button>
 
