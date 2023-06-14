@@ -23,7 +23,7 @@ user_c.PATCH = with_params({
 	local ctx = self.ctx
 
 	local _user = Users:find({name = params.name})
-	if _user then
+	if _user and _user.id ~= ctx.user.id then
 		self.errors = {"This name is already taken"}
 		return {render = "errors", layout = false}
 	end

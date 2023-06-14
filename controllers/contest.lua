@@ -34,7 +34,7 @@ contest_c.PATCH = with_params({
 	local ctx = self.ctx
 
 	local _contest = Contests:find({name = params.name})
-	if _contest then
+	if _contest and _contest.id ~= ctx.contest.id then
 		self.errors = {"This name is already taken"}
 		return {render = "errors", layout = false}
 	end
