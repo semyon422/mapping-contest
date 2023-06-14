@@ -1,12 +1,11 @@
 <script>
-function announce() {
-	const event = new Event('verified123');
-	document.getElementById("login").dispatchEvent(event);
+function onSubmit(token) {
+	document.getElementById("login-form").submit();
 }
 </script>
 <div class="grid">
 	<div></div>
-	<form id="login" action="/login" method="post" hx-trigger="verified">
+	<form id="login-form" action="/login" method="post">
 		<hgroup>
 			<h1>Login</h1>
 			<h1><a href="/register">Register</a></h1>

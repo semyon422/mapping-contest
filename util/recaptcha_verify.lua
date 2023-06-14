@@ -15,9 +15,7 @@ return function(ip, token, action, score)
 
 	score = score or 0.5
 	if not captcha.success or captcha.score < score or captcha.action ~= action then
-		return false, ("not captcha.success or captcha.score < %s or captcha.action ~= %q"):format(
-			score, action
-		)
+		return false, body
 	end
 
 	return true
