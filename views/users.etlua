@@ -25,8 +25,8 @@
 				<tr>
 					<th><%= user.id %></th>
 					<td><a href="<%= url_for(user) %>"><%= user.name %></a></td>
-					<td><a href="<%= url_for(user) %>"><%= user.osu_url %></a></td>
-					<td><a href="<%= url_for(user) %>"><%= user.discord %></a></td>
+					<td><a href="<%= user.osu_url %>"><%= user.osu_url %></a></td>
+					<td><%= user.discord %></td>
 					<td>
 						<% for i, role_name in ipairs(Roles.list) do %>
 							<% local changable = rule("change_role", {params = {role = role_name}}) %>
