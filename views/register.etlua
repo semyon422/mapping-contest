@@ -6,7 +6,7 @@ function announce() {
 </script>
 <div class="grid">
 	<div></div>
-	<form id="register" hx-boost="true" action="/register" method="post" hx-trigger="verified">
+	<form id="register" action="/register" method="post" hx-trigger="verified">
 		<h1>Register</h1>
 
 		<label for="name">Username</label>
