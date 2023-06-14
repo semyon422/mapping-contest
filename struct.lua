@@ -14,6 +14,11 @@ struct.enums_above = {
 	charts = {"sections"},
 }
 
+struct.primary_unique = {
+	tracks = {"files"},
+	charts = {"users", "files", "contests", "tracks", "sections"}
+}
+
 struct.primary = {
 	{users = {"contests", "charts"}},
 	{files = {"charts", "tracks"}},

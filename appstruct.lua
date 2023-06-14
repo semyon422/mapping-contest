@@ -37,7 +37,11 @@ local function singularize_except_last(t)
 	return _t
 end
 
-function Appstruct:get_key_name(res)
+function Appstruct:get_key_name(res, parent)
+	local p = self.custom_keys[parent] and self.custom_keys[parent][res]
+	if p then
+		return p
+	end
 	if includes(self.enums, res) then
 		return singularize(res)
 	end
@@ -148,7 +152,7 @@ function Appstruct:get_tables()
 		for _, v in ipairs(self:get_above(name)) do
 			table.insert(t, {
 				name = v,
-				key = self.custom_keys[name] and self.custom_keys[name][v] or self:get_key_name(v),
+				key = self:get_key_name(v, name),
 				enum = includes(self.enums, v),
 			})
 		end
@@ -196,12 +200,21 @@ function Appstruct:create_tables()
 				table.insert(decl, d)
 			end
 		end
-		local rel_keys = {}
 		for _, rel in ipairs(tbl) do
 			if not rel.enum then
 				table.insert(decl, fk_pattern:format(rel.key, rel.name))
 			end
-			table.insert(rel_keys, rel.key)
+		end
+		local rel_keys = {}
+		if tbl.secondary then
+			for _, rel in ipairs(tbl) do
+				table.insert(rel_keys, rel.key)
+			end
+		elseif self.primary_unique[tbl.name] then
+			for _, res in ipairs(self.primary_unique[tbl.name]) do
+				local key = self:get_key_name(res, tbl.name)
+				table.insert(rel_keys, key)
+			end
 		end
 		if #rel_keys > 0 then
 			table.insert(decl, ("UNIQUE(%s)"):format(table.concat(rel_keys, ", ")))
