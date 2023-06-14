@@ -74,7 +74,9 @@ access:add("chart", "DELETE", {
 })
 
 access:add("users", "GET", {{"permit"}})
+
 access:add("user", "GET", {{"permit"}})
+access:add("user", "PATCH", {{"role_admin"}})
 
 access:add("user.role", "PUT", {{"change_role"}})
 access:add("user.role", "DELETE", {{"change_role"}})

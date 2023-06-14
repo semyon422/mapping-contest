@@ -1,5 +1,6 @@
 local preload = require("lapis.db.model").preload
 local Datetime = require("util.datetime")
+local Contests = require("models.contests")
 local types = require("lapis.validate.types")
 local with_params = require("lapis.validate").with_params
 
@@ -32,13 +33,20 @@ contest_c.PATCH = with_params({
 }, function(self, params)
 	local ctx = self.ctx
 
-	ctx.contest.name = params.name
-	ctx.contest.description = params.description
-	ctx.contest.started_at = Datetime.to_unix(params.started_at)
-	ctx.contest.is_visible = params.is_visible == "on"
-	ctx.contest.is_voting_open = params.is_voting_open == "on"
-	ctx.contest.is_submission_open = params.is_submission_open == "on"
-	ctx.contest:update(
+	local _contest = Contests:find({name = params.name})
+	if _contest then
+		self.errors = {"This name is already taken"}
+		return {render = "errors", layout = false}
+	end
+
+	local contest = ctx.contest
+	contest.name = params.name
+	contest.description = params.description
+	contest.started_at = Datetime.to_unix(params.started_at)
+	contest.is_visible = params.is_visible == "on"
+	contest.is_voting_open = params.is_voting_open == "on"
+	contest.is_submission_open = params.is_submission_open == "on"
+	contest:update(
 		"name",
 		"description",
 		"started_at",
@@ -47,7 +55,7 @@ contest_c.PATCH = with_params({
 		"is_submission_open"
 	)
 
-	return {headers = {["HX-Location"] = self:url_for(ctx.contest)}}
+	return {headers = {["HX-Location"] = self:url_for(contest)}}
 end)
 
 return contest_c

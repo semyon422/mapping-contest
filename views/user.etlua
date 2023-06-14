@@ -60,3 +60,34 @@
 		Log out
 	</a>
 <% end %>
+
+<% if policy("user.PATCH") then %>
+	<a href="#" role="button" _="on click toggle @open on #modal_edit_user">
+		Edit
+	</a>
+<% end %>
+
+<dialog id="modal_edit_user">
+	<article>
+		<header>
+			<a href="#" aria-label="Close" class="close" _="on click toggle @open on #modal_edit_user"></a>
+			Edit user
+		</header>
+		<form hx-patch hx-target="#edit_errors" autocomplete="off">
+			<label for="name">Name</label>
+			<input id="name" type="text" name="name" required value="<%= user.name %>">
+
+			<label for="osu_url">osu!</label>
+			<input id="osu_url" type="text" name="osu_url" required value="<%= user.osu_url %>">
+
+			<label for="discord">Discord</label>
+			<input id="discord" type="text" name="discord" required value="<%= user.discord %>">
+
+			<label for="password">Password</label>
+			<input id="password" type="password" name="password" placeholder="unchanged">
+
+			<button>Save</button>
+		</form>
+		<div id="edit_errors"></div>
+	</article>
+</dialog>
