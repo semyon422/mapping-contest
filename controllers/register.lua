@@ -30,7 +30,7 @@ register_c.POST = with_params({
 	if config.is_register_captcha_enabled then
 		local success, message = util.recaptcha_verify(
 			self.ctx.ip,
-			params.recaptcha_token,
+			params["g-recaptcha-response"],
 			"register",
 			0.5
 		)

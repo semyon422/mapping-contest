@@ -35,7 +35,7 @@ function login_c.POST(self)
 	if config.is_login_captcha_enabled then
 		local success, message = util.recaptcha_verify(
 			self.ctx.ip,
-			params.recaptcha_token,
+			params["g-recaptcha-response"],
 			"login",
 			0.5
 		)
