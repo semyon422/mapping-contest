@@ -59,9 +59,7 @@ register_c.POST = with_params({
 
 	self.session.user_id = user.id
 
-	return {headers = {
-		["HX-Location"] = self:url_for("home"),
-	}}
+	return {redirect_to = self:url_for("home")}
 end)
 
 return register_c
