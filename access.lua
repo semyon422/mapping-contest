@@ -57,6 +57,7 @@ access:add("contest", "GET", {
 	{"contest_host"}
 })
 access:add("contest", "PATCH", {{"contest_host"}})
+access:add("contest", "DELETE", {{"contest_host"}})
 access:add("contest.track", "DELETE", {{"contest_host"}})
 access:add("contest.tracks", "POST", {{"contest_host"}})
 

@@ -140,6 +140,7 @@
 
 			<button>Save</button>
 		</form>
+		<button class="contrast" href="#" hx-delete hx-confirm="Are you sure you wish to delete this contest?">Delete</button class="contrast">
 		<div id="edit_errors"></div>
 	</article>
 </dialog>

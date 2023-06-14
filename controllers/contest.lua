@@ -23,6 +23,11 @@ contest_c.GET = function(self)
 	return {render = true}
 end
 
+contest_c.DELETE = function(self)
+	self.ctx.contest:delete()
+	return {headers = {["HX-Location"] = self:url_for("contests")}}
+end
+
 contest_c.PATCH = with_params({
 	{"name", types.limited_text(128)},
 	{"description", types.limited_text(1024)},
