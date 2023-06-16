@@ -39,7 +39,6 @@ function login_c.POST(self)
 			"login",
 			0.5
 		)
-		print(success, message)
 		if not success then
 			self.errors = {message}
 			return {render = true}
