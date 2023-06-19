@@ -41,11 +41,13 @@ local access = newAppPolicySet()
 
 access:add("home", "GET", {{"permit"}})
 
+access:add("oauth", "GET", {{"permit"}})
+
 access:add("login", "GET", {{"not_authed"}})
 access:add("login", "POST", {{"not_authed"}})
 
-access:add("register", "GET", {{"not_authed"}})
-access:add("register", "POST", {{"not_authed"}})
+-- access:add("register", "GET", {{"not_authed"}})
+-- access:add("register", "POST", {{"not_authed"}})
 
 access:add("logout", "POST", {{"authed"}})
 

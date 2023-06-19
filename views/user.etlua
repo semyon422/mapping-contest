@@ -16,12 +16,13 @@
 				end
 			%>
 			<tr>
-				<th>Name</th>
-				<td><a href="<%= url_for(user) %>"><%= user.name %></a></td>
+				<th>osu!</th>
+				<% local osu_url = "https://osu.ppy.sh/users/" .. user.osu_id %>
+				<td><a href="<%= osu_url %>"><%= osu_url %></a></td>
 			</tr>
 			<tr>
-				<th>osu!</th>
-				<td><a href="<%= user.osu_url %>"><%= user.osu_url %></a></td>
+				<th>Name</th>
+				<td><a href="<%= url_for(user) %>"><%= user.name %></a></td>
 			</tr>
 			<tr>
 				<th>discord</th>
@@ -74,11 +75,11 @@
 			Edit user
 		</header>
 		<form hx-patch hx-target="#edit_errors" autocomplete="off">
+			<label for="osu_id">osu! id</label>
+			<input id="osu_id" type="text" name="osu_id" required value="<%= user.osu_id %>">
+
 			<label for="name">Name</label>
 			<input id="name" type="text" name="name" required value="<%= user.name %>">
-
-			<label for="osu_url">osu!</label>
-			<input id="osu_url" type="text" name="osu_url" required value="<%= user.osu_url %>">
 
 			<label for="discord">Discord</label>
 			<input id="discord" type="text" name="discord" required value="<%= user.discord %>">

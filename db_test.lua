@@ -25,8 +25,8 @@ function db_test.create()
 	struct:create_tables()
 
 	local user = Users:create({
+		osu_id = 1,
 		name = "admin",
-		osu_url = "https://osu.ppy.sh",
 		discord = "jhlee#0133",
 		password = bcrypt.digest("password", 10),
 		latest_activity = os.time(),

@@ -78,8 +78,8 @@ decls.tracks = {
 }
 
 decls.users = {
+	{"osu_id", types.integer},
 	{"name", types.text({unique = true})},
-	{"osu_url", types.text},
 	{"discord", types.text},
 	{"password", types.text},
 	{"latest_activity", types.integer},

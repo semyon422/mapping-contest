@@ -19,6 +19,14 @@ config("production", {
 
 --------
 
+config({"development", "production"}, {
+	osu_oauth = {
+		client_id = 0,
+		redirect_uri = "",
+		client_secret = "",
+	},
+})
+
 config("development", {
 	is_register_enabled = true,
 	is_login_enabled = true,

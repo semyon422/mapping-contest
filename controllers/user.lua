@@ -15,8 +15,8 @@ function user_c.GET(self)
 end
 
 user_c.PATCH = with_params({
+	{"osu_id", types.db_id},
 	{"name", types.limited_text(64)},
-	{"osu_url", types.limited_text(256)},
 	{"discord", types.limited_text(64)},
 	{"password", types.limited_text(64) + types.empty},
 }, function(self, params)
@@ -29,10 +29,10 @@ user_c.PATCH = with_params({
 	end
 
 	local user = ctx.user
+	user.osu_id = params.osu_id
 	user.name = params.name
-	user.osu_url = params.osu_url
 	user.discord = params.discord
-	user:update("name", "osu_url", "discord")
+	user:update("osu_id", "name", "discord")
 
 	if params.password then
 		user.password = bcrypt.digest(params.password, 10)

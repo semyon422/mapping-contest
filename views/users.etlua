@@ -8,7 +8,6 @@
 			<tr>
 			<th>#</th>
 			<th>Name</th>
-			<th>osu!</th>
 			<th>discord</th>
 			<th colspan="2">Roles</th>
 			</tr>
@@ -25,7 +24,6 @@
 				<tr>
 					<th><%= user.id %></th>
 					<td><a href="<%= url_for(user) %>"><%= user.name %></a></td>
-					<td><a href="<%= user.osu_url %>"><%= user.osu_url %></a></td>
 					<td><%= user.discord %></td>
 					<td>
 						<% for i, role_name in ipairs(Roles.list) do %>
