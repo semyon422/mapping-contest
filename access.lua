@@ -43,6 +43,7 @@ access:add("home", "GET", {{"permit"}})
 
 access:add("oauth", "GET", {{"permit"}})
 
+access:add("login_osu", "GET", {{"not_authed"}})
 access:add("login", "GET", {{"not_authed"}})
 access:add("login", "POST", {{"not_authed"}})
 

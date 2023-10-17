@@ -11,10 +11,6 @@ function onSubmit(token) {
 			<h1><a href="/register">Register</a></h1>
 		</hgroup>
 
-		<h5>
-			<a href="<%= ctx.osu_authorize_url %>">Login using osu! account</a>
-		</h5>
-
 		<label for="name">Username</label>
 		<input type="text" id="name" name="name" required value="<%= params.name or "" %>">
 

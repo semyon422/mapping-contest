@@ -1,0 +1,14 @@
+<script>
+function onSubmit(token) {
+	document.getElementById("login-form").submit();
+}
+</script>
+<div class="grid">
+	<div></div>
+	<div>
+		<h5>
+			<a href="<%= ctx.osu_authorize_url %>">Login using osu! account</a>
+		</h5>
+	</div>
+	<div></div>
+</div>
