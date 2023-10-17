@@ -1,6 +1,6 @@
 local class = require("class")
 
-local Rule, newRule = class()
+local Rule = class()
 
 function Rule:new(effect)
 	assert(effect == "permit" or effect == "deny", "invalid effect")
@@ -39,4 +39,4 @@ function Rule:evaluate(...)
 	return self:evaluate_condition(...)
 end
 
-return newRule
+return Rule

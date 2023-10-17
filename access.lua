@@ -1,13 +1,11 @@
-local class = require("class")
-
 local Policy = require("abac.Policy")
 local PolicySet = require("abac.PolicySet")
 
-local WebPolicy, newWebPolicy = class(Policy)
+local WebPolicy = Policy + {}
 
 WebPolicy.require_prefix = "rules."
 
-local WebPolicySet, newWebPolicySet = class(PolicySet)
+local WebPolicySet = PolicySet + {}
 
 function WebPolicySet:new(route_name, method)
 	self.route_name = route_name
@@ -18,7 +16,7 @@ function WebPolicySet:target(request)
 	return request.route_name == self.route_name and request.req.method == self.method
 end
 
-local AppPolicySet, newAppPolicySet = class(PolicySet)
+local AppPolicySet = PolicySet + {}
 
 function AppPolicySet:new()
 	self.policies_map = {}
@@ -29,15 +27,15 @@ function AppPolicySet:get(name)
 end
 
 function AppPolicySet:add(route_name, method, data)
-	local set = newWebPolicySet(route_name, method)
-	set:append(data, newWebPolicy)
+	local set = WebPolicySet(route_name, method)
+	set:append(data, WebPolicy)
 	self.policies_map[route_name .. "." .. method] = set
 	self:append({set})
 end
 
-local access = newAppPolicySet()
+local access = AppPolicySet()
 
--- access:append({{{"permit"}}}, PolicySet, newWebPolicy)
+-- access:append({{{"permit"}}}, PolicySet, WebPolicy)
 
 access:add("home", "GET", {{"permit"}})
 

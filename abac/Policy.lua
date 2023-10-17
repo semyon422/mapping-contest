@@ -1,11 +1,11 @@
 local class = require("class")
 local Rule = require("abac.Rule")
 
-local Policy, newPolicy = class()
+local Policy = class()
 
 function Policy:target() return true end
 
-Policy.evaluate_target = class(Rule).evaluate_target
+Policy.evaluate_target = Rule.evaluate_target
 
 Policy.combine = require("abac.combines.all_applicable")
 Policy.require_prefix = ""
@@ -54,4 +54,4 @@ function Policy:evaluate(...)
 	return self:evaluate_rules(...)
 end
 
-return newPolicy
+return Policy

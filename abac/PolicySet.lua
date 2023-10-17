@@ -1,7 +1,8 @@
 local class = require("class")
+local Policy = require("abac.Policy")
 
-local PolicySet, newPolicySet = class("abac.Policy")
+local PolicySet = Policy + {}
 
 PolicySet.combine = require("abac.combines.first_applicable")
 
-return newPolicySet
+return PolicySet

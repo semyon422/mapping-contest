@@ -6,7 +6,7 @@ local Model = require("lapis.db.model").Model
 local types = schema.types
 local singularize = lapis_util.singularize
 
-local Appstruct, newAppstruct = class()
+local Appstruct = class()
 
 local function includes(t, v)
 	for _, _v in ipairs(t) do
@@ -339,4 +339,4 @@ function Appstruct:get_string()
 	return table.concat(text, "\n")
 end
 
-return newAppstruct
+return Appstruct
