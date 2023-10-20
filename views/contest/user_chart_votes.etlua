@@ -1,7 +1,7 @@
 <% local contest = ctx.contest %>
 <% local roles = ctx.roles %>
 
-<% render("views.breadcrumb", {items = {{"Home", "/"}, {"Contests", "/contests"}, {contest.name, "/contests/1"}, {"Votes"}}}) %>
+<% render("views.breadcrumb", {items = {{"Home", "/"}, {"Contests", "/contests"}, {contest.name, "/contests/" .. contest.id}, {"Votes"}}}) %>
 
 <% local Sections = require("enums.sections") %>
 <% local section_names = {"Fast", "Slow", "Full"} %>
