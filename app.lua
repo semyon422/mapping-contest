@@ -1,4 +1,10 @@
-package.path = "./?/init.lua;" .. package.path
+local pkg = require("aqua.package")
+pkg:reset()
+pkg:add("aqua")
+pkg:add("tree/share/lua/5.1")
+pkg:addc("tree/lib/lua/5.1")
+pkg:add(os.getenv("OR_ROOT") .. "/lualib")
+pkg:addc(os.getenv("OR_ROOT") .. "/lualib")
 
 local lapis = require("lapis")
 local respond_to = require("lapis.application").respond_to
