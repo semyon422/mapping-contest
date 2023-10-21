@@ -47,9 +47,15 @@ charts_c.POST = with_params({
 		artist = osz.Artist,
 	})
 	if not track then
-		file:delete_file()
-		file:delete()
-		return {status = 400, "track not found"}
+		-- file:delete_file()
+		-- file:delete()
+		-- return {status = 400, "track not found"}
+		track = Tracks:create({
+			file_id = file.id,
+			title = osz.Title,
+			artist = osz.Artist,
+			created_at = os.time(),
+		})
 	end
 
 	local contest = Contests:find(params.contest_id)
