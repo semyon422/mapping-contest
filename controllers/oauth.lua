@@ -39,6 +39,9 @@ function oauth_c.GET(self)
 	local user = Users:find({osu_id = me.id})
 	if user then
 		self.session.user_id = user.id
+		user.name = me.username
+		user.discord = me.discord or ""
+		user:update("name", "discord")
 		return {redirect_to = self:url_for("home")}
 	end
 
