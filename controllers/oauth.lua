@@ -40,7 +40,7 @@ function oauth_c.GET(self)
 	if user then
 		self.session.user_id = user.id
 		user.name = me.username
-		user.discord = me.discord or ""
+		user.discord = tostring(me.discord) or ""
 		user:update("name", "discord")
 		return {redirect_to = self:url_for("home")}
 	end
