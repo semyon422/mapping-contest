@@ -154,13 +154,13 @@
 		</header>
 		<form hx-post="<%= url_for("contest.tracks", {contest_id = contest.id}) %>" hx-encoding="multipart/form-data"
 			hx-swap="none"
-			_="on htmx:xhr:progress(loaded, total) set #progress.value to (loaded/total)*100
+			_="on htmx:xhr:progress(loaded, total) set #track_progress.value to (loaded/total)*100
 			on htmx:afterRequest send update_tracks to #tracks then toggle @open on #modal_add_track"
 		>
 			<label for="file">Select .osz file</label>
 			<input type="file" id="file" name="file" required>
 
-			<progress id="progress" value="0" max="100"></progress>
+			<progress id="track_progress" value="0" max="100"></progress>
 
 			<button>Upload</button>
 		</form>
@@ -176,13 +176,13 @@
 		<form hx-post="<%= url_for("charts") %>" hx-encoding="multipart/form-data"
 			hx-vars='{"contest_id":<%= contest.id %>}'
 			hx-swap="none"
-			_="on htmx:xhr:progress(loaded, total) set #progress.value to (loaded/total)*100
+			_="on htmx:xhr:progress(loaded, total) set #chart_progress.value to (loaded/total)*100
 			on htmx:afterRequest send update_charts to #charts toggle @open on #modal_add_chart"
 		>
 			<label for="file">Select .osz file</label>
 			<input type="file" id="file" name="file" required>
 
-			<progress id="progress" value="0" max="100"></progress>
+			<progress id="chart_progress" value="0" max="100"></progress>
 
 			<button>Upload</button>
 		</form>
