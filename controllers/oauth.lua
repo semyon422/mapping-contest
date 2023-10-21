@@ -49,7 +49,7 @@ function oauth_c.GET(self)
 	user = Users:create({
 		osu_id = me.id,
 		name = me.username,
-		discord = me.discord or "",
+		discord = tostring(me.discord) or "",
 		password = "",
 		latest_activity = time,
 		created_at = time,
