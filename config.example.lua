@@ -25,6 +25,7 @@ config({"development", "production"}, {
 		redirect_uri = "",
 		client_secret = "",
 	},
+	timezone = 3,  -- MSK
 })
 
 config("development", {

@@ -20,10 +20,9 @@ end
 
 register_c.POST = with_params({
 	{"name", types.limited_text(64)},
-	{"osu_url", types.limited_text(256)},
 	{"discord", types.limited_text(64)},
 	{"password", types.limited_text(64)},
-	{"g-recaptcha-response", types.string},
+	{"g-recaptcha-response", types.string + types.empty},
 }, function(self, params)
 	self.ctx.recaptcha_site_key = config.recaptcha.site_key
 	self.ctx.is_captcha_enabled = config.is_register_captcha_enabled
@@ -49,8 +48,8 @@ register_c.POST = with_params({
 
 	local time = os.time()
 	user = Users:create({
+		osu_id = 0,
 		name = params.name,
-		osu_url = params.osu_url,
 		discord = params.discord,
 		password = bcrypt.digest(params.password, 10),
 		latest_activity = time,

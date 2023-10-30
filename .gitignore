@@ -1,6 +1,7 @@
 tree
 logs
 temp
+storages
 nginx.conf.compiled
 db.sqlite
 config.lua

@@ -11,9 +11,6 @@ function onSubmit(token) {
 		<label for="name">Username</label>
 		<input type="text" id="name" name="name" required value="<%= params.name or "" %>">
 
-		<label for="osu_url">osu! profile link</label>
-		<input type="text" id="osu_url" name="osu_url" required value="<%= params.osu_url or "" %>">
-
 		<label for="discord">Discord username</label>
 		<input type="text" id="discord" name="discord" required value="<%= params.discord or "" %>">
 
