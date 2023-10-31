@@ -7,7 +7,7 @@ function onSubmit(token) {
 	<div></div>
 	<div>
 		<h5>
-			<a href="<%= ctx.osu_authorize_url %>">Login using osu! account</a>
+			<a href="<%= osu_authorize_url %>">Login using osu! account</a>
 		</h5>
 	</div>
 	<div></div>

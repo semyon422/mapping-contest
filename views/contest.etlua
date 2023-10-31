@@ -1,5 +1,4 @@
 <% local datetime = require("util.datetime") %>
-<% local contest = ctx.contest %>
 <% render("views.breadcrumb", {items = {{"Home", "/"}, {"Contests", "/contests"}, {
 	contest.name .. (not contest.is_visible and " (hidden)" or "")
 }}}) %>
@@ -85,7 +84,7 @@
 						<td><a href="<%= url_for(chart.charter) %>"><%= chart.charter.name %></a></td>
 						<td><a href="<%= url_for("file", {file_id = chart.file_id}) %>"><%= chart.track.title %></a></td>
 						<td><%= datetime.to_text(chart.submitted_at) %></td>
-						<% if policy("chart.DELETE", {ctx = {chart = chart}}) then %>
+						<% if policy("chart.DELETE", {chart = chart}) then %>
 							<td>
 							<a href="#" hx-swap="none" hx-delete="<%= url_for(chart) %>"
 								hx-confirm="Are you sure you wish to delete this chart?"

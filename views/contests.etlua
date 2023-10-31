@@ -13,7 +13,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			<% for _, contest in ipairs(ctx.contests) do %>
+			<% for _, contest in ipairs(contests) do %>
 				<% if contest.is_visible or contest.host_id == session.user_id then %>
 					<tr>
 						<th><%= contest.id %></th>

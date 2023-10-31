@@ -18,7 +18,7 @@ function onSubmit(token) {
 		<input type="password" id="password" name="password" required value="<%= params.password or "" %>">
 
 		<button class="g-recaptcha"
-			data-sitekey="<%= ctx.recaptcha_site_key %>"
+			data-sitekey="<%= recaptcha_site_key %>"
 			data-callback="onSubmit"
 			data-action="register"
 		>Submit</button>

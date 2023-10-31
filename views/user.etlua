@@ -1,9 +1,7 @@
-<% render("views.breadcrumb", {items = {{"Home", "/"}, {"Users", "/users"}, {ctx.user.name}}}) %>
+<%- render("breadcrumb", {items = {{"Home", "/"}, {"Users", "/users"}, {user.name}}}) %>
 
-<%
-	local Roles = require("enums.roles")
-	local user = ctx.user
-%>
+<% local Roles = require("domain.Roles") %>
+<% local access_helper = require("access_helper") %>
 
 <div id="user" hx-select="#user" hx-swap="outerHTML" hx-get hx-trigger="update_user">
 	<table hx-swap="none" _="on htmx:afterRequest trigger update_user">
@@ -11,8 +9,7 @@
 			<%
 				local roles_map = {}
 				for _, user_role in ipairs(user.user_roles) do
-					local role = Roles:to_name(user_role.role)
-					roles_map[role] = true
+					roles_map[user_role.role] = true
 				end
 			%>
 			<tr>
@@ -22,7 +19,7 @@
 			</tr>
 			<tr>
 				<th>Name</th>
-				<td><a href="<%= url_for(user) %>"><%= user.name %></a></td>
+				<td><a href="/users/<%= user.id %>"><%= user.name %></a></td>
 			</tr>
 			<tr>
 				<th>discord</th>
@@ -32,11 +29,11 @@
 				<th>Roles</th>
 				<td>
 					<% for i, role_name in ipairs(Roles.list) do %>
-						<% local changable = rule("change_role", {params = {role = role_name}}) %>
+						<% local changable = access_helper.rule("change_role", {role = role_name}) %>
 						<% local exist = roles_map[role_name] %>
 						<% if changable then %>
 							<a href="#" class="role_display"
-								hx-<%= exist and "delete" or "put" %>="<%= url_for("user.role", {user_id = user.id, role = role_name}) %>"
+								hx-<%= exist and "delete" or "put" %>="/users/<%= user.id %>/roles/<%= role_name %>"
 							>
 						<% end %>
 						<% if changable or exist then %>
@@ -62,7 +59,7 @@
 	</a>
 <% end %>
 
-<% if policy("user.PATCH") then %>
+<% if access_helper.authorize("update_user", {user_id = user_id, session = session}) then %>
 	<a href="#" role="button" _="on click toggle @open on #modal_edit_user">
 		Edit
 	</a>

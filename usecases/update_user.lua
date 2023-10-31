@@ -1,11 +1,11 @@
 local relations = require("rdb.relations")
 local Usecase = require("usecases.Usecase")
 
-local get_user = Usecase()
+local update_user = Usecase()
 
-get_user:setPolicySet({{"permit"}})
+update_user:setPolicySet({{"role_admin"}})
 
-function get_user:run(params, usersRepo)
+function update_user:run(params, usersRepo)
 	params.user = usersRepo:select({id = tonumber(params.user_id)})[1]
 	if not params.user then
 		return "not_found", params
@@ -21,4 +21,4 @@ function get_user:run(params, usersRepo)
 	return "ok", params
 end
 
-return get_user
+return update_user

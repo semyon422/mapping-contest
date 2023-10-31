@@ -1,23 +1,23 @@
-local user_roles = {}
+local users = {}
 
-user_roles.table_name = "user_roles"
+users.table_name = "users"
 
-user_roles.create_query = [[
-CREATE TABLE IF NOT EXISTS "user_roles" (
+users.create_query = [[
+CREATE TABLE IF NOT EXISTS "users" (
 	"id" INTEGER NOT NULL PRIMARY KEY,
-	"user_id" INTEGER NOT NULL,
-	"role" INTEGER NOT NULL,
-	FOREIGN KEY (user_id) references users(id) ON DELETE CASCADE,
-	UNIQUE(user_id, role)
+	"osu_id" INTEGER NOT NULL,
+	"name" TEXT NOT NULL UNIQUE,
+	"discord" TEXT NOT NULL,
+	"password" TEXT NOT NULL,
+	"latest_activity" INTEGER NOT NULL,
+	"created_at" INTEGER NOT NULL
 );
 ]]
 
-user_roles.types = {
-	role = require("enums.roles"),
+users.types = {}
+
+users.relations = {
+	user_roles = {has_many = "user_roles", key = "user_id"},
 }
 
-user_roles.relations = {
-	user = {belongs_to = "users", key = "user_id"},
-}
-
-return user_roles
+return users

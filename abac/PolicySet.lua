@@ -1,4 +1,3 @@
-local class = require("class")
 local Policy = require("abac.Policy")
 
 local PolicySet = Policy + {}

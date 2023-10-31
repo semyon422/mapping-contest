@@ -5,11 +5,22 @@ local Router = require("http.Router")
 local UsecaseViewHandler = require("http.UsecaseViewHandler")
 local RequestParamsHandler = require("http.RequestParamsHandler")
 
-local usecases = autoload("usecases")
+local usecases = require("usecases")
 local views = require("views")
 
+local Models = require("rdb.Models")
+local TableOrm = require("rdb.TableOrm")
+local LsqliteDatabase = require("rdb.LsqliteDatabase")
+
+local db = LsqliteDatabase()
+db:open("db.sqlite")
+db:query("PRAGMA foreign_keys = ON;")
+
+local models = Models("models", TableOrm(db))
+
 local usecase_repos = {
-	get_user = {},
+	get_users = {models.users},
+	get_user = {models.users},
 	ok = {},
 }
 
@@ -47,7 +58,13 @@ return function()
 	req.method = ngx.req.get_method()
 	req.uri = ngx.var.request_uri
 
-	local code, headers, body = router:handle_request(req)
+	local ok, code, headers, body = xpcall(router.handle_request, debug.traceback, router, req)
+	if not ok then
+		ngx.status = 500
+		ngx.print("<pre>" .. code .. "</pre>")
+		return
+	end
+
 	if not code then
 		ngx.status = 404
 		return
