@@ -1,7 +1,9 @@
-<% render("views.breadcrumb", {items = {{"Home", "/"}, {"Contests"}}}) %>
+<%- render("breadcrumb", {items = {{"Home", "/"}, {"Contests"}}}) %>
+
+<% local access_helper = require("access_helper") %>
 
 <div class="container">
-	<% if rule("role_host") then %>
+	<% if access_helper.rule("role_host") then %>
 	<a href="#" hx-post="/contests">Create new contest</a>
 	<% end %>
 
@@ -18,7 +20,7 @@
 					<tr>
 						<th><%= contest.id %></th>
 						<td>
-							<a href="<%= url_for(contest) %>"><%= contest.name %></a>
+							<a href="/contests/<%= contest.id %>"><%= contest.name %></a>
 							<% if not contest.is_visible then %>
 								(hidden)
 							<% end %>

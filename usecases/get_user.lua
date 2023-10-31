@@ -5,8 +5,8 @@ local get_user = Usecase()
 
 get_user:setPolicySet({{"permit"}})
 
-function get_user:run(params, usersRepo)
-	params.user = usersRepo:select({id = tonumber(params.user_id)})[1]
+function get_user:run(params, models)
+	params.user = models.users:select({id = tonumber(params.user_id)})[1]
 	if not params.user then
 		return "not_found", params
 	end

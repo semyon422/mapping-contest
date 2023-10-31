@@ -1,12 +1,12 @@
 local relations = require("rdb.relations")
-local usecase_decorators = require("usecase_decorators")
+local Usecase = require("usecases.Usecase")
 
-local function get_users(params, usersRepo)
-	params.users = usersRepo:select()
+local get_users = Usecase()
+
+function get_users:run(params, models)
+	params.users = models.users:select()
 	relations.preload(params.users, "user_roles")
 	return "ok", params
 end
-
-get_users = usecase_decorators.access(get_users, {{"permit"}})
 
 return get_users

@@ -1,10 +1,12 @@
-<% render("views.breadcrumb", {items = {{"Home", "/"}, {"Contests", "/contests"}, {contest.name, "/contests/" .. contest.id}, {"Votes"}}}) %>
+<%- render("breadcrumb", {items = {{"Home", "/"}, {"Contests", "/contests"}, {contest.name, "/contests/" .. contest.id}, {"Votes"}}}) %>
 
-<% local Sections = require("enums.sections") %>
+<% local Sections = require("domain.Sections") %>
 <% local section_names = {"Fast", "Slow", "Full"} %>
 
-<% local Votes = require("enums.votes") %>
+<% local Votes = require("domain.Votes") %>
 <% local vote_icons = {"check", "times", "heart"} %>
+
+<% local access_helper = require("access_helper") %>
 
 <section id="votes" hx-select="#votes" hx-swap="outerHTML" hx-get hx-trigger="update_votes">
 	<hgroup>
@@ -12,7 +14,7 @@
 		<h5>Votes</h5>
 	</hgroup>
 	<table hx-swap="none" _="on htmx:afterRequest trigger update_votes">
-		<% if not policy("contest.user_chart_votes.PATCH") then %>
+		<% if not access_helper.authorize("update_vote") then %>
 			<h5>Voting not allowed</h5>
 		<% end %>
 		<tbody>
@@ -40,12 +42,12 @@
 					<% for _, vote_chart in ipairs(section_vote_charts) do %>
 						<tr>
 							<td></td>
-							<td><a href="<%= url_for(vote_chart.chart.charter) %>"><%= vote_chart.chart.charter.name %></a></td>
-							<td><a href="<%= url_for("file", {file_id = vote_chart.chart.file_id}) %>"><%= vote_chart.chart.track.title %></a></td>
+							<td><a href="/users/<%= vote_chart.chart.charter.id %>"><%= vote_chart.chart.charter.name %></a></td>
+							<td><a href="/files/<%= vote_chart.chart.file_id %>"><%= vote_chart.chart.track.title %></a></td>
 							<td>
 								<% for i, vote_name in ipairs(Votes.list) do %>
 									<a href="#" class="vote_counter"
-										hx-patch="<%= url_for("contest.user_chart_votes", {contest_id = contest.id}) %>"
+										hx-patch="/contests/<%= contest.id %>/user_chart_votes"
 										hx-vars='{"chart_id":<%= vote_chart.chart.id %>,"vote":"<%= vote_name %>"}'
 									>
 									<%- vote_chart.voted[vote_name] and "<kbd>" or "<code>" %>

@@ -18,12 +18,6 @@ db:query("PRAGMA foreign_keys = ON;")
 
 local models = Models("models", TableOrm(db))
 
-local usecase_repos = {
-	get_users = {models.users},
-	get_user = {models.users},
-	ok = {},
-}
-
 local default_results = {
 	forbidden = {403, "json"},
 	not_found = {404, "json"},
@@ -33,7 +27,7 @@ local session_config = {
 	secret = "secret string",
 }
 
-local uv_handler = UsecaseViewHandler(usecases, usecase_repos, default_results, views)
+local uv_handler = UsecaseViewHandler(usecases, models, default_results, views)
 local rp_handler = RequestParamsHandler(session_config, uv_handler)
 local router = Router(rp_handler)
 

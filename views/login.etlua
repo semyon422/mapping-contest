@@ -12,10 +12,10 @@ function onSubmit(token) {
 		</hgroup>
 
 		<label for="name">Username</label>
-		<input type="text" id="name" name="name" required value="<%= params.name or "" %>">
+		<input type="text" id="name" name="name" required value="<%= name or "" %>">
 
 		<label for="password">Password</label>
-		<input type="password" id="password" name="password" required value="<%= params.password or "" %>">
+		<input type="password" id="password" name="password" required value="<%= password or "" %>">
 
 		<button class="g-recaptcha"
 			data-sitekey="<%= recaptcha_site_key %>"

@@ -5,12 +5,12 @@ return {
 		}},
 	}},
 	{"/", {
-		GET = {"get_home", {
+		GET = {"ok", {
 			ok = {200, "home"},
 		}},
 	}},
 	{"/login", {
-		GET = {"login", {
+		GET = {"get_login", {
 			ok = {200, "login"},
 		}},
 	}},
@@ -20,7 +20,7 @@ return {
 		}},
 	}},
 	{"/register", {
-		GET = {"register", {
+		GET = {"get_register", {
 			ok = {200, "register"},
 		}},
 	}},

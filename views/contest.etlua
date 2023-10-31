@@ -1,20 +1,23 @@
 <% local datetime = require("util.datetime") %>
-<% render("views.breadcrumb", {items = {{"Home", "/"}, {"Contests", "/contests"}, {
+<%- render("breadcrumb", {items = {{"Home", "/"}, {"Contests", "/contests"}, {
 	contest.name .. (not contest.is_visible and " (hidden)" or "")
 }}}) %>
+
+<% local access_helper = require("access_helper") %>
+<% local util = require("util") %>
 
 <section>
 	<hgroup>
 		<h4>
 			<%= contest.name %>
-			<% if policy("contest.PATCH") then %>
+			<% if access_helper.authorize("update_contest") then %>
 				<a href="#" _="on click toggle @open on #modal_edit_contest">
 					<i class="fas fa-edit"></i>
 				</a>
 			<% end %>
 		</h4>
 		<h5>
-			<%= util.datetime.to_text(contest.started_at)%>
+			<%= datetime.to_text(contest.started_at)%>
 		</h5>
 	</hgroup>
 	<div class="grid">
@@ -22,10 +25,10 @@
 			<p>
 				<%- contest.description %>
 			</p>
-			<a role="button" href="<%= url_for("contest.user_chart_votes", {contest_id = contest.id}) %>">
+			<a role="button" href="/contests/<%= contest.id %>/user_chart_votes">
 				Vote
 			</a>
-			<% if contest.is_submission_open and policy("charts.POST") then %>
+			<% if contest.is_submission_open and access_helper.authorize("submit_chart") then %>
 				<a role="button" href="#" _="on click toggle @open on #modal_add_chart">
 					Submit chart
 				</a>
@@ -34,7 +37,7 @@
 		<div id="tracks" hx-select="#tracks" hx-swap="outerHTML" hx-get hx-trigger="update_tracks">
 			<h6>
 				Tracks
-				<% if policy("contest.tracks.POST") then %>
+				<% if access_helper.authorize("submit_track") then %>
 					<a href="#" _="on click toggle @open on #modal_add_track">
 						<i class="fas fa-plus"></i>
 					</a>
@@ -45,8 +48,8 @@
 					<% for _, contest_track in ipairs(contest.contest_tracks) do %>
 						<% local track = contest_track.track %>
 						<tr>
-							<td><a href="<%= url_for("file", {file_id = track.file_id}) %>"><%= track.artist %> - <%= track.title %></a></td>
-							<% if policy("contest.track.DELETE") then %>
+							<td><a href="/files/<%= track.file_id %>"><%= track.artist %> - <%= track.title %></a></td>
+							<% if access_helper.authorize("delete_track") then %>
 								<td>
 								<a href="#" hx-swap="none" hx-delete="<%= url_for(contest_track) %>"
 									hx-confirm="Are you sure you wish to delete this track?"
@@ -81,12 +84,12 @@
 				<% for i, chart in ipairs(contest.charts) do %>
 					<tr>
 						<th scope="row"><%= i %></th>
-						<td><a href="<%= url_for(chart.charter) %>"><%= chart.charter.name %></a></td>
-						<td><a href="<%= url_for("file", {file_id = chart.file_id}) %>"><%= chart.track.title %></a></td>
+						<td><a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a></td>
+						<td><a href="/files/<%= chart.file_id %>"><%= chart.track.title %></a></td>
 						<td><%= datetime.to_text(chart.submitted_at) %></td>
-						<% if policy("chart.DELETE", {chart = chart}) then %>
+						<% if access_helper.authorize("delete_chart", {chart = chart}) then %>
 							<td>
-							<a href="#" hx-swap="none" hx-delete="<%= url_for(chart) %>"
+							<a href="#" hx-swap="none" hx-delete="/charts/<%= chart.id %>"
 								hx-confirm="Are you sure you wish to delete this chart?"
 								_="on htmx:afterRequest trigger update_charts"
 							>
@@ -115,7 +118,7 @@
 			<textarea id="description" name="description" required maxlength="1024"><%= contest.description %></textarea>
 
 			<label for="started_at">Started at</label>
-			<input id="started_at" type="datetime-local" step="1" name="started_at" value="<%= util.datetime.to_iso(contest.started_at) %>">
+			<input id="started_at" type="datetime-local" step="1" name="started_at" value="<%= datetime.to_iso(contest.started_at) %>">
 
 			<label for="is_visible">
 				<input type="checkbox" id="is_visible" name="is_visible" role="switch"
@@ -151,7 +154,7 @@
 			<a href="#" aria-label="Close" class="close" _="on click toggle @open on #modal_add_track"></a>
 			Add track
 		</header>
-		<form hx-post="<%= url_for("contest.tracks", {contest_id = contest.id}) %>" hx-encoding="multipart/form-data"
+		<form hx-post="/contests/<%= contest.id %>/tracks" hx-encoding="multipart/form-data"
 			hx-swap="none"
 			_="on htmx:xhr:progress(loaded, total) set #track_progress.value to (loaded/total)*100
 			on htmx:afterRequest send update_tracks to #tracks then toggle @open on #modal_add_track"
@@ -172,7 +175,7 @@
 			<a href="#" aria-label="Close" class="close" _="on click toggle @open on #modal_add_chart"></a>
 			Add chart
 		</header>
-		<form hx-post="<%= url_for("charts") %>" hx-encoding="multipart/form-data"
+		<form hx-post="/charts" hx-encoding="multipart/form-data"
 			hx-vars='{"contest_id":<%= contest.id %>}'
 			hx-swap="none"
 			_="on htmx:xhr:progress(loaded, total) set #chart_progress.value to (loaded/total)*100

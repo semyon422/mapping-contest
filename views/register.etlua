@@ -9,13 +9,13 @@ function onSubmit(token) {
 		<h1>Register</h1>
 
 		<label for="name">Username</label>
-		<input type="text" id="name" name="name" required value="<%= params.name or "" %>">
+		<input type="text" id="name" name="name" required value="<%= name or "" %>">
 
 		<label for="discord">Discord username</label>
-		<input type="text" id="discord" name="discord" required value="<%= params.discord or "" %>">
+		<input type="text" id="discord" name="discord" required value="<%= discord or "" %>">
 
 		<label for="password">Password</label>
-		<input type="password" id="password" name="password" required value="<%= params.password or "" %>">
+		<input type="password" id="password" name="password" required value="<%= password or "" %>">
 
 		<button class="g-recaptcha"
 			data-sitekey="<%= recaptcha_site_key %>"
