@@ -4,6 +4,11 @@ local Votes = require("domain.Votes")
 
 local get_votes = Usecase()
 
+get_votes:setPolicySet({
+	{"contest_visible"},
+	{"contest_host"}
+})
+
 get_votes:bindModel("contests", {id = "contest_id"})
 
 local function new_vote_chart(chart)

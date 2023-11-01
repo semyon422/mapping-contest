@@ -6,6 +6,8 @@ local Usecase = require("usecases.Usecase")
 
 local submit_chart = Usecase()
 
+submit_chart:setPolicySet({{"role_verified"}})
+
 submit_chart:setHandler(function(params, models)
 	local _file = params.file
 

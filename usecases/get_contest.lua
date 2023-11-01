@@ -3,6 +3,11 @@ local relations = require("rdb.relations")
 
 local get_contest = Usecase()
 
+get_contest:setPolicySet({
+	{"contest_visible"},
+	{"contest_host"},
+})
+
 get_contest:bindModel("contests", {id = "contest_id"})
 
 get_contest:setHandler(function(params, models)
