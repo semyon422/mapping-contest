@@ -2,8 +2,8 @@ local Usecase = require("usecases.Usecase")
 
 local update_contest = Usecase()
 
-function update_contest:run(params, models)
+update_contest:setHandler(function(params, models)
 	return "ok", params
-end
+end)
 
 return update_contest

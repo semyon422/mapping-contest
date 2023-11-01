@@ -4,6 +4,8 @@ local Votes = require("domain.Votes")
 
 local get_votes = Usecase()
 
+get_votes:bindModel("contests", {id = "contest_id"})
+
 local function new_vote_chart(chart)
 	local vote_chart = {
 		chart = chart,
@@ -19,12 +21,7 @@ local function sort_vote_charts(a, b)
 	return a.chart.id < b.chart.id
 end
 
-function get_votes:run(params, models)
-	params.contest = models.contests:select({id = tonumber(params.contest_id)})[1]
-	if not params.contest then
-		return "not_found", params
-	end
-
+get_votes:setHandler(function(params, models)
 	relations.preload({params.contest}, {
 		user_contest_chart_votes = "user",
 		charts = {"track", "charter"}
@@ -41,7 +38,7 @@ function get_votes:run(params, models)
 		local vote = uccv.vote
 		table.insert(vote_chart[vote], uccv.user)
 
-		if uccv.user_id == self.session.user_id then
+		if uccv.user_id == params.session.user_id then
 			vote_chart.voted[vote] = true
 		end
 	end
@@ -54,6 +51,6 @@ function get_votes:run(params, models)
 	params.vote_charts = vote_charts
 
 	return "ok", params
-end
+end)
 
 return get_votes

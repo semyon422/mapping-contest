@@ -2,8 +2,8 @@ local Usecase = require("usecases.Usecase")
 
 local delete_track = Usecase()
 
-function delete_track:run(params, models)
+delete_track:setHandler(function(params, models)
 	return "ok", params
-end
+end)
 
 return delete_track

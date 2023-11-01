@@ -1,9 +1,4 @@
 return {
-	{"/ping", {
-		GET = {"ping", {
-			ok = {200, "json"},
-		}},
-	}},
 	{"/", {
 		GET = {"ok", {
 			ok = {200, "home"},

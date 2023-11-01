@@ -4,11 +4,9 @@ local http_util = require("http_util")
 
 local login_osu = Usecase()
 
-function login_osu:run(params, models)
-	if params.session.user_id then
-		return "forbidden", {}
-	end
+login_osu:setPolicySet({{"not_authed"}})
 
+login_osu:setHandler(function(params, models)
 	params.recaptcha_site_key = config.recaptcha.site_key
 	params.is_captcha_enabled = config.is_login_captcha_enabled
 
@@ -21,6 +19,6 @@ function login_osu:run(params, models)
 	})
 
 	return "ok", params
-end
+end)
 
 return login_osu

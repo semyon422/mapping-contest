@@ -5,20 +5,11 @@ local update_user = Usecase()
 
 update_user:setPolicySet({{"role_admin"}})
 
-function update_user:run(params, usersRepo)
-	params.user = usersRepo:select({id = tonumber(params.user_id)})[1]
-	if not params.user then
-		return "not_found", params
-	end
+update_user:bindModel("users", {id = "user_id"})
 
-	local decision, err = self:authorize(params)
-	if decision ~= "permit" then
-		return "forbidden", {err}
-	end
-
+update_user:setHandler(function(params, usersRepo)
 	relations.preload({params.user}, "user_roles")
-
 	return "ok", params
-end
+end)
 
 return update_user

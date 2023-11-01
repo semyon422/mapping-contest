@@ -2,8 +2,8 @@ local Usecase = require("usecases.Usecase")
 
 local update_vote = Usecase()
 
-function update_vote:run(params, models)
+update_vote:setHandler(function(params, models)
 	return "ok", params
-end
+end)
 
 return update_vote

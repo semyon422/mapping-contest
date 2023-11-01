@@ -2,8 +2,8 @@ local Usecase = require("usecases.Usecase")
 
 local submit_track = Usecase()
 
-function submit_track:run(params, models)
+submit_track:setHandler(function(params, models)
 	return "ok", params
-end
+end)
 
 return submit_track

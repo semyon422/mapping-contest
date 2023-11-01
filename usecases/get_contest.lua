@@ -3,12 +3,9 @@ local relations = require("rdb.relations")
 
 local get_contest = Usecase()
 
-function get_contest:run(params, models)
-	params.contest = models.contests:select({id = tonumber(params.contest_id)})[1]
-	if not params.contest then
-		return "not_found", params
-	end
+get_contest:bindModel("contests", {id = "contest_id"})
 
+get_contest:setHandler(function(params, models)
 	relations.preload({params.contest}, {
 		"host",
 		contest_tracks = "track",
@@ -19,6 +16,6 @@ function get_contest:run(params, models)
 	end
 
 	return "ok", params
-end
+end)
 
 return get_contest
