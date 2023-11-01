@@ -59,7 +59,7 @@
 	</a>
 <% end %>
 
-<% if access_helper.authorize("update_user", {user_id = user_id, session = session}) then %>
+<% if access_helper.authorize("users.update_user", {user_id = user_id, session = session}) then %>
 	<a href="#" role="button" _="on click toggle @open on #modal_edit_user">
 		Edit
 	</a>

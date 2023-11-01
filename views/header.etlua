@@ -9,7 +9,7 @@
 			<li><a href="/login_osu" role="button">Log in</a></li>
 		<% else %>
 			<li>
-				<a href="<%= url_for("user", {user_id = session.user_id}) %>" role="button">
+				<a href="/users/<%= session.user_id %>" role="button">
 					Profile
 				</a>
 			</li>

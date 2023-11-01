@@ -14,7 +14,7 @@
 		<h5>Votes</h5>
 	</hgroup>
 	<table hx-swap="none" _="on htmx:afterRequest trigger update_votes">
-		<% if not access_helper.authorize("update_vote") then %>
+		<% if not access_helper.authorize("contests.update_vote") then %>
 			<h5>Voting not allowed</h5>
 		<% end %>
 		<tbody>
