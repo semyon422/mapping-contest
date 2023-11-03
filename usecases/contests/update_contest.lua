@@ -1,13 +1,12 @@
-local Usecase = require("usecases.Usecase")
 local Datetime = require("util.datetime")
 
-local update_contest = Usecase()
+local update_contest = {}
 
-update_contest:setPolicySet({{"contest_host"}})
+update_contest.policy_set = {{"contest_host"}}
 
-update_contest:bindModel("contests", {id = "contest_id"})
+update_contest.models = {contest = {"contests", {id = "contest_id"}}}
 
-update_contest:setHandler(function(params, models)
+function update_contest.handler(params, models)
 	local _contest = models.contests:select({name = params.name})[1]
 	if _contest and _contest.id ~= params.contest.id then
 		params.errors = {"This name is already taken"}
@@ -24,6 +23,6 @@ update_contest:setHandler(function(params, models)
 	})
 
 	return "ok", params
-end)
+end
 
 return update_contest

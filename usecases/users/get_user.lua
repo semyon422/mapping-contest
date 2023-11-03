@@ -1,13 +1,12 @@
 local relations = require("rdb.relations")
-local Usecase = require("usecases.Usecase")
 
-local get_user = Usecase()
+local get_user = {}
 
-get_user:bindModel("users", {id = "user_id"})
+get_user.models = {user = {"users", {id = "user_id"}}}
 
-get_user:setHandler(function(params, models)
+function get_user.handler(params, models)
 	relations.preload({params.user}, "user_roles")
 	return "ok", params
-end)
+end
 
 return get_user

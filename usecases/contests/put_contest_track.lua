@@ -1,17 +1,17 @@
-local Usecase = require("usecases.Usecase")
+local put_contest_track = {}
 
-local put_contest_track = Usecase()
+put_contest_track.models = {
+	contest = {"contests", {id = "contest_id"}},
+	track = {"tracks", {id = "track_id"}},
+}
 
-put_contest_track:bindModel("contests", {id = "contest_id"})
-put_contest_track:bindModel("tracks", {id = "track_id"})
-
-put_contest_track:setHandler(function(params, models)
+function put_contest_track.handler(params, models)
 	models.contest_tracks:create({
 		contest_id = params.contest_id,
 		track_id = params.track_id,
 	})
 
 	return "deleted", params
-end)
+end
 
 return put_contest_track

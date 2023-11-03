@@ -1,16 +1,15 @@
-local Usecase = require("usecases.Usecase")
 local relations = require("rdb.relations")
 
-local get_contest = Usecase()
+local get_contest = {}
 
-get_contest:setPolicySet({
+get_contest.policy_set = {
 	{"contest_visible"},
 	{"contest_host"},
-})
+}
 
-get_contest:bindModel("contests", {id = "contest_id"})
+get_contest.models = {contest = {"contests", {id = "contest_id"}}}
 
-get_contest:setHandler(function(params, models)
+function get_contest.handler(params, models)
 	relations.preload({params.contest}, {
 		"host",
 		contest_tracks = "track",
@@ -21,6 +20,6 @@ get_contest:setHandler(function(params, models)
 	end
 
 	return "ok", params
-end)
+end
 
 return get_contest

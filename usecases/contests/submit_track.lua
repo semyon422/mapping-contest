@@ -1,12 +1,11 @@
-local Usecase = require("usecases.Usecase")
 local Filehash = require("util.filehash")
 local osu_util = require("osu_util")
 
-local submit_track = Usecase()
+local submit_track = {}
 
-submit_track:setPolicySet({{"contest_host"}})
+submit_track.policy_set = {{"contest_host"}}
 
-submit_track:setHandler(function(params, models)
+function submit_track.handler(params, models)
 	local _file = params.file
 
 	local hash = Filehash:sum_for_db_raw(_file.content)
@@ -53,6 +52,6 @@ submit_track:setHandler(function(params, models)
 	models.contest_tracks:create(contest_track)
 
 	return "ok", params
-end)
+end
 
 return submit_track

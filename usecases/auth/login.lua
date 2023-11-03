@@ -1,11 +1,10 @@
-local Usecase = require("usecases.Usecase")
 local config = require("lapis.config").get()
-local util = require('util')
+local util = require("util")
 local bcrypt = require("bcrypt")
 
-local get_login = Usecase()
+local get_login = {}
 
-get_login:setPolicySet({{"not_authed"}})
+get_login.policy_set = {{"not_authed"}}
 
 local failed = "Login failed. Invalid email or password"
 local function login(users, name, password)
@@ -17,7 +16,7 @@ local function login(users, name, password)
 	return false, failed
 end
 
-get_login:setHandler(function(params, models)
+function get_login.handler(params, models)
 	params.recaptcha_site_key = config.recaptcha.site_key
 	params.is_captcha_enabled = config.is_login_captcha_enabled
 
@@ -44,6 +43,6 @@ get_login:setHandler(function(params, models)
 	params.session.user_id = user.id
 
 	return "ok", params
-end)
+end
 
 return get_login

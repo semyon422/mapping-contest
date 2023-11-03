@@ -1,5 +1,5 @@
 local rules = require("rules")
-local usecases = require("usecases")
+local Usecase = require("http.Usecase")
 
 local access_helper = {}
 
@@ -8,7 +8,15 @@ function access_helper.rule(name, params)
 end
 
 function access_helper.authorize(usecase_name, params)
-	return usecases[usecase_name]:authorize(params) == "permit"
+	local usecase = require("usecases." .. usecase_name)
+	local policy_set = usecase.policy_set
+
+	local uc = Usecase()
+	if policy_set then
+		uc:setPolicySet(policy_set)
+	end
+
+	return uc:authorize(params) == "permit"
 end
 
 return access_helper

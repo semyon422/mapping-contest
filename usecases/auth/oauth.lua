@@ -1,11 +1,10 @@
-local Usecase = require("usecases.Usecase")
 local http = require("lapis.nginx.http")
 local config = require("lapis.config").get()
 local lapis_util = require("lapis.util")
 
-local oauth = Usecase()
+local oauth = {}
 
-oauth:setHandler(function(params, models)
+function oauth.handler(params, models)
 	local body, status_code = http.simple("https://osu.ppy.sh/oauth/token", {
 		client_id = config.osu_oauth.client_id,
 		client_secret = config.osu_oauth.client_secret,
@@ -59,6 +58,6 @@ oauth:setHandler(function(params, models)
 
 	params.session.user_id = user.id
 	return "ok", params
-end)
+end
 
 return oauth

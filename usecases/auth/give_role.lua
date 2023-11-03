@@ -1,17 +1,15 @@
-local Usecase = require("usecases.Usecase")
+local give_role = {}
 
-local give_role = Usecase()
+give_role.policy_set{{"change_role"}}
 
-give_role:setPolicySet({{"change_role"}})
+give_role.models = {user = {"users", {id = "user_id"}}}
 
-give_role:bindModel("users", {id = "user_id"})
-
-give_role:setHandler(function(params, models)
+function give_role.handler(params, models)
 	models.user_roles:insert({
 		user_id = params.user_id,
 		role = params.role,
 	})
 	return "ok", params
-end)
+end
 
 return give_role

@@ -1,11 +1,12 @@
 local class = require("class")
-local autoload = require("autoload")
 
 local Router = require("http.Router")
 local UsecaseViewHandler = require("http.UsecaseViewHandler")
 local RequestParamsHandler = require("http.RequestParamsHandler")
 
-local usecases = require("usecases")
+local Usecases = require("http.Usecases")
+local usecases = Usecases("usecases")
+
 local views = require("views")
 
 local Models = require("rdb.Models")
@@ -19,8 +20,8 @@ db:query("PRAGMA foreign_keys = ON;")
 local models = Models("models", TableOrm(db))
 
 local default_results = {
-	forbidden = {403, "json"},
-	not_found = {404, "json"},
+	forbidden = {403, "json", {["Content-Type"] = "application/json"}},
+	not_found = {404, "json", {["Content-Type"] = "application/json"}},
 }
 local session_config = {
 	name = "session",

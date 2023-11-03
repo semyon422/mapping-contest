@@ -2,13 +2,11 @@ local Sections = require("domain.Sections")
 local Filehash = require("util.filehash")
 local osu_util = require("osu_util")
 
-local Usecase = require("usecases.Usecase")
+local submit_chart = {}
 
-local submit_chart = Usecase()
+submit_chart.policy_set = {{"role_verified"}}
 
-submit_chart:setPolicySet({{"role_verified"}})
-
-submit_chart:setHandler(function(params, models)
+function submit_chart.handler(params, models)
 	local _file = params.file
 
 	local hash = Filehash:sum_for_db_raw(_file.content)
@@ -62,6 +60,6 @@ submit_chart:setHandler(function(params, models)
 	})
 
 	return "created", params
-end)
+end
 
 return submit_chart

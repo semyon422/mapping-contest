@@ -1,13 +1,12 @@
-local Usecase = require("usecases.Usecase")
 local config = require("lapis.config").get()
 local util = require("util")
 local bcrypt = require("bcrypt")
 
-local register = Usecase()
+local register = {}
 
-register:setPolicySet({{"not_authed"}})
+register.policy_set = {{"not_authed"}}
 
-register:setHandler(function(params, models)
+function register.handler(params, models)
 	params.recaptcha_site_key = config.recaptcha.site_key
 	params.is_captcha_enabled = config.is_register_captcha_enabled
 
@@ -43,6 +42,6 @@ register:setHandler(function(params, models)
 	params.session.user_id = user.id
 
 	return "ok", params
-end)
+end
 
 return register

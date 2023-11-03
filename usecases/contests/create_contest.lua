@@ -1,8 +1,6 @@
-local Usecase = require("usecases.Usecase")
+local create_contest = {}
 
-local ok = Usecase()
-
-ok:setHandler(function(params, models)
+function create_contest.handler(params, models)
 	local time = os.time()
 	local contest = models.contests:insert({
 		host_id = params.session.user_id,
@@ -17,6 +15,6 @@ ok:setHandler(function(params, models)
 	contest:update({name = "Contest " .. contest.id})
 
 	return "ok", params
-end)
+end
 
-return ok
+return create_contest

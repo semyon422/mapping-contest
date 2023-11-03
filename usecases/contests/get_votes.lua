@@ -1,15 +1,14 @@
-local Usecase = require("usecases.Usecase")
 local relations = require("rdb.relations")
 local Votes = require("domain.Votes")
 
-local get_votes = Usecase()
+local get_votes = {}
 
-get_votes:setPolicySet({
+get_votes.policy_set = {
 	{"contest_visible"},
 	{"contest_host"}
-})
+}
 
-get_votes:bindModel("contests", {id = "contest_id"})
+get_votes.models = {contest = {"contests", {id = "contest_id"}}}
 
 local function new_vote_chart(chart)
 	local vote_chart = {
@@ -26,7 +25,7 @@ local function sort_vote_charts(a, b)
 	return a.chart.id < b.chart.id
 end
 
-get_votes:setHandler(function(params, models)
+function get_votes.handler(params, models)
 	relations.preload({params.contest}, {
 		user_contest_chart_votes = "user",
 		charts = {"track", "charter"}
@@ -56,6 +55,6 @@ get_votes:setHandler(function(params, models)
 	params.vote_charts = vote_charts
 
 	return "ok", params
-end)
+end
 
 return get_votes

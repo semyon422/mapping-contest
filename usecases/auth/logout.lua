@@ -1,12 +1,10 @@
-local Usecase = require("usecases.Usecase")
+local logout = {}
 
-local logout = Usecase()
+logout.policy_set = {{"authed"}}
 
-logout:setPolicySet({{"authed"}})
-
-logout:setHandler(function(params)
+function logout.handler(params)
 	params.session.user_id = nil
 	return "ok", params
-end)
+end
 
 return logout

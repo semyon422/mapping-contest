@@ -30,9 +30,7 @@ function loaders.etlua(chunk, chunkname)
 			env.inner = template(result)
 			content = layout(env)
 		end
-		return content, {
-			["Content-Type"] = "text/html"
-		}
+		return content
 	end
 end
 

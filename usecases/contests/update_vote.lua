@@ -1,12 +1,11 @@
-local Usecase = require("usecases.Usecase")
 local relations = require("rdb.relations")
 local Sections = require("domain.Sections")
 
-local update_vote = Usecase()
+local update_vote = {}
 
-update_vote:setPolicySet({{"role_verified", "contest_voting_open"}})
+update_vote.policy_set = {{"role_verified", "contest_voting_open"}}
 
-update_vote:setHandler(function(params, models)
+function update_vote.handler(params, models)
 	local uccv = {
 		contest_id = params.contest_id,
 		user_id = params.session.user_id,
@@ -64,6 +63,6 @@ update_vote:setHandler(function(params, models)
 	models.user_contest_chart_votes:insert(uccv)
 
 	return "ok", params
-end)
+end
 
 return update_vote

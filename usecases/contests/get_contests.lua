@@ -1,10 +1,8 @@
-local Usecase = require("usecases.Usecase")
+local get_contests = {}
 
-local get_contests = Usecase()
-
-get_contests:setHandler(function(params, models)
+function get_contests.handler(params, models)
 	params.contests = models.contests:select()
 	return "ok", params
-end)
+end
 
 return get_contests

@@ -1,12 +1,11 @@
-local Usecase = require("usecases.Usecase")
 local config = require("lapis.config").get()
 local http_util = require("http_util")
 
-local login_osu = Usecase()
+local login_osu = {}
 
-login_osu:setPolicySet({{"not_authed"}})
+login_osu.policy_set = {{"not_authed"}}
 
-login_osu:setHandler(function(params, models)
+function login_osu.handler(params, models)
 	params.recaptcha_site_key = config.recaptcha.site_key
 	params.is_captcha_enabled = config.is_login_captcha_enabled
 
@@ -19,6 +18,6 @@ login_osu:setHandler(function(params, models)
 	})
 
 	return "ok", params
-end)
+end
 
 return login_osu

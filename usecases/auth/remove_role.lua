@@ -1,14 +1,12 @@
-local Usecase = require("usecases.Usecase")
+local remove_role = {}
 
-local remove_role = Usecase()
+remove_role.policy_set = {{"change_role"}}
 
-remove_role:setPolicySet({{"change_role"}})
+remove_role.models = {user_role = {"user_roles", {"user_id", "role"}}}
 
-remove_role:bindModel("user_roles", {"user_id", "role"})
-
-remove_role:setHandler(function(params, models)
+function remove_role.handler(params, models)
 	params.user_role:delete()
 	return "ok", params
-end)
+end
 
 return remove_role

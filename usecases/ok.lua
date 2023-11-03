@@ -1,9 +1,7 @@
-local Usecase = require("usecases.Usecase")
+local ok = {}
 
-local ok = Usecase()
-
-ok:setHandler(function(params)
+function ok.handler(params)
 	return "ok", params
-end)
+end
 
 return ok

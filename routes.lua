@@ -10,7 +10,7 @@ return {
 			ok = {200, "login"},
 		}},
 		POST = {"auth.login", {
-			ok = {302, "redirect", "/"},
+			ok = {302, nil, {["Location"] = "/"}},
 			validation = {200, "login"},
 		}},
 	}},
@@ -26,7 +26,7 @@ return {
 	}},
 	{"/logout", {
 		POST = {"auth.logout", {
-			ok = {200, "json"},
+			ok = {200},
 		}},
 	}},
 	{"/oauth", {
@@ -37,7 +37,7 @@ return {
 	-- users
 	{"/users", {
 		GET = {"users.get_users", {
-			ok = {200, "json"},
+			ok = {200, "users"},
 		}},
 	}},
 	{"/users/:user_id", {
@@ -54,7 +54,9 @@ return {
 			ok = {200, "contests"},
 		}},
 		POST = {"create_contest", {
-			created = {302, "redirect_contest"},
+			created = {302, nil, function(result)
+				return {["Location"] = "/contests/" .. result.contest.id}
+			end},
 		}},
 	}},
 	{"/contests/:contest_id", {
@@ -79,7 +81,15 @@ return {
 	-- other
 	{"/files/:file_id", {
 		GET = {"get_file", {
-			ok = {200, "download_file"},
+			ok = {200, "file", function(result)
+				return {
+					["Pragma"] = "public",
+					["Cache-Control"] = "must-revalidate, post-check=0, pre-check=0",
+					["Content-Disposition"] = 'attachment; filename="' .. result.file.name .. '"',
+					["Content-Transfer-Encoding"] = "binary",
+					["Content-Type"] = "application/octet-stream",
+				}
+			end},
 		}},
 	}},
 }
