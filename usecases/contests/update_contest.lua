@@ -1,10 +1,20 @@
 local Datetime = require("util.datetime")
+local types = require("lapis.validate.types")
 
 local update_contest = {}
 
 update_contest.policy_set = {{"contest_host"}}
 
 update_contest.models = {contest = {"contests", {id = "contest_id"}}}
+
+update_contest.validate = types.partial({
+	name = types.limited_text(128),
+	description = types.limited_text(1024),
+	started_at = types.valid_text,
+	is_visible = types.string + types.empty,
+	is_submission_open = types.string + types.empty,
+	is_voting_open = types.string + types.empty,
+})
 
 function update_contest.handler(params, models)
 	local _contest = models.contests:select({name = params.name})[1]

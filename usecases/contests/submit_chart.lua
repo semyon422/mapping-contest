@@ -1,10 +1,21 @@
 local Sections = require("domain.Sections")
 local Filehash = require("util.filehash")
 local osu_util = require("osu_util")
+local types = require("lapis.validate.types")
 
 local submit_chart = {}
 
 submit_chart.policy_set = {{"role_verified"}}
+
+submit_chart.validate = types.partial({
+	contest_id = types.db_id,
+	file = types.shape({
+		content = types.string,
+		filename = types.string,
+		name = types.string,
+		["content-type"] = types.string,
+	}),
+})
 
 function submit_chart.handler(params, models)
 	local _file = params.file

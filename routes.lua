@@ -8,6 +8,7 @@ return {
 	{"/login", {
 		GET = {"auth.get_login", {
 			ok = {200, "login"},
+			validation = {200, "login"},
 		}},
 		POST = {"auth.login", {
 			ok = {302, nil, {["Location"] = "/"}},

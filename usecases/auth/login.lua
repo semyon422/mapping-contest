@@ -1,13 +1,20 @@
 local config = require("lapis.config").get()
 local util = require("util")
 local bcrypt = require("bcrypt")
+local types = require("lapis.validate.types")
 
-local get_login = {}
+local login = {}
 
-get_login.policy_set = {{"not_authed"}}
+login.policy_set = {{"not_authed"}}
+
+login.validate = types.partial({
+	name = types.limited_text(64),
+	password = types.limited_text(64),
+	["g-recaptcha-response"] = types.string + types.empty,
+})
 
 local failed = "Login failed. Invalid email or password"
-local function login(users, name, password)
+local function _login(users, name, password)
 	if not name or not password then return false, failed end
 	local user = users:select({name = name})[1]
 	if not user then return false, failed end
@@ -16,7 +23,7 @@ local function login(users, name, password)
 	return false, failed
 end
 
-function get_login.handler(params, models)
+function login.handler(params, models)
 	params.recaptcha_site_key = config.recaptcha.site_key
 	params.is_captcha_enabled = config.is_login_captcha_enabled
 
@@ -33,7 +40,7 @@ function get_login.handler(params, models)
 		end
 	end
 
-	local user, err = login(models.users, params.name, params.password)
+	local user, err = _login(models.users, params.name, params.password)
 
 	if not user then
 		params.errors = {err}
@@ -45,4 +52,4 @@ function get_login.handler(params, models)
 	return "ok", params
 end
 
-return get_login
+return login

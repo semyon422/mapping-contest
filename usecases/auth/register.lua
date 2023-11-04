@@ -1,10 +1,18 @@
 local config = require("lapis.config").get()
 local util = require("util")
 local bcrypt = require("bcrypt")
+local types = require("lapis.validate.types")
 
 local register = {}
 
 register.policy_set = {{"not_authed"}}
+
+register.validate = types.partial({
+	name = types.limited_text(64),
+	discord = types.limited_text(64),
+	password = types.limited_text(64),
+	["g-recaptcha-response"] = types.string + types.empty,
+})
 
 function register.handler(params, models)
 	params.recaptcha_site_key = config.recaptcha.site_key

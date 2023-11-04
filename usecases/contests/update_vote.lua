@@ -1,9 +1,17 @@
 local relations = require("rdb.relations")
 local Sections = require("domain.Sections")
+local Votes = require("domain.Votes")
+local types = require("lapis.validate.types")
 
 local update_vote = {}
 
 update_vote.policy_set = {{"role_verified", "contest_voting_open"}}
+
+update_vote.validate = types.partial({
+	contest_id = types.db_id,
+	chart_id = types.db_id,
+	vote = types.one_of(Votes.list),
+})
 
 function update_vote.handler(params, models)
 	local uccv = {

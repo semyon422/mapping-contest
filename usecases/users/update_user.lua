@@ -1,10 +1,18 @@
 local bcrypt = require("bcrypt")
+local types = require("lapis.validate.types")
 
 local update_user = {}
 
 update_user.policy_set = {{"role_admin"}}
 
 update_user.models = {user = {"users", {id = "user_id"}}}
+
+update_user.validate = types.partial({
+	osu_id = types.db_id,
+	name = types.limited_text(64),
+	discord = types.limited_text(64),
+	password = types.limited_text(64) + types.empty,
+})
 
 function update_user.handler(params, models)
 	local _user = models.users:select({name = params.name})[1]
