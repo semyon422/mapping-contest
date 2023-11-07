@@ -1,7 +1,6 @@
-<%- render("breadcrumb", {items = {{"Home", "/"}, {"Users", "/users"}, {user.name}}}) %>
+<%- view({items = {{"Home", "/"}, {"Users", "/users"}, {user.name}}}):render("breadcrumb") %>
 
 <% local Roles = require("domain.Roles") %>
-<% local access_helper = require("access_helper") %>
 
 <div id="user" hx-select="#user" hx-swap="outerHTML" hx-get hx-trigger="update_user">
 	<table hx-swap="none" _="on htmx:afterRequest trigger update_user">
@@ -29,8 +28,9 @@
 				<th>Roles</th>
 				<td>
 					<% for i, role_name in ipairs(Roles.list) do %>
-						<% local changable = access_helper.rule("change_role", {role = role_name}) %>
 						<% local exist = roles_map[role_name] %>
+						<% local usecase_name = exist and "auth.remove_role" or "auth.give_role" %>
+						<% local changable = view({role = role_name}):authorize(usecase_name) %>
 						<% if changable then %>
 							<a href="#" class="role_display"
 								hx-<%= exist and "delete" or "put" %>="/users/<%= user.id %>/roles/<%= role_name %>"
@@ -59,7 +59,7 @@
 	</a>
 <% end %>
 
-<% if access_helper.authorize("users.update_user", {user_id = user_id, session = session}) then %>
+<% if view:authorize("users.update_user") then %>
 	<a href="#" role="button" _="on click toggle @open on #modal_edit_user">
 		Edit
 	</a>

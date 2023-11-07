@@ -1,16 +1,16 @@
 <% local datetime = require("util.datetime") %>
-<%- render("breadcrumb", {items = {{"Home", "/"}, {"Contests", "/contests"}, {
+<%- view({items = {{"Home", "/"}, {"Contests", "/contests"}, {
 	contest.name .. (not contest.is_visible and " (hidden)" or "")
-}}}) %>
+}}}):render("breadcrumb") %>
 
-<% local access_helper = require("access_helper") %>
 <% local util = require("util") %>
 
 <section>
 	<hgroup>
 		<h4>
 			<%= contest.name %>
-			<% if access_helper.authorize("contests.update_contest") then %>
+			<% if view:authorize("contests.update_contest") then %>
+			<% if view({contest = contest}):authorize("contests.update_contest") then %>
 				<a href="#" _="on click toggle @open on #modal_edit_contest">
 					<i class="fas fa-edit"></i>
 				</a>
@@ -28,7 +28,7 @@
 			<a role="button" href="/contests/<%= contest.id %>/user_chart_votes">
 				Vote
 			</a>
-			<% if contest.is_submission_open and access_helper.authorize("contests.submit_chart") then %>
+			<% if contest.is_submission_open and view:authorize("contests.submit_chart") then %>
 				<a role="button" href="#" _="on click toggle @open on #modal_add_chart">
 					Submit chart
 				</a>
@@ -37,7 +37,7 @@
 		<div id="tracks" hx-select="#tracks" hx-swap="outerHTML" hx-get hx-trigger="update_tracks">
 			<h6>
 				Tracks
-				<% if access_helper.authorize("contests.submit_track") then %>
+				<% if view:authorize("contests.submit_track") then %>
 					<a href="#" _="on click toggle @open on #modal_add_track">
 						<i class="fas fa-plus"></i>
 					</a>
@@ -49,7 +49,7 @@
 						<% local track = contest_track.track %>
 						<tr>
 							<td><a href="/files/<%= track.file_id %>"><%= track.artist %> - <%= track.title %></a></td>
-							<% if access_helper.authorize("contests.delete_track") then %>
+							<% if view:authorize("contests.delete_track") then %>
 								<td>
 								<a href="#" hx-swap="none" hx-delete="/contests/<%= contest.id %>/tracks/<%= track.id %>"
 									hx-confirm="Are you sure you wish to delete this track?"
@@ -87,7 +87,7 @@
 						<td><a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a></td>
 						<td><a href="/files/<%= chart.file_id %>"><%= chart.track.title %></a></td>
 						<td><%= datetime.to_text(chart.submitted_at) %></td>
-						<% if access_helper.authorize("contests.delete_chart", {chart = chart}) then %>
+						<% if view({chart = chart}):authorize("contests.delete_chart") then %>
 							<td>
 							<a href="#" hx-swap="none" hx-delete="/charts/<%= chart.id %>"
 								hx-confirm="Are you sure you wish to delete this chart?"

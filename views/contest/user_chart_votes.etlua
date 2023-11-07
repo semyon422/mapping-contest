@@ -1,4 +1,4 @@
-<%- render("breadcrumb", {items = {{"Home", "/"}, {"Contests", "/contests"}, {contest.name, "/contests/" .. contest.id}, {"Votes"}}}) %>
+<%- view({items = {{"Home", "/"}, {"Contests", "/contests"}, {contest.name, "/contests/" .. contest.id}, {"Votes"}}}):render("breadcrumb") %>
 
 <% local Sections = require("domain.Sections") %>
 <% local section_names = {"Fast", "Slow", "Full"} %>
@@ -6,15 +6,13 @@
 <% local Votes = require("domain.Votes") %>
 <% local vote_icons = {"check", "times", "heart"} %>
 
-<% local access_helper = require("access_helper") %>
-
 <section id="votes" hx-select="#votes" hx-swap="outerHTML" hx-get hx-trigger="update_votes">
 	<hgroup>
 		<h4><%= contest.name %></h4>
 		<h5>Votes</h5>
 	</hgroup>
 	<table hx-swap="none" _="on htmx:afterRequest trigger update_votes">
-		<% if not access_helper.authorize("contests.update_vote") then %>
+		<% if not view:authorize("contests.update_vote") then %>
 			<h5>Voting not allowed</h5>
 		<% end %>
 		<tbody>

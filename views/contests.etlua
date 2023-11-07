@@ -1,9 +1,8 @@
-<%- render("breadcrumb", {items = {{"Home", "/"}, {"Contests"}}}) %>
+<%- view({items = {{"Home", "/"}, {"Contests"}}}):render("breadcrumb") %>
 
-<% local access_helper = require("access_helper") %>
 
 <div class="container">
-	<% if access_helper.rule("role_host") then %>
+	<% if view:authorize("contests.create_contest") then %>
 	<a href="#" hx-post="/contests">Create new contest</a>
 	<% end %>
 

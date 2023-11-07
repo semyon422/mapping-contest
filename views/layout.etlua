@@ -16,7 +16,7 @@
 	</head>
 	<body>
 		<main class="container">
-			<%- render("header") %>
+			<%- view:render("header") %>
 			<%- inner %>
 		</main>
 	</body>

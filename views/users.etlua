@@ -1,7 +1,6 @@
-<%- render("breadcrumb", {items = {{"Home", "/"}, {"Users"}}}) %>
+<%- view({items = {{"Home", "/"}, {"Users"}}}):render("breadcrumb") %>
 
 <% local Roles = require("domain.Roles") %>
-<% local access_helper = require("access_helper") %>
 
 <div id="users" hx-select="#users" hx-swap="outerHTML" hx-get hx-trigger="update_users">
 	<table hx-swap="none" _="on htmx:afterRequest trigger update_users">
@@ -25,8 +24,9 @@
 					<td><%= user.discord %></td>
 					<td>
 						<% for i, role_name in ipairs(Roles.list) do %>
-							<% local changable = access_helper.rule("change_role", {role = role_name, session_user = session_user}) %>
 							<% local exist = roles_map[role_name] %>
+							<% local usecase_name = exist and "auth.remove_role" or "auth.give_role" %>
+							<% local changable = view({role = role_name}):authorize(usecase_name) %>
 							<% if not changable and exist then %>
 								<code
 									class="role_<%= changable and "ch" or "nc" %>_<%= exist and "ex" or "ne" %>"
@@ -38,9 +38,9 @@
 					</td>
 					<td>
 						<% for i, role_name in ipairs(Roles.list) do %>
-							<% local changable = access_helper.rule("change_role", {role = role_name, session_user = session_user}) %>
 							<% local exist = roles_map[role_name] %>
-							<% if changable then %>
+							<% local usecase_name = exist and "auth.remove_role" or "auth.give_role" %>
+							<% local changable = view({role = role_name}):authorize(usecase_name) %><% if changable then %>
 								<a href="#" class="role_display"
 									hx-<%= exist and "delete" or "put" %>="/users/<%= user.id %>/roles/<%= role_name %>"
 								>
