@@ -10,7 +10,6 @@
 		<h4>
 			<%= contest.name %>
 			<% if view:authorize("contests.update_contest") then %>
-			<% if view({contest = contest}):authorize("contests.update_contest") then %>
 				<a href="#" _="on click toggle @open on #modal_edit_contest">
 					<i class="fas fa-edit"></i>
 				</a>

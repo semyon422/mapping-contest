@@ -46,7 +46,7 @@ return {
 			ok = {200, "user"},
 		}},
 		PATCH = {"users.update_user", {
-			ok = {200, "user", function(params)
+			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/users/" .. params.user.id}
 			end},
 		}},
@@ -78,7 +78,7 @@ return {
 			deleted = {302, "redirect_contests", {["HX-Location"] = "/contests"}},
 		}},
 		PATCH = {"contests.update_contest", {
-			ok = {200, "contest", function(params)
+			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest.id}
 			end},
 		}},
