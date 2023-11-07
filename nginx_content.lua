@@ -1,4 +1,5 @@
 local class = require("class")
+local relations = require("rdb.relations")
 
 local Router = require("http.Router")
 local UsecaseViewHandler = require("http.UsecaseViewHandler")
@@ -29,7 +30,21 @@ local session_config = {
 }
 
 local uv_handler = UsecaseViewHandler(usecases, models, default_results, views)
-local rp_handler = RequestParamsHandler(session_config, uv_handler)
+
+local rp_handler = RequestParamsHandler(session_config, uv_handler, function(params)
+	if not params.session.user_id then
+		return
+	end
+
+	local user = models.users:select({id = params.session.user_id})[1]
+	if not user then
+		return
+	end
+
+	relations.preload({user}, "user_roles")
+	params.session_user = user
+end)
+
 local router = Router(rp_handler)
 
 router:route_many(require("routes"))

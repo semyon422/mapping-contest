@@ -1,5 +1,5 @@
 local Rule = require("abac.Rule")
-local Roles = require("enums.roles")
+local Roles = require("domain.Roles")
 
 local rule = Rule("permit")
 

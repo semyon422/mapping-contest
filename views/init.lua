@@ -1,4 +1,4 @@
-local etlua = require("etlua")
+local etlua_util = require("etlua_util")
 
 local mt = {}
 local views = setmetatable({}, mt)
@@ -14,11 +14,11 @@ local function render_subtemplate(name, params)
 end
 
 local layout_f = assert(io.open("views/layout.etlua"))
-local layout = etlua.compile(layout_f:read("a"))
+local layout = etlua_util.compile(layout_f:read("a"), "views/layout.etlua")
 layout_f:close()
 
 function loaders.etlua(chunk, chunkname)
-	local template = assert(etlua.compile(chunk))
+	local template = assert(etlua_util.compile(chunk, chunkname))
 	return function(result, no_layout)
 		result.render = function(name, params)
 			local env = setmetatable(params or {}, {__index = result})

@@ -45,7 +45,17 @@ return {
 		GET = {"users.get_user", {
 			ok = {200, "user"},
 		}},
-		PATCH = {"update_user", {
+		PATCH = {"users.update_user", {
+			ok = {200, "user", function(params)
+				return {["HX-Location"] = "/users/" .. params.user.id}
+			end},
+		}},
+	}},
+	{"/users/:user_id/roles/:role", {
+		PUT = {"auth.give_role", {
+			ok = {200, "user"},
+		}},
+		DELETE = {"auth.remove_role", {
 			ok = {200, "user"},
 		}},
 	}},
@@ -65,10 +75,12 @@ return {
 			ok = {200, "contest"},
 		}},
 		DELETE = {"contests.delete_contest", {
-			deleted = {302, "redirect_contests"},
+			deleted = {302, "redirect_contests", {["HX-Location"] = "/contests"}},
 		}},
 		PATCH = {"contests.update_contest", {
-			ok = {200, "contest"},
+			ok = {200, "contest", function(params)
+				return {["HX-Location"] = "/contests/" .. params.contest.id}
+			end},
 		}},
 	}},
 	{"/contests/:contest_id/user_chart_votes", {

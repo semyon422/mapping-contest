@@ -15,19 +15,17 @@
 		</thead>
 		<tbody>
 			<% for _, user in ipairs(users) do %>
-				<%
-					local roles_map = {}
-					for _, user_role in ipairs(user.user_roles) do
-						roles_map[user_role.role] = true
-					end
-				%>
+				<% local roles_map = {} %>
+				<% for _, user_role in ipairs(user.user_roles) do %>
+					<% roles_map[user_role.role] = true %>
+				<% end %>
 				<tr>
 					<th><%= user.id %></th>
 					<td><a href="/users/<%= user.id %>"><%= user.name %></a></td>
 					<td><%= user.discord %></td>
 					<td>
 						<% for i, role_name in ipairs(Roles.list) do %>
-							<% local changable = access_helper.rule("change_role", {role = role_name}) %>
+							<% local changable = access_helper.rule("change_role", {role = role_name, session_user = session_user}) %>
 							<% local exist = roles_map[role_name] %>
 							<% if not changable and exist then %>
 								<code
@@ -40,7 +38,7 @@
 					</td>
 					<td>
 						<% for i, role_name in ipairs(Roles.list) do %>
-							<% local changable = access_helper.rule("change_role", {role = role_name}) %>
+							<% local changable = access_helper.rule("change_role", {role = role_name, session_user = session_user}) %>
 							<% local exist = roles_map[role_name] %>
 							<% if changable then %>
 								<a href="#" class="role_display"

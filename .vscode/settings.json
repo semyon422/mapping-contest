@@ -1,5 +1,13 @@
 {
     "Lua.runtime.version": "LuaJIT",
+    "Lua.runtime.path": [
+        "?.lua",
+        "?/init.lua",
+        "aqua/?.lua",
+        "aqua/?/init.lua",
+        "tree/share/lua/5.1/?.lua",
+        "tree/share/lua/5.1/?/init.lua"
+    ],
     "Lua.diagnostics.globals": [
         "ngx"
     ],

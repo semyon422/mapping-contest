@@ -1,6 +1,6 @@
 local give_role = {}
 
-give_role.policy_set{{"change_role"}}
+give_role.policy_set = {{"change_role"}}
 
 give_role.models = {user = {"users", {id = "user_id"}}}
 
