@@ -31,7 +31,7 @@ function oauth.handler(params, models)
 
 	local me = lapis_util.from_json(body)
 
-	local user = models.users:select({osu_id = me.id})[1]
+	local user = models.users:find({osu_id = me.id})
 	if user then
 		params.session.user_id = user.id
 		user:update({
@@ -42,7 +42,7 @@ function oauth.handler(params, models)
 	end
 
 	local time = os.time()
-	user = models.users:insert({
+	user = models.users:create({
 		osu_id = me.id,
 		name = me.username,
 		discord = tostring(me.discord) or "",
@@ -51,7 +51,7 @@ function oauth.handler(params, models)
 		created_at = time,
 	})
 
-	models.user_roles:insert({
+	models.user_roles:create({
 		user_id = user.id,
 		role = "verified",
 	})

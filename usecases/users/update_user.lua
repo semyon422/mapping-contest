@@ -15,7 +15,7 @@ update_user.validate = types.partial({
 })
 
 function update_user.handler(params, models)
-	local _user = models.users:select({name = params.name})[1]
+	local _user = models.users:find({name = params.name})
 	if _user and _user.id ~= params.user.id then
 		params.errors = {"This name is already taken"}
 		return "validation", params

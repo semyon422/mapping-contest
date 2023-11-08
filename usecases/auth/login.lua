@@ -16,7 +16,7 @@ login.validate = types.partial({
 local failed = "Login failed. Invalid email or password"
 local function _login(users, name, password)
 	if not name or not password then return false, failed end
-	local user = users:select({name = name})[1]
+	local user = users:find({name = name})
 	if not user then return false, failed end
 	local valid = bcrypt.verify(password, user.password)
 	if valid then return user end

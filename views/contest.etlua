@@ -46,7 +46,7 @@
 						<% local track = contest_track.track %>
 						<tr>
 							<td><a href="/files/<%= track.file_id %>"><%= track.artist %> - <%= track.title %></a></td>
-							<% if view:authorize("contests.delete_track") then %>
+							<% if view({contest_track = contest_track}):authorize("contests.delete_contest_track") then %>
 								<td>
 								<a href="#" hx-swap="none" hx-delete="/contests/<%= contest.id %>/tracks/<%= track.id %>"
 									hx-confirm="Are you sure you wish to delete this track?"

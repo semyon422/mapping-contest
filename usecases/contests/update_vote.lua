@@ -20,7 +20,7 @@ function update_vote.handler(params, models)
 		chart_id = params.chart_id,
 		vote = params.vote,
 	}
-	local found_uccv = models.user_contest_chart_votes:select(uccv)[1]
+	local found_uccv = models.user_contest_chart_votes:find(uccv)
 	if found_uccv then
 		found_uccv:delete()
 		return "ok", {}
@@ -28,12 +28,12 @@ function update_vote.handler(params, models)
 
 	if params.vote == "yes" or params.vote == "no" then
 		local opposite = params.vote == "yes" and "no" or "yes"
-		local opposite_uccv = models.user_contest_chart_votes:select({
+		local opposite_uccv = models.user_contest_chart_votes:find({
 			contest_id = params.contest_id,
 			user_id = params.session.user_id,
 			chart_id = params.chart_id,
 			vote = opposite,
-		})[1]
+		})
 		if opposite_uccv then
 			opposite_uccv:delete()
 		end
@@ -41,7 +41,7 @@ function update_vote.handler(params, models)
 		return "ok", {}
 	end
 
-	local base_chart = models.charts:select(params.chart_id)[1]
+	local base_chart = models.charts:find(params.chart_id)
 	local section_charts = {}
 
 	for _, chart in ipairs(params.contest:get_charts()) do
@@ -68,7 +68,7 @@ function update_vote.handler(params, models)
 		return
 	end
 
-	models.user_contest_chart_votes:insert(uccv)
+	models.user_contest_chart_votes:create(uccv)
 
 	return "ok", params
 end

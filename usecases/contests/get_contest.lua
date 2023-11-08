@@ -15,9 +15,6 @@ function get_contest.handler(params, models)
 		contest_tracks = "track",
 		charts = {"track", "charter"}
 	})
-	for _, chart in ipairs(params.contest.charts) do
-		chart.contest = params.contest
-	end
 
 	return "ok", params
 end

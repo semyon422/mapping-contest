@@ -2,6 +2,7 @@ local Sections = require("domain.Sections")
 local filehash = require("util.filehash")
 local osu_util = require("osu_util")
 local types = require("lapis.validate.types")
+local File = require("domain.File")
 
 local submit_chart = {}
 
@@ -22,34 +23,32 @@ function submit_chart.handler(params, models)
 
 	local hash = filehash.sum(_file.content)
 
-	local file = models.files:select({hash = hash})[1]
+	local file = models.files:find({hash = hash})
+	local d_file = File(hash)
 	if not file then
-		file = models.files:insert({
+		file = models.files:create({
 			hash = hash,
 			name = _file.filename,
 			uploaded = true,
 			size = #_file.content,
 			created_at = os.time(),
 		})
-		file:write_file(_file.content)
+		d_file:write(_file.content)
 	end
 
 	local osz, err = osu_util.parse_osz(file:get_path())
 	if not osz then
-		file:delete_file()
+		d_file:delete()
 		file:delete()
 		return {status = 400, err}
 	end
 
-	local track = models.tracks:select({
+	local track = models.tracks:find({
 		title = osz.Title,
 		artist = osz.Artist,
-	})[1]
+	})
 	if not track then
-		-- file:delete_file()
-		-- file:delete()
-		-- return {status = 400, "track not found"}
-		track = models.tracks:insert({
+		track = models.tracks:create({
 			file_id = file.id,
 			title = osz.Title,
 			artist = osz.Artist,
@@ -57,7 +56,7 @@ function submit_chart.handler(params, models)
 		})
 	end
 
-	local contest = models.contests:select(params.contest_id)[1]
+	local contest = models.contests:find(params.contest_id)
 	local section = Sections:get_section(os.time() - contest.started_at, osz.HitObjects)
 
 	params.chart = models.charts:create({

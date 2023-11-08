@@ -91,6 +91,11 @@ return {
 			ok = {200, "contest.user_chart_votes"},
 		}},
 	}},
+	{"/contests/:contest_id/tracks/:track_id", {
+		DELETE = {"contests.delete_contest_track", {
+			ok = {200, "contest"},
+		}},
+	}},
 	-- other
 	{"/files/:file_id", {
 		GET = {"get_file", {

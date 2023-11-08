@@ -31,7 +31,7 @@ function register.handler(params, models)
 		end
 	end
 
-	local user = models.users:select({name = params.name})[1]
+	local user = models.users:find({name = params.name})
 	if user then
 		params.errors = {"This name is already taken"}
 		return "ok", params

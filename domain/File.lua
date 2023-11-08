@@ -1,5 +1,7 @@
 local class = require("class")
 
+---@class domain.File
+---@operator call: domain.File
 local File = class()
 
 function File:new(hash)

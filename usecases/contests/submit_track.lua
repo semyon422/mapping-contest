@@ -1,6 +1,7 @@
 local filehash = require("util.filehash")
 local osu_util = require("osu_util")
 local types = require("lapis.validate.types")
+local File = require("domain.File")
 
 local submit_track = {}
 
@@ -22,6 +23,7 @@ function submit_track.handler(params, models)
 	local hash = filehash.sum(_file.content)
 
 	local file = models:find({hash = hash})
+	local d_file = File(hash)
 	local track
 	if not file then
 		file = models.files:create({
@@ -31,11 +33,11 @@ function submit_track.handler(params, models)
 			size = #_file.content,
 			created_at = os.time(),
 		})
-		file:write_file(_file.content)
+		d_file:write(_file.content)
 
 		local osz, err = osu_util.parse_osz(file:get_path())
 		if not osz then
-			file:delete_file()
+			d_file:delete()
 			file:delete()
 			return {status = 400, err}
 		end

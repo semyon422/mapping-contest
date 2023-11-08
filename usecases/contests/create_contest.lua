@@ -2,7 +2,7 @@ local create_contest = {}
 
 function create_contest.handler(params, models)
 	local time = os.time()
-	local contest = models.contests:insert({
+	local contest = models.contests:create({
 		host_id = params.session.user_id,
 		name = time,
 		description = "",

@@ -17,7 +17,7 @@ update_contest.validate = types.partial({
 })
 
 function update_contest.handler(params, models)
-	local _contest = models.contests:select({name = params.name})[1]
+	local _contest = models.contests:find({name = params.name})
 	if _contest and _contest.id ~= params.contest.id then
 		params.errors = {"This name is already taken"}
 		return "validation", params
