@@ -1,10 +1,13 @@
-local Filehash = require("util.filehash")
+local class = require("class")
 
-local File = {}
+local File = class()
+
+function File:new(hash)
+	self.hash = hash
+end
 
 function File:get_path()
-	local hash = Filehash:to_name(self.hash)
-	return "storages/" .. hash
+	return "storages/" .. self.hash
 end
 
 function File:exists()
@@ -16,23 +19,22 @@ function File:exists()
 	return false
 end
 
-function File:write_file(content)
+function File:write(content)
 	local path = self:get_path()
 	local f = assert(io.open(path, "wb"))
 	f:write(content)
 	f:close()
 end
 
-function File:read_file()
+function File:read()
 	local path = self:get_path()
 	local f = assert(io.open(path, "rb"))
 	local content = f:read("*a")
 	f:close()
-
 	return content
 end
 
-function File:delete_file()
+function File:delete()
 	local path = self:get_path()
 	os.remove(path)
 end

@@ -1,4 +1,12 @@
+local enum = require("util.enum")
+
 local Sections = {}
+
+Sections.enum = enum({
+	fast = 0,
+	slow = 1,
+	full = 2,
+})
 
 Sections.list = {  -- see enums.sections
 	"fast",

@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS "user_contest_chart_votes" (
 ]]
 
 user_contest_chart_votes.types = {
-	vote = require("enums.votes"),
+	vote = require("domain.Votes").enum,
 }
 
 user_contest_chart_votes.relations = {

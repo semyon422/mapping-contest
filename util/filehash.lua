@@ -1,32 +1,26 @@
-local digest = require("openssl.digest")
-local db = require("lapis.db")
 
-local Filehash = {}
+local filehash = {}
 
-function Filehash.sum_for_db(self, s)
-	return digest.new("md5"):final(s)
+function filehash.sum_bin(s)
+	return ngx.md5_bin(s)
 end
 
-function Filehash.sum_to_name(self, s)
-	return self:to_name(self:sum_for_db(s))
+function filehash.sum(s)
+	return ngx.md5(s)
 end
 
-function Filehash.sum_for_db_raw(self, s)
-	return db.raw("x'" .. Filehash:sum_to_name(s) .. "'")
-end
-
-function Filehash.for_db(self, hex)
+function filehash.encode(hex)
 	if #hex == 16 then
 		return hex
 	end
     return (hex:gsub("..", function(cc) return string.char(tonumber(cc, 16) or 0) end))
 end
 
-function Filehash.to_name(self, data)
+function filehash.decode(data)
 	if #data == 32 then
 		return data
 	end
 	return (data:gsub(".", function(c) return ("%02x"):format(c:byte()) end))
 end
 
-return Filehash
+return filehash

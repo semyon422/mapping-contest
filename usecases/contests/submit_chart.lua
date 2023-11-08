@@ -1,5 +1,5 @@
 local Sections = require("domain.Sections")
-local Filehash = require("util.filehash")
+local filehash = require("util.filehash")
 local osu_util = require("osu_util")
 local types = require("lapis.validate.types")
 
@@ -20,7 +20,7 @@ submit_chart.validate = types.partial({
 function submit_chart.handler(params, models)
 	local _file = params.file
 
-	local hash = Filehash:sum_for_db_raw(_file.content)
+	local hash = filehash.sum(_file.content)
 
 	local file = models.files:select({hash = hash})[1]
 	if not file then

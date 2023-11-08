@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "charts" (
 ]]
 
 charts.types = {
-	section = require("enums.sections"),
+	section = require("domain.Sections").enum,
 }
 
 charts.relations = {

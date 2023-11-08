@@ -1,4 +1,13 @@
+local enum = require("util.enum")
+
 local Roles = {}
+
+Roles.enum = enum({
+	admin = 0,
+	moderator = 1,
+	host = 2,
+	verified = 3,
+})
 
 Roles.list = {  -- see enums.roles
 	"admin",

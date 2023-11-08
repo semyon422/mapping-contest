@@ -1,3 +1,5 @@
+local filehash = require("util.filehash")
+
 local files = {}
 
 files.table_name = "files"
@@ -15,6 +17,7 @@ CREATE TABLE IF NOT EXISTS "files" (
 
 files.types = {
 	uploaded = "boolean",
+	hash = filehash,
 }
 
 files.relations = {}

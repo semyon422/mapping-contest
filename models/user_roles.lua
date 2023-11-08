@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS "user_roles" (
 ]]
 
 user_roles.types = {
-	role = require("enums.roles"),
+	role = require("domain.Roles").enum,
 }
 
 user_roles.relations = {

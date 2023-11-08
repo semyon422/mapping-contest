@@ -1,4 +1,4 @@
-local Filehash = require("util.filehash")
+local filehash = require("util.filehash")
 local osu_util = require("osu_util")
 local types = require("lapis.validate.types")
 
@@ -19,7 +19,7 @@ submit_track.validate = types.partial({
 function submit_track.handler(params, models)
 	local _file = params.file
 
-	local hash = Filehash:sum_for_db_raw(_file.content)
+	local hash = filehash.sum(_file.content)
 
 	local file = models:find({hash = hash})
 	local track
