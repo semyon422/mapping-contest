@@ -3,8 +3,6 @@
 	contest.name .. (not contest.is_visible and " (hidden)" or "")
 }}}):render("breadcrumb") %>
 
-<% local util = require("util") %>
-
 <section>
 	<hgroup>
 		<h4>

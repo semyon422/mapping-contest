@@ -1,5 +1,5 @@
 local config = require("lapis.config").get()
-local util = require("util")
+local recaptcha_verify = require("util.recaptcha_verify")
 local bcrypt = require("bcrypt")
 local types = require("lapis.validate.types")
 
@@ -19,7 +19,7 @@ function register.handler(params, models)
 	params.is_captcha_enabled = config.is_register_captcha_enabled
 
 	if config.is_register_captcha_enabled then
-		local success, message = util.recaptcha_verify(
+		local success, message = recaptcha_verify(
 			params.ip,
 			params["g-recaptcha-response"],
 			"register",
