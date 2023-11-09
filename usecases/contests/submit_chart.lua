@@ -23,7 +23,7 @@ function submit_chart.handler(params, models)
 	local osz, err = osu_util.parse_osz(_file.tmpname)
 	if not osz then
 		assert(os.remove(_file.tmpname))
-		return {status = 400, err}
+		return "validation", {errors = {err}}
 	end
 
 	local hash = _file.hash

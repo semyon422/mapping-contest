@@ -24,7 +24,7 @@ function submit_track.handler(params, models)
 	local osz, err = osu_util.parse_osz(_file.tmpname)
 	if not osz then
 		assert(os.remove(_file.tmpname))
-		return {status = 400, err}
+		return "validation", {errors = {err}}
 	end
 
 	local hash = _file.hash
@@ -58,12 +58,12 @@ function submit_track.handler(params, models)
 
 	local found_contest_track = models.contest_tracks:find(contest_track)
 	if found_contest_track then
-		return
+		return "ok", params
 	end
 
 	models.contest_tracks:create(contest_track)
 
-	return "ok", params
+	return "created", params
 end
 
 return submit_track
