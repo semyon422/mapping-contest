@@ -8,6 +8,7 @@
         "tree/share/lua/5.1/?.lua",
         "tree/share/lua/5.1/?/init.lua"
     ],
+    "Lua.workspace.ignoreSubmodules": false,
     "Lua.diagnostics.globals": [
         "ngx"
     ],
