@@ -64,9 +64,9 @@ return {
 		GET = {"contests.get_contests", {
 			ok = {200, "contests"},
 		}},
-		POST = {"create_contest", {
-			created = {302, nil, function(result)
-				return {["Location"] = "/contests/" .. result.contest.id}
+		POST = {"contests.create_contest", {
+			created = {200, nil, function(result)
+				return {["HX-Location"] = "/contests/" .. result.contest.id}
 			end},
 		}, "www_form"},
 	}},
@@ -88,17 +88,28 @@ return {
 			ok = {200, "contest.user_chart_votes"},
 		}},
 		PATCH = {"contests.update_vote", {
-			ok = {200, "contest.user_chart_votes"},
+			ok = {200},
 		}, "www_form"},
 	}},
 	{"/contests/:contest_id/tracks", {
 		POST = {"contests.submit_track", {
 			ok = {200},
+			created = {200},
 		}, "multipart_file"},
 	}},
 	{"/contests/:contest_id/tracks/:track_id", {
 		DELETE = {"contests.delete_contest_track", {
-			ok = {200, "contest"},
+			deleted = {204},
+		}},
+	}},
+	{"/contests/:contest_id/charts", {
+		POST = {"contests.submit_chart", {
+			created = {200},
+		}, "multipart_file"},
+	}},
+	{"/charts/:chart_id", {
+		DELETE = {"contests.delete_chart", {
+			deleted = {204},
 		}},
 	}},
 	-- other

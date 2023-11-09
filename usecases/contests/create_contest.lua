@@ -13,8 +13,9 @@ function create_contest.handler(params, models)
 		is_submission_open = false,
 	})
 	contest:update({name = "Contest " .. contest.id})
+	params.contest = contest
 
-	return "ok", params
+	return "created", params
 end
 
 return create_contest

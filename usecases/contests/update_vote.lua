@@ -7,6 +7,8 @@ local update_vote = {}
 
 update_vote.policy_set = {{"role_verified", "contest_voting_open"}}
 
+update_vote.models = {contest = {"contests", {id = "contest_id"}}}
+
 update_vote.validate = types.partial({
 	contest_id = types.db_id,
 	chart_id = types.db_id,
@@ -41,10 +43,11 @@ function update_vote.handler(params, models)
 		return "ok", {}
 	end
 
-	local base_chart = models.charts:find(params.chart_id)
+	local base_chart = models.charts:find({id = params.chart_id})
 	local section_charts = {}
 
-	for _, chart in ipairs(params.contest:get_charts()) do
+	relations.preload({params.contest}, "charts")
+	for _, chart in ipairs(params.contest.charts) do
 		if chart.section == base_chart.section then
 			table.insert(section_charts, chart)
 		end

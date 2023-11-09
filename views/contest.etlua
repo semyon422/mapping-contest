@@ -84,6 +84,7 @@
 						<td><a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a></td>
 						<td><a href="/files/<%= chart.file_id %>"><%= chart.track.title %></a></td>
 						<td><%= datetime.to_text(chart.submitted_at) %></td>
+						<% chart.contest = contest %>
 						<% if view({chart = chart}):authorize("contests.delete_chart") then %>
 							<td>
 							<a href="#" hx-swap="none" hx-delete="/charts/<%= chart.id %>"
@@ -172,8 +173,7 @@
 			<a href="#" aria-label="Close" class="close" _="on click toggle @open on #modal_add_chart"></a>
 			Add chart
 		</header>
-		<form hx-post="/charts" hx-encoding="multipart/form-data"
-			hx-vars='{"contest_id":<%= contest.id %>}'
+		<form hx-post="/contests/<%= contest.id %>/charts" hx-encoding="multipart/form-data"
 			hx-swap="none"
 			_="on htmx:xhr:progress(loaded, total) set #chart_progress.value to (loaded/total)*100
 			on htmx:afterRequest send update_charts to #charts toggle @open on #modal_add_chart"

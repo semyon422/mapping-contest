@@ -65,7 +65,7 @@ function submit_chart.handler(params, models)
 		section = section,
 		name = osz.Version,
 		submitted_at = os.time(),
-	})
+	}, true)
 
 	return "created", params
 end

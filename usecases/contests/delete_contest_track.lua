@@ -2,7 +2,10 @@ local delete_contest_track = {}
 
 delete_contest_track.policy_set = {{"contest_host"}}
 
-delete_contest_track.models = {contest_track = {"contest_tracks", {"contest_id", "track_id"}}}
+delete_contest_track.models = {
+	contest = {"contests", {id = "contest_id"}},
+	contest_track = {"contest_tracks", {"contest_id", "track_id"}},
+}
 
 function delete_contest_track.handler(params, models)
 	params.contest_track:delete()
