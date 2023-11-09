@@ -13,7 +13,7 @@ return {
 		POST = {"auth.login", {
 			ok = {302, nil, {["Location"] = "/"}},
 			validation = {200, "login"},
-		}},
+		}, "www_form"},
 	}},
 	{"/login_osu", {
 		GET = {"auth.login_osu", {
@@ -49,7 +49,7 @@ return {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/users/" .. params.user.id}
 			end},
-		}},
+		}, "www_form"},
 	}},
 	{"/users/:user_id/roles/:role", {
 		PUT = {"auth.give_role", {
@@ -68,7 +68,7 @@ return {
 			created = {302, nil, function(result)
 				return {["Location"] = "/contests/" .. result.contest.id}
 			end},
-		}},
+		}, "www_form"},
 	}},
 	{"/contests/:contest_id", {
 		GET = {"contests.get_contest", {
@@ -81,7 +81,7 @@ return {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest.id}
 			end},
-		}},
+		}, "www_form"},
 	}},
 	{"/contests/:contest_id/user_chart_votes", {
 		GET = {"contests.get_votes", {
@@ -89,7 +89,12 @@ return {
 		}},
 		PATCH = {"contests.update_vote", {
 			ok = {200, "contest.user_chart_votes"},
-		}},
+		}, "www_form"},
+	}},
+	{"/contests/:contest_id/tracks", {
+		POST = {"contests.submit_track", {
+			ok = {200},
+		}, "multipart_file"},
 	}},
 	{"/contests/:contest_id/tracks/:track_id", {
 		DELETE = {"contests.delete_contest_track", {

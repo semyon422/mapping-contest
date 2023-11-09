@@ -1,4 +1,3 @@
-local filehash = require("util.filehash")
 local osu_util = require("osu_util")
 local types = require("lapis.validate.types")
 local File = require("domain.File")
@@ -7,41 +6,41 @@ local submit_track = {}
 
 submit_track.policy_set = {{"contest_host"}}
 
+submit_track.models = {contest = {"contests", {id = "contest_id"}}}
+
 submit_track.validate = types.partial({
 	contest_id = types.db_id,
 	file = types.shape({
-		content = types.string,
+		tmpname = types.string,
 		filename = types.string,
-		name = types.string,
-		["content-type"] = types.string,
+		hash = types.string,
+		size = types.integer,
 	}),
 })
 
 function submit_track.handler(params, models)
 	local _file = params.file
 
-	local hash = filehash.sum(_file.content)
+	local osz, err = osu_util.parse_osz(_file.tmpname)
+	if not osz then
+		assert(os.remove(_file.tmpname))
+		return {status = 400, err}
+	end
 
-	local file = models:find({hash = hash})
+	local hash = _file.hash
 	local d_file = File(hash)
+	assert(os.rename(_file.tmpname, d_file:get_path()))
+
+	local file = models.files:find({hash = hash})
 	local track
 	if not file then
 		file = models.files:create({
 			hash = hash,
 			name = _file.filename,
 			uploaded = true,
-			size = #_file.content,
+			size = _file.size,
 			created_at = os.time(),
 		})
-		d_file:write(_file.content)
-
-		local osz, err = osu_util.parse_osz(file:get_path())
-		if not osz then
-			d_file:delete()
-			file:delete()
-			return {status = 400, err}
-		end
-
 		track = models.tracks:create({
 			file_id = file.id,
 			title = osz.Title,

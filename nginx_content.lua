@@ -1,9 +1,10 @@
-local class = require("class")
 local relations = require("rdb.relations")
+local autoload = require("autoload")
 
 local Router = require("http.Router")
 local UsecaseViewHandler = require("http.UsecaseViewHandler")
-local RequestParamsHandler = require("http.RequestParamsHandler")
+local SessionHandler = require("http.SessionHandler")
+local RequestHandler = require("http.RequestHandler")
 
 local Usecases = require("http.Usecases")
 local usecases = Usecases("usecases")
@@ -29,9 +30,13 @@ local session_config = {
 	secret = "secret string",
 }
 
+local session_handler = SessionHandler(session_config)
 local uv_handler = UsecaseViewHandler(usecases, models, default_results, views)
+local router = Router()
 
-local rp_handler = RequestParamsHandler(session_config, uv_handler, function(params)
+router:route_many(require("routes"))
+
+local function before(params)
 	if not params.session.user_id then
 		return
 	end
@@ -43,32 +48,20 @@ local rp_handler = RequestParamsHandler(session_config, uv_handler, function(par
 
 	relations.preload({user}, "user_roles")
 	params.session_user = user
-end)
-
-local router = Router(rp_handler)
-
-router:route_many(require("routes"))
-
-local Request = class()
-
-function Request:new(body)
-	self.body = body
 end
 
-function Request:receive()
-	return self.body
-end
+local body_handlers = autoload("body")
+
+local requestHandler = RequestHandler(router, body_handlers, session_handler, uv_handler, before)
 
 return function()
-	ngx.req.read_body()
-	local data = ngx.req.get_body_data()
-	local req = Request(data)
+	local req = {}
 
 	req.headers = ngx.req.get_headers()
 	req.method = ngx.req.get_method()
 	req.uri = ngx.var.request_uri
 
-	local ok, code, headers, body = xpcall(router.handle_request, debug.traceback, router, req)
+	local ok, code, headers, body = xpcall(requestHandler.handle, debug.traceback, requestHandler, req)
 	if not ok then
 		ngx.status = 500
 		ngx.print("<pre>" .. code .. "</pre>")
