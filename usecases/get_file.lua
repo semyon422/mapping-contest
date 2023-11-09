@@ -2,7 +2,7 @@ local File = require("domain.File")
 
 local get_file = {}
 
-get_file.policy_set = {file = {"files", {id = "file_id"}}}
+get_file.models = {file = {"files", {id = "file_id"}}}
 
 function get_file.handler(params, models)
 	local file = File(params.file.hash)
