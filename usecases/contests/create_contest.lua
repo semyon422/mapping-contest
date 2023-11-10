@@ -1,5 +1,7 @@
 local create_contest = {}
 
+create_contest.policy_set = {{"role_host"}}
+
 function create_contest.handler(params, models)
 	local time = os.time()
 	local contest = models.contests:create({
