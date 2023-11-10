@@ -1,3 +1,0 @@
-#!/bin/bash
-. ./setenv
-lapis exec "local struct = require('struct') struct:drop_tables() struct:create_tables()"

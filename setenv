@@ -7,7 +7,7 @@
 TREE=$PWD/tree
 LJ_ROOT=$OR_ROOT/luajit
 
-PATH=$TREE/bin:$OR_ROOT/bin:$PATH
+PATH=$TREE/bin:$OR_ROOT/bin:$OR_ROOT/luajit/bin:$PATH
 LD_LIBRARY_PATH=$PWD:$LJ_ROOT/lib:$TREE/lib
 
 export PATH

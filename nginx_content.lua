@@ -11,15 +11,10 @@ local usecases = Usecases("usecases")
 
 local views = require("views")
 
-local Models = require("rdb.Models")
-local TableOrm = require("rdb.TableOrm")
-local LsqliteDatabase = require("rdb.LsqliteDatabase")
-
-local db = LsqliteDatabase()
-db:open("db.sqlite")
-db:query("PRAGMA foreign_keys = ON;")
-
-local models = Models("models", TableOrm(db))
+local app_db = require("app_db")
+app_db.init()
+app_db.create_tables()
+local models = app_db.models
 
 local default_results = {
 	forbidden = {403, "json", {["Content-Type"] = "application/json"}},

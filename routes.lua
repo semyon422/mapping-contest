@@ -1,10 +1,15 @@
 return {
-	-- auth
+	{"/test", {
+		GET = {"ok", {
+			ok = {200, "json"},
+		}},
+	}},
 	{"/", {
 		GET = {"ok", {
 			ok = {200, "home"},
 		}},
 	}},
+	-- auth
 	{"/login", {
 		GET = {"auth.get_login", {
 			ok = {200, "login"},
