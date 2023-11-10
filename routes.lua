@@ -89,10 +89,7 @@ return {
 			end},
 		}, "www_form"},
 	}},
-	{"/contests/:contest_id/user_chart_votes", {
-		GET = {"contests.get_votes", {
-			ok = {200, "contest.user_chart_votes"},
-		}},
+	{"/contests/:contest_id/votes", {
 		PATCH = {"contests.update_vote", {
 			ok = {200},
 		}, "www_form"},

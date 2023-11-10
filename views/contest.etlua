@@ -22,9 +22,6 @@
 			<p>
 				<%- contest.description %>
 			</p>
-			<a role="button" href="/contests/<%= contest.id %>/user_chart_votes">
-				Vote
-			</a>
 			<% if contest.is_submission_open and view:authorize("contests.submit_chart") then %>
 				<a role="button" href="#" _="on click toggle @open on #modal_add_chart">
 					Submit chart
@@ -64,42 +61,70 @@
 	</div>
 </section>
 
-<section>
-	<div id="charts" hx-select="#charts" hx-swap="outerHTML" hx-get hx-trigger="update_charts">
-		<h4>Submissions</h4>
-		<table>
-			<thead>
+<% local Sections = require("domain.Sections") %>
+<% local section_names = {"Fast", "Slow", "Full"} %>
+
+<% local Votes = require("domain.Votes") %>
+<% local vote_icons = {"check", "times", "heart"} %>
+
+<section id="votes" hx-select="#votes" hx-swap="outerHTML" hx-get hx-trigger="update_votes">
+	<% if not view:authorize("contests.update_vote") then %>
+		<h5>Voting not allowed</h5>
+	<% end %>
+	<table hx-swap="none" _="on htmx:afterRequest trigger update_votes">
+		<tbody>
+			<% for j, section in ipairs(Sections.list) do %>
+				<% local section_vote_charts = {} %>
+				<% for _, vote_chart in ipairs(vote_charts) do %>
+					<% if vote_chart.chart.section == section then %>
+						<% table.insert(section_vote_charts, vote_chart) %>
+					<% end %>
+				<% end %>
 				<tr>
-				<th scope="col">#</th>
-				<th scope="col">Charter</th>
-				<th scope="col">Track</th>
-				<th scope="col">Date</th>
-				<th scope="col"></th>
+					<th colspan="2">
+						<b><%= section_names[j] %></b>
+						<% if true then %>
+							<a href="#" _="on click toggle @open on #modal_edit_section">
+								<i class="fas fa-edit"></i>
+							</a>
+						<% end %>
+					</th>
+					<td colspan="2">Max <i class="fas fa-heart"></i>: <%= Sections:get_max_heart_votes(#section_vote_charts) %></td>
 				</tr>
-			</thead>
-			<tbody>
-				<% for i, chart in ipairs(contest.charts) do %>
+				<% for _, vote_chart in ipairs(section_vote_charts) do %>
 					<tr>
-						<th scope="row"><%= i %></th>
+						<% local chart = vote_chart.chart %>
+						<% chart.contest = contest %>
 						<td><a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a></td>
 						<td><a href="/files/<%= chart.file_id %>"><%= chart.track.title %></a></td>
-						<td><%= datetime.to_text(chart.submitted_at) %></td>
-						<% chart.contest = contest %>
-						<% if view({chart = chart}):authorize("contests.delete_chart") then %>
-							<td>
+						<td>
+							<% for i, vote_name in ipairs(Votes.list) do %>
+								<a href="#" class="vote_counter"
+									hx-patch="/contests/<%= contest.id %>/votes"
+									hx-vars='{"chart_id":<%= chart.id %>,"vote":"<%= vote_name %>"}'
+								>
+								<%- vote_chart.voted[vote_name] and "<kbd>" or "<code>" %>
+									<i class="fas fa-<%= vote_icons[i] %>"></i>
+									<%= #vote_chart[vote_name] %>
+								<%- vote_chart.voted[vote_name] and "</kbd>" or "</code>" %>
+								</a>
+							<% end %>
+						</td>
+						<td>
+							<% if view({chart = chart}):authorize("contests.delete_chart") then %>
 							<a href="#" hx-swap="none" hx-delete="/charts/<%= chart.id %>"
 								hx-confirm="Are you sure you wish to delete this chart?"
 								_="on htmx:afterRequest trigger update_charts"
 							>
 								<i class="fas fa-times"></i>
 							</a>
-							</td>
-						<% end %>
+							<% end %>
+						</td>
 					</tr>
 				<% end %>
-			</tbody>
-		</table>
-	</div>
+			<% end %>
+		</tbody>
+	</table>
 </section>
 
 <dialog id="modal_edit_contest">
