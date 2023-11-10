@@ -53,10 +53,10 @@ return {
 	}},
 	{"/users/:user_id/roles/:role", {
 		PUT = {"auth.give_role", {
-			ok = {200, "user"},
+			ok = {200},
 		}},
 		DELETE = {"auth.remove_role", {
-			ok = {200, "user"},
+			ok = {200},
 		}},
 	}},
 	-- contests
@@ -75,7 +75,7 @@ return {
 			ok = {200, "contest"},
 		}},
 		DELETE = {"contests.delete_contest", {
-			deleted = {302, "redirect_contests", {["HX-Location"] = "/contests"}},
+			deleted = {302, nil, {["HX-Location"] = "/contests"}},
 		}},
 		PATCH = {"contests.update_contest", {
 			ok = {200, nil, function(params)
