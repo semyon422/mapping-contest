@@ -8,12 +8,18 @@ app_db.create_tables()
 local models = app_db.models
 
 local register = require("usecases.auth.register")
+local give_role = require("usecases.auth.give_role")
 
 local session = {}
 
-assert(register.handler({
+register.handler({
 	name = "admin",
 	discord = "discord",
 	password = "password",
 	session = session,
-}, models) == "ok")
+}, models)
+
+give_role.handler({
+	user_id = session.user_id,
+	role = "admin",
+}, models)
