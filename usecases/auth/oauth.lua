@@ -14,7 +14,8 @@ function oauth.handler(params, models)
 	})
 
 	if status_code ~= 200 then
-		return "error", body
+		params.errors = {body}
+		return "error", params
 	end
 
 	local res = lapis_util.from_json(body)
@@ -26,7 +27,8 @@ function oauth.handler(params, models)
 	})
 
 	if status_code ~= 200 then
-		return "error", body
+		params.errors = {body}
+		return "error", params
 	end
 
 	local me = lapis_util.from_json(body)

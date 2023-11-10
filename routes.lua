@@ -37,7 +37,8 @@ return {
 	}},
 	{"/oauth", {
 		GET = {"auth.oauth", {
-			ok = {200, "oauth"},
+			ok = {302, nil, {["Location"] = "/"}},
+			error = {400, "errors"},
 		}},
 	}},
 	-- users
