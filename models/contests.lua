@@ -27,6 +27,7 @@ contests.relations = {
 	host = {belongs_to = "users", key = "host_id"},
 	contest_tracks = {has_many = "contest_tracks", key = "contest_id"},
 	charts = {has_many = "charts", key = "contest_id"},
+	sections = {has_many = "sections", key = "contest_id"},
 	user_contest_chart_votes = {has_many = "user_contest_chart_votes", key = "contest_id"},
 }
 
