@@ -8,7 +8,7 @@
 		<h4>
 			<%= contest.name %>
 			<% if view:authorize("contests.update_contest") then %>
-				<a href="#" _="on click toggle @open on #modal_edit_contest">
+				<a href="?edit">
 					<i class="fas fa-edit"></i>
 				</a>
 			<% end %>
@@ -23,21 +23,21 @@
 				<%- contest.description %>
 			</p>
 			<% if contest.is_submission_open and view:authorize("contests.submit_chart") then %>
-				<a role="button" href="#" _="on click toggle @open on #modal_add_chart">
+				<a role="button" href="?submit_chart">
 					Submit chart
 				</a>
 			<% end %>
 		</div>
-		<div id="tracks" hx-select="#tracks" hx-swap="outerHTML" hx-get hx-trigger="update_tracks">
+		<div>
 			<h6>
 				Tracks
 				<% if view:authorize("contests.submit_track") then %>
-					<a href="#" _="on click toggle @open on #modal_add_track">
+					<a href="?add_track">
 						<i class="fas fa-plus"></i>
 					</a>
 				<% end %>
 			</h6>
-			<table>
+			<table id="tracks" hx-select="#tracks" hx-swap="outerHTML" hx-get hx-trigger="update_tracks">
 				<tbody>
 					<% for _, contest_track in ipairs(contest.contest_tracks) do %>
 						<% local track = contest_track.track %>
@@ -62,46 +62,48 @@
 </section>
 
 <% local Sections = require("domain.Sections") %>
-<% local section_names = {"Fast", "Slow", "Full"} %>
 
 <% local Votes = require("domain.Votes") %>
 <% local vote_icons = {"check", "times", "heart"} %>
 
-<section id="votes" hx-select="#votes" hx-swap="outerHTML" hx-get hx-trigger="update_votes">
+<section>
 	<% if not view:authorize("contests.update_vote") then %>
 		<h5>Voting not allowed</h5>
 	<% end %>
-	<table hx-swap="none" _="on htmx:afterRequest trigger update_votes">
-		<tbody>
-			<% for j, section in ipairs(Sections.list) do %>
-				<% local section_vote_charts = {} %>
-				<% for _, vote_chart in ipairs(vote_charts) do %>
-					<% if vote_chart.chart.section == section then %>
-						<% table.insert(section_vote_charts, vote_chart) %>
-					<% end %>
-				<% end %>
+	<% if true then %>
+		<a href="?create_section">Create section</a>
+	<% end %>
+	<table id="votes"
+		hx-select="#votes"
+		hx-get
+		hx-trigger="update_votes"
+	>
+		<tbody _="on htmx:afterRequest trigger update_votes">
+			<% for j, section in ipairs(contest.sections) do %>
 				<tr>
-					<th colspan="2">
-						<b><%= section_names[j] %></b>
-						<% if true then %>
-							<a href="#" _="on click toggle @open on #modal_edit_section">
+					<th colspan="3">
+						<b><%= section.name %></b>
+						<% if view:authorize("contests.update_contest") then %>
+							<a href="?edit_section=<%= section.id %>" hx-boost="false">
 								<i class="fas fa-edit"></i>
 							</a>
 						<% end %>
 					</th>
 					<td colspan="2">Max <i class="fas fa-heart"></i>: <%= Sections:get_max_heart_votes(#section_vote_charts) %></td>
 				</tr>
-				<% for _, vote_chart in ipairs(section_vote_charts) do %>
+				<% for _, vote_chart in ipairs(section_vote_charts[j]) do %>
 					<tr>
 						<% local chart = vote_chart.chart %>
 						<% chart.contest = contest %>
 						<td><a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a></td>
 						<td><a href="/files/<%= chart.file_id %>"><%= chart.track.title %></a></td>
+						<td><%= chart.notes %></td>
 						<td>
 							<% for i, vote_name in ipairs(Votes.list) do %>
 								<a href="#" class="vote_counter"
 									hx-patch="/contests/<%= contest.id %>/votes"
 									hx-vars='{"chart_id":<%= chart.id %>,"vote":"<%= vote_name %>"}'
+									hx-swap="none"
 								>
 								<%- vote_chart.voted[vote_name] and "<kbd>" or "<code>" %>
 									<i class="fas fa-<%= vote_icons[i] %>"></i>
@@ -127,10 +129,11 @@
 	</table>
 </section>
 
-<dialog id="modal_edit_contest">
+<% if edit then %>
+<dialog id="modal_edit_contest" open>
 	<article>
 		<header>
-			<a href="#" aria-label="Close" class="close" _="on click toggle @open on #modal_edit_contest"></a>
+			<a href="?" aria-label="Close" class="close"></a>
 			Edit contest
 		</header>
 		<form hx-patch hx-target="#edit_errors" autocomplete="off">
@@ -166,21 +169,22 @@
 
 			<button>Save</button>
 		</form>
-		<button class="contrast" href="#" hx-delete hx-confirm="Are you sure you wish to delete this contest?">Delete</button class="contrast">
+		<button class="contrast" hx-delete hx-confirm="Delete this contest?">Delete</button>
 		<div id="edit_errors"></div>
 	</article>
 </dialog>
+<% end %>
 
-<dialog id="modal_add_track">
+<% if add_track then %>
+<dialog id="modal_add_track" open>
 	<article>
 		<header>
-			<a href="#" aria-label="Close" class="close" _="on click toggle @open on #modal_add_track"></a>
+			<a href="?" aria-label="Close" class="close"></a>
 			Add track
 		</header>
 		<form hx-post="/contests/<%= contest.id %>/tracks" hx-encoding="multipart/form-data"
 			hx-swap="none"
-			_="on htmx:xhr:progress(loaded, total) set #track_progress.value to (loaded/total)*100
-			on htmx:afterRequest send update_tracks to #tracks then toggle @open on #modal_add_track"
+			_="on htmx:xhr:progress(loaded, total) set #track_progress.value to (loaded/total)*100"
 		>
 			<label for="file">Select .osz file</label>
 			<input type="file" id="file" name="file" required>
@@ -191,17 +195,18 @@
 		</form>
 	</article>
 </dialog>
+<% end %>
 
-<dialog id="modal_add_chart">
+<% if submit_chart then %>
+<dialog id="modal_add_chart" open>
 	<article>
 		<header>
-			<a href="#" aria-label="Close" class="close" _="on click toggle @open on #modal_add_chart"></a>
+			<a href="?" aria-label="Close" class="close"></a>
 			Add chart
 		</header>
 		<form hx-post="/contests/<%= contest.id %>/charts" hx-encoding="multipart/form-data"
 			hx-swap="none"
-			_="on htmx:xhr:progress(loaded, total) set #chart_progress.value to (loaded/total)*100
-			on htmx:afterRequest send update_charts to #charts toggle @open on #modal_add_chart"
+			_="on htmx:xhr:progress(loaded, total) set #chart_progress.value to (loaded/total)*100"
 		>
 			<label for="file">Select .osz file</label>
 			<input type="file" id="file" name="file" required>
@@ -212,3 +217,68 @@
 		</form>
 	</article>
 </dialog>
+<% end %>
+
+<% if create_section then %>
+<dialog id="modal_create_section" open>
+	<article>
+		<header>
+			<a href="?" aria-label="Close" class="close"></a>
+			Create section
+		</header>
+		<form hx-post="/contests/<%= contest.id %>/sections" hx-swap="none" autocomplete="off">
+			<label for="name">Name</label>
+			<input id="name" type="text" name="name" required>
+
+			<label for="time_base">Base time (minutes)</label>
+			<input id="time_base" type="text" name="time_base" required>
+
+			<label for="time_per_knote">Time per 1000 notes (minutes)</label>
+			<input id="time_per_knote" type="text" name="time_per_knote" required>
+
+			<button>Save</button>
+		</form>
+	</article>
+</dialog>
+<% end %>
+
+<% if edit_section then %>
+<% local section %>
+<% for j, _section in ipairs(contest.sections) do %>
+	<% if _section.id == tonumber(edit_section) then %>
+		<% section = _section %>
+		<% break %>
+	<% end %>
+<% end %>
+
+<dialog id="modal_edit_section" open>
+	<article>
+		<header>
+			<a href="?" aria-label="Close" class="close"></a>
+			Edit section
+		</header>
+		<form
+			hx-patch="/sections/<%= edit_section %>"
+			hx-swap="none"
+			autocomplete="off"
+			hx-vals='{"contest_id":<%= contest.id %>}'
+		>
+			<label for="name">Name</label>
+			<input id="name" type="text" name="name" value="<%= section.name %>" required>
+
+			<label for="time_base">Base time (minutes)</label>
+			<input id="time_base" type="text" name="time_base" value="<%= section.time_base %>" required>
+
+			<label for="time_per_knote">Time per 1000 notes (minutes)</label>
+			<input id="time_per_knote" type="text" name="time_per_knote" value="<%= section.time_per_knote %>" required>
+
+			<button>Save</button>
+		</form>
+		<button class="contrast"
+			hx-delete="/sections/<%= edit_section %>"
+			hx-confirm="Delete this section?"
+			hx-vals='{"contest_id":<%= contest.id %>}'
+		>Delete</button>
+	</article>
+</dialog>
+<% end %>

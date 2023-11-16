@@ -1,4 +1,3 @@
-local Sections = require("domain.Sections")
 local osu_util = require("osu_util")
 local types = require("lapis.validate.types")
 local File = require("domain.File")
@@ -54,20 +53,17 @@ function submit_chart.handler(params, models)
 		})
 	end
 
-	local contest = models.contests:find({id = params.contest_id})
-	local section = Sections:get_section(os.time() - contest.started_at, osz.HitObjects)
-
 	params.chart = models.charts:create({
 		track_id = track.id,
 		charter_id = params.session.user_id,
 		contest_id = params.contest_id,
 		file_id = file.id,
-		section = section,
 		name = osz.Version,
+		notes = osz.HitObjects,
 		submitted_at = os.time(),
 	}, true)
 
-	return "created", params
+	return "ok", params
 end
 
 return submit_chart

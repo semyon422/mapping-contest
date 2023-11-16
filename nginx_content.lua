@@ -59,7 +59,7 @@ return function()
 	local ok, code, headers, body = xpcall(requestHandler.handle, debug.traceback, requestHandler, req)
 	if not ok then
 		ngx.status = 500
-		ngx.print("<pre>" .. code .. "</pre>")
+		ngx.print("<pre>" .. tostring(code) .. "</pre>")
 		return
 	end
 

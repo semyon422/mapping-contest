@@ -85,7 +85,7 @@ return {
 		}},
 		PATCH = {"contests.update_contest", {
 			ok = {200, nil, function(params)
-				return {["HX-Location"] = "/contests/" .. params.contest.id}
+				return {["HX-Location"] = "/contests/" .. params.contest_id}
 			end},
 		}, "www_form"},
 	}},
@@ -94,10 +94,18 @@ return {
 			ok = {200},
 		}, "www_form"},
 	}},
+	{"/contests/:contest_id/sections", {
+		POST = {"contests.create_section", {
+			ok = {200, nil, function(params)
+				return {["HX-Location"] = "/contests/" .. params.contest_id}
+			end},
+		}, "www_form"},
+	}},
 	{"/contests/:contest_id/tracks", {
 		POST = {"contests.submit_track", {
-			ok = {200},
-			created = {200},
+			ok = {200, nil, function(params)
+				return {["HX-Location"] = "/contests/" .. params.contest_id}
+			end},
 		}, "multipart_file"},
 	}},
 	{"/contests/:contest_id/tracks/:track_id", {
@@ -107,13 +115,27 @@ return {
 	}},
 	{"/contests/:contest_id/charts", {
 		POST = {"contests.submit_chart", {
-			created = {200},
+			ok = {200, nil, function(params)
+				return {["HX-Location"] = "/contests/" .. params.contest_id}
+			end},
 		}, "multipart_file"},
 	}},
 	{"/charts/:chart_id", {
 		DELETE = {"contests.delete_chart", {
 			deleted = {204},
 		}},
+	}},
+	{"/sections/:section_id", {
+		PATCH = {"contests.update_section", {
+			ok = {200, nil, function(params)
+				return {["HX-Location"] = "/contests/" .. params.contest_id}
+			end},
+		}, "www_form"},
+		DELETE = {"contests.delete_section", {
+			deleted = {204, nil, function(params)
+				return {["HX-Location"] = "/contests/" .. params.contest_id}
+			end},
+		}, "www_form"},
 	}},
 	-- other
 	{"/files/:file_id", {

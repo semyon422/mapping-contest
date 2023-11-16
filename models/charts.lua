@@ -9,20 +9,18 @@ CREATE TABLE IF NOT EXISTS "charts" (
 	"file_id" INTEGER NOT NULL,
 	"contest_id" INTEGER NOT NULL,
 	"track_id" INTEGER NOT NULL,
-	"section" INTEGER NOT NULL,
 	"name" TEXT NOT NULL,
+	"notes" INTEGER NOT NULL,
 	"submitted_at" INTEGER NOT NULL,
 	FOREIGN KEY (charter_id) references users(id) ON DELETE CASCADE,
 	FOREIGN KEY (file_id) references files(id) ON DELETE CASCADE,
 	FOREIGN KEY (contest_id) references contests(id) ON DELETE CASCADE,
 	FOREIGN KEY (track_id) references tracks(id) ON DELETE CASCADE,
-	UNIQUE(charter_id, file_id, contest_id, track_id, section)
+	UNIQUE(charter_id, file_id, contest_id, track_id)
 );
 ]]
 
-charts.types = {
-	section = require("domain.Sections").enum,
-}
+charts.types = {}
 
 charts.relations = {
 	charter = {belongs_to = "users", key = "charter_id"},

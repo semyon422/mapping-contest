@@ -6,6 +6,7 @@ local model_list = {
 	"charts",
 	"contest_tracks",
 	"contests",
+	"sections",
 	"files",
 	"tracks",
 	"user_contest_chart_votes",

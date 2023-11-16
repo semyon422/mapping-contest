@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS "sections" (
 	"id" INTEGER NOT NULL PRIMARY KEY,
 	"contest_id" INTEGER NOT NULL,
 	"name" TEXT NOT NULL UNIQUE,
-	"description" TEXT NOT NULL,
 	"time_base" INTEGER NOT NULL,
 	"time_per_knote" INTEGER NOT NULL,
 	FOREIGN KEY (contest_id) references contests(id) ON DELETE CASCADE

@@ -63,7 +63,7 @@ function submit_track.handler(params, models)
 
 	models.contest_tracks:create(contest_track)
 
-	return "created", params
+	return "ok", params
 end
 
 return submit_track
