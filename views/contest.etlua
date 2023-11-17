@@ -14,7 +14,7 @@
 			<% end %>
 		</h4>
 		<h5>
-			<%= datetime.to_text(contest.started_at)%>
+			<%= datetime.to_text(contest.started_at) %>
 		</h5>
 	</hgroup>
 	<div class="grid">
@@ -22,7 +22,7 @@
 			<p>
 				<%- contest.description %>
 			</p>
-			<% if contest.is_submission_open and view:authorize("contests.submit_chart") then %>
+			<% if view:authorize("contests.submit_chart") then %>
 				<a role="button" href="?submit_chart">
 					Submit chart
 				</a>
@@ -38,6 +38,8 @@
 				<% end %>
 			</h6>
 			<table id="tracks" hx-select="#tracks" hx-swap="outerHTML" hx-get hx-trigger="update_tracks">
+			<% if contest_user then %>
+				<span>You started at: <%= datetime.to_text(contest_user.started_at) %></span>
 				<tbody>
 					<% for _, contest_track in ipairs(contest.contest_tracks) do %>
 						<% local track = contest_track.track %>
@@ -46,7 +48,7 @@
 							<% if view({contest_track = contest_track}):authorize("contests.delete_contest_track") then %>
 								<td>
 								<a href="#" hx-swap="none" hx-delete="/contests/<%= contest.id %>/tracks/<%= track.id %>"
-									hx-confirm="Are you sure you wish to delete this track?"
+									hx-confirm="Delete this track?"
 									_="on htmx:afterRequest trigger update_tracks"
 								>
 									<i class="fas fa-times"></i>
@@ -56,6 +58,15 @@
 						</tr>
 					<% end %>
 				</tbody>
+			<% else %>
+				<a role="button" href="#"
+					hx-swap="none"
+					hx-confirm="The timer will start. Are you sure?"
+					hx-post="/contests/<%= contest.id %>/users"
+				>
+					Join contest
+				</a>
+			<% end %>
 			</table>
 		</div>
 	</div>

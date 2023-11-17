@@ -4,7 +4,11 @@ local File = require("domain.File")
 
 local submit_chart = {}
 
-submit_chart.policy_set = {{"role_verified"}}
+submit_chart.policy_set = {{"role_verified", "contest_user", "is_submission_open"}}
+
+submit_chart.models = {
+	contest = {"contests", {id = "contest_id"}, {"contest_users"}},
+}
 
 submit_chart.validate = types.partial({
 	contest_id = types.db_id,

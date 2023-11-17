@@ -120,6 +120,13 @@ return {
 			end},
 		}, "multipart_file"},
 	}},
+	{"/contests/:contest_id/users", {
+		POST = {"contests.join_contest", {
+			ok = {200, nil, function(params)
+				return {["HX-Location"] = "/contests/" .. params.contest_id}
+			end},
+		}},
+	}},
 	{"/charts/:chart_id", {
 		DELETE = {"contests.delete_chart", {
 			deleted = {204},

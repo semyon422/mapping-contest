@@ -5,6 +5,7 @@ local LsqliteDatabase = require("rdb.LsqliteDatabase")
 local model_list = {
 	"charts",
 	"contest_tracks",
+	"contest_users",
 	"contests",
 	"sections",
 	"files",
