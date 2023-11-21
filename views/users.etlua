@@ -18,7 +18,7 @@
 				<% end %>
 				<tr>
 					<th><%= user.id %></th>
-					<td><a href="/users/<%= user.id %>"><%= user.name %></a></td>
+					<td><a href="/users/<%= user.id %>" hx-boost="false"><%= user.name %></a></td>
 					<td><%= user.discord %></td>
 					<td>
 						<% for i, role_name in ipairs(Roles.list) do %>
