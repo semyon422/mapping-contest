@@ -79,9 +79,6 @@
 
 <section>
 	<% local vote_allowed = view:authorize("contests.update_vote") %>
-	<% if not vote_allowed then %>
-		<h5>Voting not allowed</h5>
-	<% end %>
 	<% if true then %>
 		<a href="/contests/<%= contest.id %>?create_section">Create section</a>
 	<% end %>
@@ -93,7 +90,7 @@
 		<tbody _="on htmx:afterRequest trigger update_votes">
 			<% for j, section in ipairs(contest.sections) do %>
 				<tr>
-					<th colspan="3">
+					<th colspan="2">
 						<b><%= section.name %></b>
 						<% if view:authorize("contests.update_contest") then %>
 							<a href="/contests/<%= contest.id %>?edit_section=<%= section.id %>" hx-boost="false">
@@ -108,8 +105,12 @@
 						<% local chart = vote_chart.chart %>
 						<% chart.contest = contest %>
 						<td><a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a></td>
-						<td><a href="/files/<%= chart.file_id %>"><%= chart.track.title %></a></td>
-						<td><%= chart.notes %></td>
+						<td>
+							<a
+								href="/files/<%= chart.file_id %>"
+								data-tooltip="<%= datetime.to_text(chart.submitted_at) %>, <%= chart.notes %> notes"
+							><%= chart.track.title %></a>
+						</td>
 						<td>
 							<% for i, vote_name in ipairs(Votes.list) do %>
 								<% if vote_allowed then %>
