@@ -44,6 +44,10 @@ function update_vote.handler(params, models)
 	end
 
 	local base_chart = models.charts:find({id = params.chart_id})
+	if base_chart.charter_id == params.session.user_id then
+		return "ok", {}
+	end
+
 	local section_charts = {}
 
 	relations.preload({params.contest}, "charts")

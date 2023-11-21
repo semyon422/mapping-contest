@@ -10,7 +10,6 @@
 
 .role_ch_ex {
     background-color: var(--code-kbd-background-color);
-    color: var(--code-kbd-color);
     --font-weight: bolder;
 }
 .role_ch_ne {
@@ -25,4 +24,15 @@
 .role_nc_ne {
     background-color: var(--background-color);
     color: var(--code-color);
+}
+
+kbd.vote_inactive {
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    --font-weight: bolder;
+}
+code.vote_inactive {
+    background-color: var(--background-color);
+    color: var(--contrast);
+    --font-weight: bolder;
 }

@@ -78,7 +78,8 @@
 <% local vote_icons = {"check", "times", "heart"} %>
 
 <section>
-	<% if not view:authorize("contests.update_vote") then %>
+	<% local vote_allowed = view:authorize("contests.update_vote") %>
+	<% if not vote_allowed then %>
 		<h5>Voting not allowed</h5>
 	<% end %>
 	<% if true then %>
@@ -111,16 +112,21 @@
 						<td><%= chart.notes %></td>
 						<td>
 							<% for i, vote_name in ipairs(Votes.list) do %>
-								<a href="#" class="vote_counter"
-									hx-patch="/contests/<%= contest.id %>/votes"
-									hx-vars='{"chart_id":<%= chart.id %>,"vote":"<%= vote_name %>"}'
-									hx-swap="none"
-								>
-								<%- vote_chart.voted[vote_name] and "<kbd>" or "<code>" %>
+								<% if vote_allowed then %>
+									<a href="#" class="vote_counter"
+										hx-patch="/contests/<%= contest.id %>/votes"
+										hx-vars='{"chart_id":<%= chart.id %>,"vote":"<%= vote_name %>"}'
+										hx-swap="none"
+									>
+								<% end %>
+								<% local tag = vote_chart.voted[vote_name] and "kbd" or "code" %>
+								<<%= tag %> class="<%= vote_allowed and "" or "vote_inactive" %>">
 									<i class="fas fa-<%= vote_icons[i] %>"></i>
 									<%= #vote_chart[vote_name] %>
-								<%- vote_chart.voted[vote_name] and "</kbd>" or "</code>" %>
-								</a>
+								</<%= tag %>>
+								<% if vote_allowed then %>
+									</a>
+								<% end %>
 							<% end %>
 						</td>
 						<td>
