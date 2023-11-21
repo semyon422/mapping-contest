@@ -6,10 +6,15 @@ return {
 	}},
 	{"/", {
 		GET = {"ok", {
-			ok = {200, "home"},
+			ok = {302, nil, {["Location"] = "/contests"}},
 		}},
 	}},
 	-- auth
+	{"/login_options", {
+		GET = {"auth.get_login", {
+			ok = {200, "login_options"},
+		}},
+	}},
 	{"/login", {
 		GET = {"auth.get_login", {
 			ok = {200, "login"},
@@ -19,11 +24,6 @@ return {
 			ok = {302, nil, {["Location"] = "/"}},
 			validation = {200, "login"},
 		}, "www_form"},
-	}},
-	{"/login_osu", {
-		GET = {"auth.login_osu", {
-			ok = {200, "login_osu"},
-		}},
 	}},
 	{"/register", {
 		GET = {"auth.get_register", {

@@ -1,7 +1,4 @@
 <% local datetime = require("util.datetime") %>
-<%- view({items = {{"Home", "/"}, {"Contests", "/contests"}, {
-	contest.name .. (not contest.is_visible and " (hidden)" or "")
-}}}):render("breadcrumb") %>
 
 <section>
 	<hgroup>
@@ -73,15 +70,13 @@
 			<% end %>
 		</div>
 	</div>
-</section>
 
-<% local Sections = require("domain.Sections") %>
+	<% local Sections = require("domain.Sections") %>
 
-<% local Votes = require("domain.Votes") %>
-<% local vote_icons = {"check", "times", "heart"} %>
-
-<section>
+	<% local Votes = require("domain.Votes") %>
+	<% local vote_icons = {"check", "times", "heart"} %>
 	<% local vote_allowed = view:authorize("contests.update_vote") %>
+
 	<% if true then %>
 		<a href="/contests/<%= contest.id %>?create_section">Create section</a>
 	<% end %>

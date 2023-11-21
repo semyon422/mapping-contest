@@ -1,18 +1,16 @@
 <nav>
 	<ul>
 		<li><strong>CIS SMC</strong></li>
-	</ul>
-	<ul>
-		<li><a href="/users">Users</a></li>
 		<li><a href="/contests">Contests</a></li>
-		<% if not session.user_id then %>
-			<li><a href="/login_osu" role="button">Log in</a></li>
-		<% else %>
+		<li><a href="/users">Users</a></li>
+		<% if session.user_id then %>
 			<li>
-				<a href="/users/<%= session.user_id %>" role="button">
+				<a href="/users/<%= session.user_id %>">
 					Profile
 				</a>
 			</li>
+		<% else %>
+			<li><a href="/login_options">Login</a></li>
 		<% end %>
 	</ul>
 </nav>

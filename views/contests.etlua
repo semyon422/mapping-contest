@@ -1,6 +1,3 @@
-<%- view({items = {{"Home", "/"}, {"Contests"}}}):render("breadcrumb") %>
-
-
 <div class="container">
 	<% if view:authorize("contests.create_contest") then %>
 	<a href="#" hx-post="/contests">Create new contest</a>

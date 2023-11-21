@@ -9,6 +9,12 @@ function onSubmit(token) {
 		<h5>
 			<a href="<%= osu_authorize_url %>">Login using osu! account</a>
 		</h5>
+		<h5>
+			<a href="/login">Login using website account</a>
+		</h5>
+		<h5>
+			<a href="/register">Register</a>
+		</h5>
 	</div>
 	<div></div>
 </div>

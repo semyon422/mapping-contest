@@ -1,5 +1,3 @@
-<%- view({items = {{"Home", "/"}, {"Users"}}}):render("breadcrumb") %>
-
 <% local Roles = require("domain.Roles") %>
 
 <div id="users" hx-select="#users" hx-swap="outerHTML" hx-get hx-trigger="update_users">
