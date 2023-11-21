@@ -8,7 +8,7 @@
 		<h4>
 			<%= contest.name %>
 			<% if view:authorize("contests.update_contest") then %>
-				<a href="?edit">
+				<a href="/contests/<%= contest.id %>?edit">
 					<i class="fas fa-edit"></i>
 				</a>
 			<% end %>
@@ -23,7 +23,7 @@
 				<%- contest.description %>
 			</p>
 			<% if view:authorize("contests.submit_chart") then %>
-				<a role="button" href="?submit_chart">
+				<a role="button" href="/contests/<%= contest.id %>?submit_chart">
 					Submit chart
 				</a>
 			<% end %>
@@ -32,7 +32,7 @@
 			<h6>
 				Tracks
 				<% if view:authorize("contests.submit_track") then %>
-					<a href="?add_track">
+					<a href="/contests/<%= contest.id %>?add_track">
 						<i class="fas fa-plus"></i>
 					</a>
 				<% end %>
@@ -82,7 +82,7 @@
 		<h5>Voting not allowed</h5>
 	<% end %>
 	<% if true then %>
-		<a href="?create_section">Create section</a>
+		<a href="/contests/<%= contest.id %>?create_section">Create section</a>
 	<% end %>
 	<table id="votes"
 		hx-select="#votes"
@@ -95,7 +95,7 @@
 					<th colspan="3">
 						<b><%= section.name %></b>
 						<% if view:authorize("contests.update_contest") then %>
-							<a href="?edit_section=<%= section.id %>" hx-boost="false">
+							<a href="/contests/<%= contest.id %>?edit_section=<%= section.id %>" hx-boost="false">
 								<i class="fas fa-edit"></i>
 							</a>
 						<% end %>
@@ -144,7 +144,7 @@
 <dialog id="modal_edit_contest" open>
 	<article>
 		<header>
-			<a href="?" aria-label="Close" class="close"></a>
+			<a href="/contests/<%= contest.id %>" aria-label="Close" class="close"></a>
 			Edit contest
 		</header>
 		<form hx-patch hx-target="#edit_errors" autocomplete="off">
@@ -190,7 +190,7 @@
 <dialog id="modal_add_track" open>
 	<article>
 		<header>
-			<a href="?" aria-label="Close" class="close"></a>
+			<a href="/contests/<%= contest.id %>" aria-label="Close" class="close"></a>
 			Add track
 		</header>
 		<form hx-post="/contests/<%= contest.id %>/tracks" hx-encoding="multipart/form-data"
@@ -212,7 +212,7 @@
 <dialog id="modal_add_chart" open>
 	<article>
 		<header>
-			<a href="?" aria-label="Close" class="close"></a>
+			<a href="/contests/<%= contest.id %>" aria-label="Close" class="close"></a>
 			Add chart
 		</header>
 		<form hx-post="/contests/<%= contest.id %>/charts" hx-encoding="multipart/form-data"
@@ -234,7 +234,7 @@
 <dialog id="modal_create_section" open>
 	<article>
 		<header>
-			<a href="?" aria-label="Close" class="close"></a>
+			<a href="/contests/<%= contest.id %>" aria-label="Close" class="close"></a>
 			Create section
 		</header>
 		<form hx-post="/contests/<%= contest.id %>/sections" hx-swap="none" autocomplete="off">
@@ -265,7 +265,7 @@
 <dialog id="modal_edit_section" open>
 	<article>
 		<header>
-			<a href="?" aria-label="Close" class="close"></a>
+			<a href="/contests/<%= contest.id %>" aria-label="Close" class="close"></a>
 			Edit section
 		</header>
 		<form
