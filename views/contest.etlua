@@ -49,7 +49,11 @@
 					<% for _, contest_track in ipairs(contest.contest_tracks) do %>
 						<% local track = contest_track.track %>
 						<tr>
-							<td><a href="/files/<%= track.file_id %>"><%= track.artist %> - <%= track.title %></a></td>
+							<td><a
+								href="/files/<%= track.file_id %>"
+								hx-boost="false"
+							><%= track.artist %> - <%= track.title %></a>
+							</td>
 							<% if view({contest_track = contest_track}):authorize("contests.delete_contest_track") then %>
 								<td>
 								<a href="#" hx-swap="none" hx-delete="/contests/<%= contest.id %>/tracks/<%= track.id %>"
@@ -107,6 +111,7 @@
 						<td>
 							<a
 								href="/files/<%= chart.file_id %>"
+								hx-boost="false"
 								data-tooltip="<%= datetime.to_text(chart.submitted_at) %>, <%= chart.notes %> notes"
 							><%= chart.track.title %></a>
 						</td>
