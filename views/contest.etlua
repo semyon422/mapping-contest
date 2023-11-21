@@ -26,7 +26,8 @@
 			<% end %>
 		</div>
 		<div>
-		<% local can_submit_track = view:authorize("contests.submit_track") %>
+			<% local can_submit_track = view:authorize("contests.submit_track") %>
+			<% if contest_user or can_submit_track then %>
 			<h6>
 				Tracks
 				<% if can_submit_track then %>
@@ -35,7 +36,6 @@
 					</a>
 				<% end %>
 			</h6>
-			<% if contest_user or can_submit_track then %>
 			<table id="tracks" hx-select="#tracks" hx-swap="outerHTML" hx-get hx-trigger="update_tracks">
 				<tbody>
 					<% for _, contest_track in ipairs(contest.contest_tracks) do %>
@@ -57,16 +57,18 @@
 				</tbody>
 			</table>
 			<% end %>
-			<% if contest_user then %>
-				<p>Your time: <span id="charting_timer"></span></p>
-			<% else %>
-				<a role="button" href="#"
-					hx-swap="none"
-					hx-confirm="The timer will start. Are you sure?"
-					hx-post="/contests/<%= contest.id %>/users"
-				>
-					Join contest
-				</a>
+			<% if contest.is_submission_open then %>
+				<% if contest_user then %>
+					<p>Time passed: <span id="charting_timer"></span></p>
+				<% else %>
+					<a role="button" href="#"
+						hx-swap="none"
+						hx-confirm="The timer will start. Are you sure?"
+						hx-post="/contests/<%= contest.id %>/users"
+					>
+						Join contest
+					</a>
+				<% end %>
 			<% end %>
 		</div>
 	</div>
@@ -77,7 +79,7 @@
 	<% local vote_icons = {"check", "times", "heart"} %>
 	<% local vote_allowed = view:authorize("contests.update_vote") %>
 
-	<% if true then %>
+	<% if view:authorize("contests.create_section") then %>
 		<a href="/contests/<%= contest.id %>?create_section">Create section</a>
 	<% end %>
 	<table id="votes"
