@@ -58,7 +58,7 @@
 			</table>
 			<% end %>
 			<% if contest_user then %>
-				<p>You started at: <%= datetime.to_text(contest_user.started_at) %></p>
+				<p>Your time: <span id="charting_timer"></span></p>
 			<% else %>
 				<a role="button" href="#"
 					hx-swap="none"
@@ -300,4 +300,27 @@
 		>Delete</button>
 	</article>
 </dialog>
+<% end %>
+
+<% if contest_user then %>
+<script>
+var countDownDate = <%= contest_user.started_at %>
+function update_charting_timer() {
+	var now = new Date().getTime() / 1000
+	var distance = now - countDownDate
+
+	var hours = Math.floor((distance % (60 * 60 * 24)) / (60 * 60))
+	var minutes = Math.floor((distance % (60 * 60)) / (60))
+	var seconds = Math.floor((distance % (60)))
+
+	hours = hours < 10 ? "0" + hours : hours
+	minutes = minutes < 10 ? "0" + minutes : minutes
+	seconds = seconds < 10 ? "0" + seconds : seconds
+
+	document.getElementById("charting_timer").innerHTML =
+		hours + ":" + minutes + ":" + seconds
+}
+update_charting_timer()
+var x = setInterval(update_charting_timer, 1000)
+</script>
 <% end %>
