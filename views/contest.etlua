@@ -29,17 +29,17 @@
 			<% end %>
 		</div>
 		<div>
+		<% local can_submit_track = view:authorize("contests.submit_track") %>
 			<h6>
 				Tracks
-				<% if view:authorize("contests.submit_track") then %>
+				<% if can_submit_track then %>
 					<a href="/contests/<%= contest.id %>?add_track">
 						<i class="fas fa-plus"></i>
 					</a>
 				<% end %>
 			</h6>
+			<% if contest_user or can_submit_track then %>
 			<table id="tracks" hx-select="#tracks" hx-swap="outerHTML" hx-get hx-trigger="update_tracks">
-			<% if contest_user then %>
-				<span>You started at: <%= datetime.to_text(contest_user.started_at) %></span>
 				<tbody>
 					<% for _, contest_track in ipairs(contest.contest_tracks) do %>
 						<% local track = contest_track.track %>
@@ -58,6 +58,10 @@
 						</tr>
 					<% end %>
 				</tbody>
+			</table>
+			<% end %>
+			<% if contest_user then %>
+				<p>You started at: <%= datetime.to_text(contest_user.started_at) %></p>
 			<% else %>
 				<a role="button" href="#"
 					hx-swap="none"
@@ -67,7 +71,6 @@
 					Join contest
 				</a>
 			<% end %>
-			</table>
 		</div>
 	</div>
 </section>
@@ -91,7 +94,10 @@
 			<% for j, section in ipairs(contest.sections) do %>
 				<tr>
 					<th colspan="2">
-						<b><%= section.name %></b>
+						<b
+							data-tooltip="<%= section.time_base %> min + <%= section.time_per_knote %> min / 1000 notes">
+							<%= section.name %>
+						</b>
 						<% if view:authorize("contests.update_contest") then %>
 							<a href="/contests/<%= contest.id %>?edit_section=<%= section.id %>" hx-boost="false">
 								<i class="fas fa-edit"></i>
