@@ -1,8 +1,8 @@
 local delete_chart = {}
 
 delete_chart.policy_set = {
-	{"chart_owner"},
-	{"is_submission_open", "chart_contest_host"},
+	{"is_submission_open", "chart_owner"},
+	{"chart_contest_host"},
 }
 
 delete_chart.models = {

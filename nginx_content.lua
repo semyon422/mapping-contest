@@ -9,6 +9,8 @@ local RequestHandler = require("http.RequestHandler")
 local Usecases = require("http.Usecases")
 local usecases = Usecases("usecases")
 
+local config = require("lapis.config").get()
+
 local views = require("views")
 
 local app_db = require("app_db")
@@ -22,7 +24,7 @@ local default_results = {
 }
 local session_config = {
 	name = "session",
-	secret = "secret string",
+	secret = config.secret,
 }
 
 local session_handler = SessionHandler(session_config)
