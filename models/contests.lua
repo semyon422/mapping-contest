@@ -9,7 +9,6 @@ CREATE TABLE IF NOT EXISTS "contests" (
 	"name" TEXT NOT NULL UNIQUE,
 	"description" TEXT NOT NULL,
 	"created_at" INTEGER NOT NULL,
-	"started_at" INTEGER NOT NULL,
 	"is_visible" INTEGER NOT NULL,
 	"is_submission_open" INTEGER NOT NULL,
 	"is_voting_open" INTEGER NOT NULL,

@@ -10,7 +10,6 @@ update_contest.models = {contest = {"contests", {id = "contest_id"}}}
 update_contest.validate = types.partial({
 	name = types.limited_text(128),
 	description = types.limited_text(1024),
-	started_at = types.valid_text,
 	is_visible = types.string + types.empty,
 	is_submission_open = types.string + types.empty,
 	is_voting_open = types.string + types.empty,
@@ -26,7 +25,6 @@ function update_contest.handler(params, models)
 	params.contest:update({
 		name = params.name,
 		description = params.description,
-		started_at = Datetime.to_unix(params.started_at),
 		is_visible = params.is_visible == "on",
 		is_voting_open = params.is_voting_open == "on",
 		is_submission_open = params.is_submission_open == "on",

@@ -1,19 +1,14 @@
 <% local datetime = require("util.datetime") %>
 
 <section>
-	<hgroup>
-		<h4>
-			<%= contest.name %>
-			<% if view:authorize("contests.update_contest") then %>
-				<a href="/contests/<%= contest.id %>?edit">
-					<i class="fas fa-edit"></i>
-				</a>
-			<% end %>
-		</h4>
-		<h5>
-			<%= datetime.to_text(contest.started_at) %>
-		</h5>
-	</hgroup>
+	<h4>
+		<%= contest.name %>
+		<% if view:authorize("contests.update_contest") then %>
+			<a href="/contests/<%= contest.id %>?edit">
+				<i class="fas fa-edit"></i>
+			</a>
+		<% end %>
+	</h4>
 	<div class="grid">
 		<div>
 			<p>
@@ -23,6 +18,19 @@
 				<a role="button" href="/contests/<%= contest.id %>?submit_chart">
 					Submit chart
 				</a>
+			<% end %>
+			<% if contest.is_submission_open then %>
+				<% if contest_user then %>
+					<p>Time passed: <span id="charting_timer"></span></p>
+				<% elseif view:authorize("contests.join_contest") then %>
+					<a role="button" href="#"
+						hx-swap="none"
+						hx-confirm="The timer will start. Are you sure?"
+						hx-post="/contests/<%= contest.id %>/users"
+					>
+						Join contest
+					</a>
+				<% end %>
 			<% end %>
 		</div>
 		<div>
@@ -57,22 +65,10 @@
 				</tbody>
 			</table>
 			<% end %>
-			<% if contest.is_submission_open then %>
-				<% if contest_user then %>
-					<p>Time passed: <span id="charting_timer"></span></p>
-				<% else %>
-					<a role="button" href="#"
-						hx-swap="none"
-						hx-confirm="The timer will start. Are you sure?"
-						hx-post="/contests/<%= contest.id %>/users"
-					>
-						Join contest
-					</a>
-				<% end %>
-			<% end %>
 		</div>
 	</div>
-
+</section>
+<section>
 	<% local Sections = require("domain.Sections") %>
 
 	<% local Votes = require("domain.Votes") %>
@@ -163,9 +159,6 @@
 
 			<label for="description">Description</label>
 			<textarea id="description" name="description" required maxlength="1024"><%= contest.description %></textarea>
-
-			<label for="started_at">Started at</label>
-			<input id="started_at" type="datetime-local" step="1" name="started_at" value="<%= datetime.to_iso(contest.started_at) %>">
 
 			<label for="is_visible">
 				<input type="checkbox" id="is_visible" name="is_visible" role="switch"

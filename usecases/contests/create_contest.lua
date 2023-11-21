@@ -9,7 +9,6 @@ function create_contest.handler(params, models)
 		name = time,
 		description = "",
 		created_at = time,
-		started_at = time,
 		is_visible = false,
 		is_voting_open = false,
 		is_submission_open = false,
