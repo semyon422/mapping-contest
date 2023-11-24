@@ -50,11 +50,9 @@ function update_vote.handler(params, models)
 	end
 
 	relations.preload({params.contest}, {
-		"host",
 		"sections",
 		"contest_users",
 		user_contest_chart_votes = "user",
-		contest_tracks = "track",
 		charts = {"track", "charter"},
 	})
 
