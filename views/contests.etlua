@@ -12,7 +12,7 @@
 		</thead>
 		<tbody>
 			<% for _, contest in ipairs(contests) do %>
-				<% if contest.is_visible or contest.host_id == session.user_id then %>
+				<% if view({contest = contest}):authorize("contests.get_contest") then %>
 					<tr>
 						<th><%= contest.id %></th>
 						<td>
