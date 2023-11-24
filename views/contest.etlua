@@ -77,7 +77,6 @@
 
 	<% local Votes = require("domain.Votes") %>
 	<% local vote_icons = {"check", "times", "heart"} %>
-	<% local vote_allowed = view:authorize("contests.update_vote") %>
 
 	<% if view:authorize("contests.create_section") then %>
 		<a href="/contests/<%= contest.id %>?create_section">Create section</a>
@@ -104,8 +103,9 @@
 					<td colspan="2">Max <i class="fas fa-heart"></i>: <%= Sections:get_max_heart_votes(#section_vote_charts) %></td>
 				</tr>
 				<% for _, vote_chart in ipairs(section_vote_charts[j]) do %>
+					<% local chart = vote_chart.chart %>
+					<% local vote_allowed = view({chart = chart}):authorize("contests.update_vote") %>
 					<tr>
-						<% local chart = vote_chart.chart %>
 						<% chart.contest = contest %>
 						<td><a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a></td>
 						<td>

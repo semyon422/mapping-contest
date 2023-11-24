@@ -2,12 +2,18 @@ local relations = require("rdb.relations")
 local Sections = require("domain.Sections")
 local Votes = require("domain.Votes")
 local types = require("lapis.validate.types")
+local voting = require("domain.voting")
 
 local update_vote = {}
 
-update_vote.policy_set = {{"role_verified", "contest_voting_open"}}
+update_vote.policy_set = {
+	{"role_verified", "contest_voting_open", "not_charter"}
+}
 
-update_vote.models = {contest = {"contests", {id = "contest_id"}}}
+update_vote.models = {
+	contest = {"contests", {id = "contest_id"}},
+	chart = {"charts", {id = "chart_id"}},
+}
 
 update_vote.validate = types.partial({
 	contest_id = types.db_id,
@@ -43,18 +49,35 @@ function update_vote.handler(params, models)
 		return "ok", {}
 	end
 
-	local base_chart = models.charts:find({id = params.chart_id})
-	if base_chart.charter_id == params.session.user_id then
-		return "ok", {}
-	end
+	relations.preload({params.contest}, {
+		"host",
+		"sections",
+		"contest_users",
+		user_contest_chart_votes = "user",
+		contest_tracks = "track",
+		charts = {"track", "charter"},
+	})
 
-	local section_charts = {}
+	local _chart = params.chart
 
-	relations.preload({params.contest}, "charts")
-	for _, chart in ipairs(params.contest.charts) do
-		if chart.section == base_chart.section then
-			table.insert(section_charts, chart)
+	local section_vote_charts = assert(voting.load_sections(params))
+	local sections = params.contest.sections
+
+	local chart_section_index
+	for i = 1, #sections do
+		for _, vote_chart in ipairs(section_vote_charts[i]) do
+			if vote_chart.chart.id == _chart.id then
+				chart_section_index = i
+				break
+			end
 		end
+	end
+	assert(chart_section_index)
+
+	local s_charts_count = #section_vote_charts[chart_section_index]
+	local chart_in_section = {}
+	for _, vote_chart in ipairs(section_vote_charts[chart_section_index]) do
+		chart_in_section[vote_chart.chart.id] = true
 	end
 
 	local heart_uccvs = models.user_contest_chart_votes:select({
@@ -62,16 +85,15 @@ function update_vote.handler(params, models)
 		user_id = params.session.user_id,
 		vote = "heart",
 	})
-	relations.preload(heart_uccvs, "chart")
 
 	local user_hearts = 0
 	for _, _uccv in ipairs(heart_uccvs) do
-		if _uccv.chart.section == base_chart.section then
+		if chart_in_section[_uccv.chart_id] then
 			user_hearts = user_hearts + 1
 		end
 	end
 
-	if user_hearts >= Sections:get_max_heart_votes(#section_charts) then
+	if user_hearts >= Sections:get_max_heart_votes(s_charts_count) then
 		return
 	end
 
