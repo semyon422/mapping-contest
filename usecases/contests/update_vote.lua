@@ -28,23 +28,14 @@ function update_vote.handler(params, models)
 		chart_id = params.chart_id,
 		vote = params.vote,
 	}
-	local found_uccv = models.user_contest_chart_votes:find(uccv)
-	if found_uccv then
-		found_uccv:delete()
+	if models.user_contest_chart_votes:delete(uccv)[1] then
 		return "ok", {}
 	end
 
 	if params.vote == "yes" or params.vote == "no" then
-		local opposite = params.vote == "yes" and "no" or "yes"
-		local opposite_uccv = models.user_contest_chart_votes:find({
-			contest_id = params.contest_id,
-			user_id = params.session.user_id,
-			chart_id = params.chart_id,
-			vote = opposite,
-		})
-		if opposite_uccv then
-			opposite_uccv:delete()
-		end
+		uccv.vote = params.vote == "yes" and "no" or "yes"
+		models.user_contest_chart_votes:delete(uccv)
+		uccv.vote = params.vote
 		models.user_contest_chart_votes:create(uccv)
 		return "ok", {}
 	end
@@ -52,8 +43,8 @@ function update_vote.handler(params, models)
 	relations.preload({params.contest}, {
 		"sections",
 		"contest_users",
-		user_contest_chart_votes = "user",
-		charts = {"track", "charter"},
+		"user_contest_chart_votes",
+		"charts",
 	})
 
 	local _chart = params.chart
