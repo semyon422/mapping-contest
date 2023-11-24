@@ -25,6 +25,11 @@ return {
 			validation = {200, "login"},
 		}, "www_form"},
 	}},
+	{"/login_as", {
+		POST = {"auth.login_as", {
+			ok = {200},
+		}, "www_form"},
+	}},
 	{"/register", {
 		GET = {"auth.get_register", {
 			ok = {200, "register"},

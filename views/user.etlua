@@ -63,6 +63,19 @@
 	</a>
 <% end %>
 
+<% if user.id ~= session.user_id and view:authorize("auth.login_as") then %>
+	<a
+		href="#"
+		role="button"
+		hx-post="/login_as"
+		hx-vals='{"user_id":<%= user.id %>}'
+		hx-swap="none"
+		_="on htmx:afterRequest call location.reload()"
+	>
+		Login as
+	</a>
+<% end %>
+
 <dialog id="modal_edit_user">
 	<article>
 		<header>
