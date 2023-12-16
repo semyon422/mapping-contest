@@ -144,7 +144,7 @@
 						</td>
 						<td>
 							<% if view({chart = chart}):authorize("contests.delete_chart") then %>
-							<a href="#" hx-swap="none" hx-delete="/charts/<%= chart.id %>"
+							<a href="#" hx-swap="none" hx-delete="/contests/<%= contest.id %>/charts/<%= chart.id %>"
 								hx-confirm="Are you sure you wish to delete this chart?"
 								_="on htmx:afterRequest trigger update_charts"
 							>

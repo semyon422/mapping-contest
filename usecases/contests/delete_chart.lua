@@ -6,7 +6,8 @@ delete_chart.policy_set = {
 }
 
 delete_chart.models = {
-	chart = {"charts", {id = "chart_id"}, {"contest"}}
+	contest = {"contests", {id = "contest_id"}},
+	chart = {"charts", {id = "chart_id"}, {"contest"}},  -- TODO: refactor this, contest loads twice
 }
 
 function delete_chart.handler(params, models)

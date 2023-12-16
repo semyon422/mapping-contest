@@ -136,7 +136,7 @@ return {
 			end},
 		}},
 	}},
-	{"/charts/:chart_id", {
+	{"/contests/:contest_id/charts/:chart_id", {
 		DELETE = {"contests.delete_chart", {
 			deleted = {204},
 		}},
