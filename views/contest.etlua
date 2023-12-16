@@ -1,4 +1,5 @@
 <% local datetime = require("util.datetime") %>
+<% local can_submit_track = view:authorize("contests.submit_track") %>
 
 <section>
 	<h4>
@@ -34,8 +35,7 @@
 			<% end %>
 		</div>
 		<div>
-			<% local can_submit_track = view:authorize("contests.submit_track") %>
-			<% if contest_user or can_submit_track then %>
+			<% if contest_user or can_submit_track or contest.is_voting_open then %>
 			<h6>
 				Tracks
 				<% if can_submit_track then %>
@@ -72,6 +72,8 @@
 		</div>
 	</div>
 </section>
+
+<% if contest_user or can_submit_track or contest.is_voting_open then %>
 <section>
 	<% local Sections = require("domain.Sections") %>
 
@@ -150,6 +152,9 @@
 		</tbody>
 	</table>
 </section>
+<% else %>
+<p>Submissions are hidden until voting open or you join contest.</p>
+<% end %>
 
 <% if edit then %>
 <dialog id="modal_edit_contest" open>
