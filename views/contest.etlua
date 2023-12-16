@@ -22,7 +22,13 @@
 			<% end %>
 			<% if contest.is_submission_open then %>
 				<% if contest_user then %>
-					<p>Time passed: <span id="charting_timer"></span></p>
+					<p>
+						<span
+							data-tooltip="Started at <%= datetime.to_text(contest_user.started_at) %>">
+							Time passed:
+						</span>
+						<span id="charting_timer"></span>
+					</p>
 				<% elseif view:authorize("contests.join_contest") then %>
 					<a role="button" href="#"
 						hx-swap="none"
