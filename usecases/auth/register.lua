@@ -27,14 +27,14 @@ function register.handler(params, models)
 		)
 		if not success then
 			params.errors = {message}
-			return "ok", params
+			return "validation", params
 		end
 	end
 
 	local user = models.users:find({name = params.name})
 	if user then
 		params.errors = {"This name is already taken"}
-		return "ok", params
+		return "validation", params
 	end
 
 	local time = os.time()

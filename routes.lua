@@ -34,6 +34,10 @@ return {
 		GET = {"auth.get_register", {
 			ok = {200, "register"},
 		}},
+		POST = {"auth.register", {
+			ok = {302, nil, {["Location"] = "/"}},
+			validation = {200, "register"},
+		}, "www_form"},
 	}},
 	{"/logout", {
 		POST = {"auth.logout", {
