@@ -1,6 +1,6 @@
 local ok = {}
 
-function ok.handler(params)
+function ok.handle(params)
 	return "ok", params
 end
 

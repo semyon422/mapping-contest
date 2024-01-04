@@ -1,9 +1,8 @@
-local Rule = require("abac.Rule")
 local has_role = require("domain.has_role")
 
-local rule = Rule("permit")
+local rule = {}
 
-function rule:target(params)
+function rule:condition(params)
 	local user = params.session_user
 	return user and has_role(user, "host")
 end

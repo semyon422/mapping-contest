@@ -3,14 +3,14 @@ local voting = require("domain.voting")
 
 local get_contest = {}
 
-get_contest.policy_set = {
+get_contest.access = {
 	{"contest_visible"},
 	{"contest_host"},
 }
 
 get_contest.models = {contest = {"contests", {id = "contest_id"}}}
 
-function get_contest.handler(params, models)
+function get_contest.handle(params, models)
 	relations.preload({params.contest}, {
 		"host",
 		"sections",

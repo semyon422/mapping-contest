@@ -5,7 +5,7 @@ local types = require("lapis.validate.types")
 
 local login = {}
 
-login.policy_set = {{"not_authed"}}
+login.access = {{"not_authed"}}
 
 login.validate = types.partial({
 	name = types.limited_text(64),
@@ -23,7 +23,7 @@ local function _login(users, name, password)
 	return false, failed
 end
 
-function login.handler(params, models)
+function login.handle(params, models)
 	params.recaptcha_site_key = config.recaptcha.site_key
 	params.is_captcha_enabled = config.is_login_captcha_enabled
 

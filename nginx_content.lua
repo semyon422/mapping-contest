@@ -1,55 +1,25 @@
-local relations = require("rdb.relations")
-local autoload = require("autoload")
+local WebApp = require("http.WebApp")
+local etlua_util = require("http.etlua_util")
 
-local Router = require("http.Router")
-local UsecaseViewHandler = require("http.UsecaseViewHandler")
-local SessionHandler = require("http.SessionHandler")
-local RequestHandler = require("http.RequestHandler")
+-- local function before(params)
+-- 	if not params.session.user_id then
+-- 		return
+-- 	end
 
-local Usecases = require("http.Usecases")
-local usecases = Usecases("usecases")
+-- 	local user = models.users:select({id = params.session.user_id})[1]
+-- 	if not user then
+-- 		return
+-- 	end
+
+-- 	relations.preload({user}, "user_roles")
+-- 	params.session_user = user
+-- end
 
 local config = require("lapis.config").get()
 
-local views = require("views")
+local webApp = WebApp(config)
 
-local app_db = require("app_db")
-app_db.init()
-app_db.create_tables()
-local models = app_db.models
-
-local default_results = {
-	forbidden = {403, "json", {["Content-Type"] = "application/json"}},
-	not_found = {404, "json", {["Content-Type"] = "application/json"}},
-}
-local session_config = {
-	name = "session",
-	secret = config.secret,
-}
-
-local session_handler = SessionHandler(session_config)
-local uv_handler = UsecaseViewHandler(usecases, models, default_results, views)
-local router = Router()
-
-router:route_many(require("routes"))
-
-local function before(params)
-	if not params.session.user_id then
-		return
-	end
-
-	local user = models.users:select({id = params.session.user_id})[1]
-	if not user then
-		return
-	end
-
-	relations.preload({user}, "user_roles")
-	params.session_user = user
-end
-
-local body_handlers = autoload("body")
-
-local requestHandler = RequestHandler(router, body_handlers, session_handler, uv_handler, before)
+table.insert(package.loaders, etlua_util.loader)
 
 return function()
 	local req = {}
@@ -58,7 +28,7 @@ return function()
 	req.method = ngx.req.get_method()
 	req.uri = ngx.var.request_uri
 
-	local ok, code, headers, body = xpcall(requestHandler.handle, debug.traceback, requestHandler, req)
+	local ok, code, headers, body = webApp:handle(req)
 	if not ok then
 		ngx.status = 500
 		ngx.print("<pre>" .. tostring(code) .. "</pre>")

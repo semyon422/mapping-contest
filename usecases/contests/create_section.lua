@@ -1,10 +1,10 @@
 local create_section = {}
 
-create_section.policy_set = {{"contest_host"}}
+create_section.access = {{"contest_host"}}
 
 create_section.models = {contest = {"contests", {id = "contest_id"}}}
 
-function create_section.handler(params, models)
+function create_section.handle(params, models)
 	models.sections:create({
 		contest_id = params.contest.id,
 		name = params.name,

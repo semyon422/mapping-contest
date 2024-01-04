@@ -3,7 +3,7 @@ local types = require("lapis.validate.types")
 
 local update_user = {}
 
-update_user.policy_set = {{"role_admin"}}
+update_user.access = {{"role_admin"}}
 
 update_user.models = {user = {"users", {id = "user_id"}}}
 
@@ -14,7 +14,7 @@ update_user.validate = types.partial({
 	password = types.limited_text(64) + types.empty,
 })
 
-function update_user.handler(params, models)
+function update_user.handle(params, models)
 	local _user = models.users:find({name = params.name})
 	if _user and _user.id ~= params.user.id then
 		params.errors = {"This name is already taken"}

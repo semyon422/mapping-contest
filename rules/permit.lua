@@ -1,8 +1,6 @@
-local Rule = require("abac.Rule")
+local rule = {}
 
-local rule = Rule("permit")
-
-function rule:condition()
+function rule:condition(params)
 	return true
 end
 

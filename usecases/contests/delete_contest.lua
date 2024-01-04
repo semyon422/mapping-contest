@@ -1,10 +1,10 @@
 local delete_contest = {}
 
-delete_contest.policy_set = {{"contest_host"}}
+delete_contest.access = {{"contest_host"}}
 
 delete_contest.models = {contest = {"contests", {id = "contest_id"}}}
 
-function delete_contest.handler(params, models)
+function delete_contest.handle(params, models)
 	params.contest:delete()
 	return "deleted", params
 end

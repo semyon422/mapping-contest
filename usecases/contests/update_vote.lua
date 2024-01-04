@@ -6,7 +6,7 @@ local voting = require("domain.voting")
 
 local update_vote = {}
 
-update_vote.policy_set = {
+update_vote.access = {
 	{"role_verified", "contest_voting_open", "not_charter"}
 }
 
@@ -21,7 +21,7 @@ update_vote.validate = types.partial({
 	vote = types.one_of(Votes.list),
 })
 
-function update_vote.handler(params, models)
+function update_vote.handle(params, models)
 	local uccv = {
 		contest_id = params.contest_id,
 		user_id = params.session.user_id,

@@ -5,7 +5,7 @@ local types = require("lapis.validate.types")
 
 local register = {}
 
-register.policy_set = {{"not_authed"}}
+register.access = {{"not_authed"}}
 
 register.validate = types.partial({
 	name = types.limited_text(64),
@@ -14,7 +14,7 @@ register.validate = types.partial({
 	["g-recaptcha-response"] = types.string + types.empty,
 })
 
-function register.handler(params, models)
+function register.handle(params, models)
 	params.recaptcha_site_key = config.recaptcha.site_key
 	params.is_captcha_enabled = config.is_register_captcha_enabled
 

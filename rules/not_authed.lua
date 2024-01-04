@@ -1,8 +1,6 @@
-local Rule = require("abac.Rule")
+local rule = {}
 
-local rule = Rule("permit")
-
-function rule:target(params)
+function rule:condition(params)
 	return not params.session_user
 end
 

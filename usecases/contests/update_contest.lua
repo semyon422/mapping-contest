@@ -3,7 +3,7 @@ local types = require("lapis.validate.types")
 
 local update_contest = {}
 
-update_contest.policy_set = {{"contest_host"}}
+update_contest.access = {{"contest_host"}}
 
 update_contest.models = {contest = {"contests", {id = "contest_id"}}}
 
@@ -15,7 +15,7 @@ update_contest.validate = types.partial({
 	is_voting_open = types.string + types.empty,
 })
 
-function update_contest.handler(params, models)
+function update_contest.handle(params, models)
 	local _contest = models.contests:find({name = params.name})
 	if _contest and _contest.id ~= params.contest.id then
 		params.errors = {"This name is already taken"}

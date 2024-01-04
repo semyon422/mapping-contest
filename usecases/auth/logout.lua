@@ -1,8 +1,8 @@
 local logout = {}
 
-logout.policy_set = {{"authed"}}
+logout.access = {{"authed"}}
 
-function logout.handler(params)
+function logout.handle(params)
 	params.session.user_id = nil
 	return "ok", params
 end

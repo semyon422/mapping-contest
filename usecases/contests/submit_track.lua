@@ -4,7 +4,7 @@ local File = require("domain.File")
 
 local submit_track = {}
 
-submit_track.policy_set = {{"contest_host"}}
+submit_track.access = {{"contest_host"}}
 
 submit_track.models = {contest = {"contests", {id = "contest_id"}}}
 
@@ -18,7 +18,7 @@ submit_track.validate = types.partial({
 	}),
 })
 
-function submit_track.handler(params, models)
+function submit_track.handle(params, models)
 	local _file = params.file
 
 	local osz, err = osu_util.parse_osz(_file.tmpname)

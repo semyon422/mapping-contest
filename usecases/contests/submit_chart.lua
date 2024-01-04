@@ -4,7 +4,7 @@ local File = require("domain.File")
 
 local submit_chart = {}
 
-submit_chart.policy_set = {{"role_verified", "contest_user", "is_submission_open"}}
+submit_chart.access = {{"role_verified", "contest_user", "is_submission_open"}}
 
 submit_chart.models = {
 	contest = {"contests", {id = "contest_id"}, {"contest_users"}},
@@ -20,7 +20,7 @@ submit_chart.validate = types.partial({
 	}),
 })
 
-function submit_chart.handler(params, models)
+function submit_chart.handle(params, models)
 	local _file = params.file
 
 	local osz, err = osu_util.parse_osz(_file.tmpname)
