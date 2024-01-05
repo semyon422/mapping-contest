@@ -12,13 +12,13 @@ return {
 	-- auth
 	{"/login_options", {
 		GET = {"auth.get_login", {
-			ok = {200, "login_options"},
+			ok = {200, {layout = "login_options"}},
 		}},
 	}},
 	{"/login", {
 		GET = {"auth.get_login", {
-			ok = {200, "login"},
-			validation = {200, "login"},
+			ok = {200, {layout = "login"}},
+			validation = {200, {layout = "login"}},
 		}},
 		POST = {"auth.login", {
 			ok = {302, nil, {["Location"] = "/"}},
@@ -32,7 +32,7 @@ return {
 	}},
 	{"/register", {
 		GET = {"auth.get_register", {
-			ok = {200, "register"},
+			ok = {200, {layout = "register"}},
 		}},
 		POST = {"auth.register", {
 			ok = {302, nil, {["Location"] = "/"}},
@@ -47,18 +47,18 @@ return {
 	{"/oauth", {
 		GET = {"auth.oauth", {
 			ok = {302, nil, {["Location"] = "/"}},
-			error = {400, "errors"},
+			error = {400, {layout = "errors"}},
 		}},
 	}},
 	-- users
 	{"/users", {
 		GET = {"users.get_users", {
-			ok = {200, "users"},
+			ok = {200, {layout = "users"}},
 		}},
 	}},
 	{"/users/:user_id", {
 		GET = {"users.get_user", {
-			ok = {200, "user"},
+			ok = {200, {layout = "user"}},
 		}},
 		PATCH = {"users.update_user", {
 			ok = {200, nil, function(params)
@@ -77,7 +77,7 @@ return {
 	-- contests
 	{"/contests", {
 		GET = {"contests.get_contests", {
-			ok = {200, "contests"},
+			ok = {200, {layout = "contests"}},
 		}},
 		POST = {"contests.create_contest", {
 			created = {200, nil, function(result)
@@ -87,7 +87,7 @@ return {
 	}},
 	{"/contests/:contest_id", {
 		GET = {"contests.get_contest", {
-			ok = {200, "contest"},
+			ok = {200, {layout = "contest"}},
 		}},
 		DELETE = {"contests.delete_contest", {
 			deleted = {302, nil, {["HX-Location"] = "/contests"}},
