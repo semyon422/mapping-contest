@@ -7,7 +7,7 @@ delete_section.models = {
 	section = {"sections", {id = "section_id"}},
 }
 
-function delete_section.handle(params, models)
+function delete_section:handle(params)
 	params.section:delete()
 
 	return "deleted", params

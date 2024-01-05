@@ -1,4 +1,3 @@
-local Datetime = require("util.datetime")
 local types = require("lapis.validate.types")
 
 local update_contest = {}
@@ -15,8 +14,8 @@ update_contest.validate = types.partial({
 	is_voting_open = types.string + types.empty,
 })
 
-function update_contest.handle(params, models)
-	local _contest = models.contests:find({name = params.name})
+function update_contest:handle(params)
+	local _contest = self.models.contests:find({name = params.name})
 	if _contest and _contest.id ~= params.contest.id then
 		params.errors = {"This name is already taken"}
 		return "validation", params

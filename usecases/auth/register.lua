@@ -14,7 +14,7 @@ register.validate = types.partial({
 	["g-recaptcha-response"] = types.string + types.empty,
 })
 
-function register.handle(params, models)
+function register:handle(params)
 	params.recaptcha_site_key = config.recaptcha.site_key
 	params.is_captcha_enabled = config.is_register_captcha_enabled
 
@@ -31,14 +31,14 @@ function register.handle(params, models)
 		end
 	end
 
-	local user = models.users:find({name = params.name})
+	local user = self.models.users:find({name = params.name})
 	if user then
 		params.errors = {"This name is already taken"}
 		return "validation", params
 	end
 
 	local time = os.time()
-	user = models.users:create({
+	user = self.models.users:create({
 		osu_id = 0,
 		name = params.name,
 		discord = params.discord,

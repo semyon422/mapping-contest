@@ -10,7 +10,7 @@ get_contest.access = {
 
 get_contest.models = {contest = {"contests", {id = "contest_id"}}}
 
-function get_contest.handle(params, models)
+function get_contest:handle(params)
 	relations.preload({params.contest}, {
 		"host",
 		"sections",

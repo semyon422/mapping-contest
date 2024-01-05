@@ -23,7 +23,7 @@ local function _login(users, name, password)
 	return false, failed
 end
 
-function login.handle(params, models)
+function login:handle(params)
 	params.recaptcha_site_key = config.recaptcha.site_key
 	params.is_captcha_enabled = config.is_login_captcha_enabled
 
@@ -40,7 +40,7 @@ function login.handle(params, models)
 		end
 	end
 
-	local user, err = _login(models.users, params.name, params.password)
+	local user, err = _login(self.models.users, params.name, params.password)
 
 	if not user then
 		params.errors = {err}

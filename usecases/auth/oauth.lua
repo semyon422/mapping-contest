@@ -4,7 +4,9 @@ local lapis_util = require("lapis.util")
 
 local oauth = {}
 
-function oauth.handle(params, models)
+function oauth:handle(params)
+	local models = self.models
+
 	local body, status_code = http.simple("https://osu.ppy.sh/oauth/token", {
 		client_id = config.osu_oauth.client_id,
 		client_secret = config.osu_oauth.client_secret,

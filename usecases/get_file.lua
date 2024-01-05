@@ -4,7 +4,7 @@ local get_file = {}
 
 get_file.models = {file = {"files", {id = "file_id"}}}
 
-function get_file.handle(params, models)
+function get_file:handle(params)
 	local file = File(params.file.hash)
 	params.content = file:read()
 	return "ok", params

@@ -21,7 +21,9 @@ update_vote.validate = types.partial({
 	vote = types.one_of(Votes.list),
 })
 
-function update_vote.handle(params, models)
+function update_vote:handle(params)
+	local models = self.models
+
 	local uccv = {
 		contest_id = params.contest_id,
 		user_id = params.session.user_id,

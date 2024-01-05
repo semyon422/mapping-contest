@@ -4,8 +4,8 @@ create_section.access = {{"contest_host"}}
 
 create_section.models = {contest = {"contests", {id = "contest_id"}}}
 
-function create_section.handle(params, models)
-	models.sections:create({
+function create_section:handle(params)
+	self.models.sections:create({
 		contest_id = params.contest.id,
 		name = params.name,
 		time_base = tonumber(params.time_base) or 0,

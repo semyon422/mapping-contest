@@ -1,7 +1,7 @@
 local get_contests = {}
 
-function get_contests.handle(params, models)
-	params.contests = models.contests:select()
+function get_contests:handle(params)
+	params.contests = self.models.contests:select()
 	return "ok", params
 end
 

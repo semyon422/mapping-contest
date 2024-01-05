@@ -5,7 +5,7 @@ local get_login = {}
 
 get_login.access = {{"not_authed"}}
 
-function get_login.handle(params, models)
+function get_login:handle(params)
 	params.recaptcha_site_key = config.recaptcha.site_key
 	params.is_captcha_enabled = config.is_register_captcha_enabled
 

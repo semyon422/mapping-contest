@@ -7,7 +7,7 @@ update_section.models = {
 	section = {"sections", {id = "section_id"}},
 }
 
-function update_section.handle(params, models)
+function update_section:handle(params)
 	params.section:update({
 		name = params.name,
 		time_base = tonumber(params.time_base) or 0,

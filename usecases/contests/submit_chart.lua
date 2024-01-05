@@ -20,7 +20,8 @@ submit_chart.validate = types.partial({
 	}),
 })
 
-function submit_chart.handle(params, models)
+function submit_chart:handle(params)
+	local models = self.models
 	local _file = params.file
 
 	local osz, err = osu_util.parse_osz(_file.tmpname)

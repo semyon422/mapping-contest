@@ -4,7 +4,7 @@ delete_contest.access = {{"contest_host"}}
 
 delete_contest.models = {contest = {"contests", {id = "contest_id"}}}
 
-function delete_contest.handle(params, models)
+function delete_contest:handle(params)
 	params.contest:delete()
 	return "deleted", params
 end

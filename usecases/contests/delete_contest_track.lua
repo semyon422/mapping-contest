@@ -7,7 +7,7 @@ delete_contest_track.models = {
 	contest_track = {"contest_tracks", {"contest_id", "track_id"}},
 }
 
-function delete_contest_track.handle(params, models)
+function delete_contest_track:handle(params)
 	params.contest_track:delete()
 
 	-- local count = models.contest_tracks:count("track_id = ?", params.track_id)

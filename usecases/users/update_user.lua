@@ -14,8 +14,8 @@ update_user.validate = types.partial({
 	password = types.limited_text(64) + types.empty,
 })
 
-function update_user.handle(params, models)
-	local _user = models.users:find({name = params.name})
+function update_user:handle(params)
+	local _user = self.models.users:find({name = params.name})
 	if _user and _user.id ~= params.user.id then
 		params.errors = {"This name is already taken"}
 		return "validation", params

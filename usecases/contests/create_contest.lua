@@ -2,9 +2,9 @@ local create_contest = {}
 
 create_contest.access = {{"role_host"}}
 
-function create_contest.handle(params, models)
+function create_contest:handle(params)
 	local time = os.time()
-	local contest = models.contests:create({
+	local contest = self.models.contests:create({
 		host_id = params.session.user_id,
 		name = time,
 		description = "",

@@ -18,7 +18,8 @@ submit_track.validate = types.partial({
 	}),
 })
 
-function submit_track.handle(params, models)
+function submit_track:handle(params)
+	local models = self.models
 	local _file = params.file
 
 	local osz, err = osu_util.parse_osz(_file.tmpname)
