@@ -1,20 +1,6 @@
 local WebApp = require("http.WebApp")
 local etlua_util = require("http.etlua_util")
 
--- local function before(params)
--- 	if not params.session.user_id then
--- 		return
--- 	end
-
--- 	local user = models.users:select({id = params.session.user_id})[1]
--- 	if not user then
--- 		return
--- 	end
-
--- 	relations.preload({user}, "user_roles")
--- 	params.session_user = user
--- end
-
 local config = require("lapis.config").get()
 
 local webApp = WebApp(config)
