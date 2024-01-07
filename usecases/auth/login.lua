@@ -1,4 +1,3 @@
-local config = require("lapis.config").get()
 local recaptcha_verify = require("util.recaptcha_verify")
 local bcrypt = require("bcrypt")
 local types = require("lapis.validate.types")
@@ -24,6 +23,8 @@ local function _login(users, name, password)
 end
 
 function login:handle(params)
+	local config = self.config
+
 	params.recaptcha_site_key = config.recaptcha.site_key
 	params.is_captcha_enabled = config.is_login_captcha_enabled
 

@@ -1,10 +1,10 @@
 local http = require("lapis.nginx.http")
-local config = require("lapis.config").get()
 local lapis_util = require("lapis.util")
 
 local oauth = {}
 
 function oauth:handle(params)
+	local config = self.config
 	local models = self.models
 
 	local body, status_code = http.simple("https://osu.ppy.sh/oauth/token", {
