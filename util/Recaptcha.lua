@@ -1,5 +1,5 @@
 local http = require("lapis.nginx.http")
-local util = require("lapis.util")
+local cjson = require("cjson")
 local class = require("class")
 
 local Recaptcha = class()
@@ -19,7 +19,7 @@ function Recaptcha:verify(ip, token, action, score)
 	if status_code ~= 200 then
 		return false, "recaptcha: " .. status_code
 	end
-	local captcha = util.from_json(body)
+	local captcha = cjson.decode(body)
 
 	score = score or 0.5
 	if not captcha.success or captcha.score < score or captcha.action ~= action then
