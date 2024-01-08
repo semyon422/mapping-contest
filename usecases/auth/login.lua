@@ -1,4 +1,4 @@
-local recaptcha_verify = require("util.recaptcha_verify")
+local Recaptcha = require("util.Recaptcha")
 local bcrypt = require("bcrypt")
 local types = require("lapis.validate.types")
 
@@ -29,7 +29,8 @@ function login:handle(params)
 	params.is_captcha_enabled = config.is_login_captcha_enabled
 
 	if config.is_login_captcha_enabled then
-		local success, message = recaptcha_verify(
+		local recaptcha = Recaptcha(config.recaptcha.secret_key)
+		local success, message = recaptcha:verify(
 			params.ip,
 			params["g-recaptcha-response"],
 			"login",

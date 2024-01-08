@@ -1,4 +1,5 @@
-<% local datetime = require("util.datetime") %>
+<% local Datetime = require("util.Datetime") %>
+<% local datetime = Datetime(config.timezone) %>
 <% local can_submit_track = view:authorize("contests.submit_track") %>
 
 <section>
@@ -24,7 +25,7 @@
 				<% if contest_user then %>
 					<p>
 						<span
-							data-tooltip="Started at <%= datetime.to_text(contest_user.started_at) %>">
+							data-tooltip="Started at <%= datetime:to_text(contest_user.started_at) %>">
 							Time passed:
 						</span>
 						<span id="charting_timer"></span>
@@ -120,7 +121,7 @@
 							<a
 								href="/files/<%= chart.file_id %>"
 								hx-boost="false"
-								data-tooltip="<%= datetime.to_text(chart.submitted_at) %>, <%= chart.notes %> notes"
+								data-tooltip="<%= datetime:to_text(chart.submitted_at) %>, <%= chart.notes %> notes"
 							><%= chart.track.title %></a>
 						</td>
 						<td>
