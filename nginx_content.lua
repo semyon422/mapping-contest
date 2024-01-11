@@ -1,3 +1,5 @@
+package.loaded.utf8 = require("lua-utf8")
+
 local WebApp = require("http.WebApp")
 local etlua_util = require("http.etlua_util")
 

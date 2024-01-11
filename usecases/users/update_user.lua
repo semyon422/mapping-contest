@@ -1,5 +1,4 @@
 local bcrypt = require("bcrypt")
-local types = require("lapis.validate.types")
 
 local update_user = {}
 
@@ -7,12 +6,12 @@ update_user.access = {{"role_admin"}}
 
 update_user.models = {user = {"users", {id = "user_id"}}}
 
-update_user.validate = types.partial({
-	osu_id = types.db_id,
-	name = types.limited_text(64),
-	discord = types.limited_text(64),
-	password = types.limited_text(64) + types.empty,
-})
+update_user.validate = {
+	osu_id = "integer",
+	name = {"*", "string", {"#", 1, 64}},
+	discord = {"*", "string", {"#", 1, 64}},
+	password = {"*", "string", {"#", 0, 64}},
+}
 
 function update_user:handle(params)
 	local _user = self.models.users:find({name = params.name})
@@ -27,7 +26,7 @@ function update_user:handle(params)
 		discord = params.discord,
 	})
 
-	if params.password then
+	if #params.password > 0 then
 		params.user:update({
 			password = bcrypt.digest(params.password, 10)
 		})

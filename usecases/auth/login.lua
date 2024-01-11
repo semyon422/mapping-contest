@@ -1,16 +1,15 @@
 local Recaptcha = require("util.Recaptcha")
 local bcrypt = require("bcrypt")
-local types = require("lapis.validate.types")
 
 local login = {}
 
 login.access = {{"not_authed"}}
 
-login.validate = types.partial({
-	name = types.limited_text(64),
-	password = types.limited_text(64),
-	["g-recaptcha-response"] = types.string + types.empty,
-})
+login.validate = {
+	name = {"*", "string", {"#", 1, 64}},
+	password = {"*", "string", {"#", 1, 64}},
+	["g-recaptcha-response"] = {"*", "string", {"#", 0, 1024}},
+}
 
 local failed = "Login failed. Invalid email or password"
 local function _login(users, name, password)

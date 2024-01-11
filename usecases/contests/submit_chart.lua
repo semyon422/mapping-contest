@@ -1,5 +1,4 @@
 local osu_util = require("osu_util")
-local types = require("lapis.validate.types")
 local File = require("domain.File")
 
 local submit_chart = {}
@@ -10,15 +9,15 @@ submit_chart.models = {
 	contest = {"contests", {id = "contest_id"}, {"contest_users"}},
 }
 
-submit_chart.validate = types.partial({
-	contest_id = types.db_id,
-	file = types.shape({
-		tmpname = types.string,
-		filename = types.string,
-		hash = types.string,
-		size = types.integer,
-	}),
-})
+submit_chart.validate = {
+	contest_id = "integer",
+	file = {
+		tmpname = "string",
+		filename = "string",
+		hash = "string",
+		size = "integer",
+	},
+}
 
 function submit_chart:handle(params)
 	local models = self.models

@@ -1,5 +1,4 @@
 local osu_util = require("osu_util")
-local types = require("lapis.validate.types")
 local File = require("domain.File")
 
 local submit_track = {}
@@ -8,15 +7,15 @@ submit_track.access = {{"contest_host"}}
 
 submit_track.models = {contest = {"contests", {id = "contest_id"}}}
 
-submit_track.validate = types.partial({
-	contest_id = types.db_id,
-	file = types.shape({
-		tmpname = types.string,
-		filename = types.string,
-		hash = types.string,
-		size = types.integer,
-	}),
-})
+submit_track.validate = {
+	contest_id = "integer",
+	file = {
+		tmpname = "string",
+		filename = "string",
+		hash = "string",
+		size = "integer",
+	},
+}
 
 function submit_track:handle(params)
 	local models = self.models

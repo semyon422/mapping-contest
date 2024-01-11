@@ -1,18 +1,16 @@
-local types = require("lapis.validate.types")
-
 local update_contest = {}
 
 update_contest.access = {{"contest_host"}}
 
 update_contest.models = {contest = {"contests", {id = "contest_id"}}}
 
-update_contest.validate = types.partial({
-	name = types.limited_text(128),
-	description = types.limited_text(1024),
-	is_visible = types.string + types.empty,
-	is_submission_open = types.string + types.empty,
-	is_voting_open = types.string + types.empty,
-})
+update_contest.validate = {
+	name = {"*", "string", {"#", 1, 128}},
+	description = {"*", "string", {"#", 1, 1024}},
+	is_visible = "boolean",
+	is_submission_open = "boolean",
+	is_voting_open = "boolean",
+}
 
 function update_contest:handle(params)
 	local _contest = self.models.contests:find({name = params.name})

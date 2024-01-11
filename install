@@ -2,9 +2,9 @@
 . ./setenv
 luarocks install lapis
 luarocks install inspect
-luarocks install tableshape
 luarocks install lsqlite3
 luarocks install bcrypt
 luarocks install luazip
+luarocks install luautf8
 mkdir temp
 mkdir storages

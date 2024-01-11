@@ -1,7 +1,6 @@
 local relations = require("rdb.relations")
 local Sections = require("domain.Sections")
 local Votes = require("domain.Votes")
-local types = require("lapis.validate.types")
 local voting = require("domain.voting")
 
 local update_vote = {}
@@ -15,11 +14,11 @@ update_vote.models = {
 	chart = {"charts", {id = "chart_id"}},
 }
 
-update_vote.validate = types.partial({
-	contest_id = types.db_id,
-	chart_id = types.db_id,
-	vote = types.one_of(Votes.list),
-})
+update_vote.validate = {
+	contest_id = "integer",
+	chart_id = "integer",
+	vote = {"one_of", unpack(Votes.list)},
+}
 
 function update_vote:handle(params)
 	local models = self.models
