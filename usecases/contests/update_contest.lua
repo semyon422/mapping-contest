@@ -22,9 +22,9 @@ function update_contest:handle(params)
 	params.contest:update({
 		name = params.name,
 		description = params.description,
-		is_visible = params.is_visible == "on",
-		is_voting_open = params.is_voting_open == "on",
-		is_submission_open = params.is_submission_open == "on",
+		is_visible = params.is_visible,
+		is_voting_open = params.is_voting_open,
+		is_submission_open = params.is_submission_open,
 	})
 
 	return "ok", params

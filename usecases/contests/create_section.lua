@@ -4,6 +4,12 @@ create_section.access = {{"contest_host"}}
 
 create_section.models = {contest = {"contests", {id = "contest_id"}}}
 
+create_section.validate = {
+	name = {"*", "string", {"#", 1, 128}},
+	time_base = "number",
+	time_per_knote = "number",
+}
+
 function create_section:handle(params)
 	self.models.sections:create({
 		contest_id = params.contest.id,

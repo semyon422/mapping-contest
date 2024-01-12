@@ -7,6 +7,12 @@ update_section.models = {
 	section = {"sections", {id = "section_id"}},
 }
 
+update_section.validate = {
+	name = {"*", "string", {"#", 1, 128}},
+	time_base = "number",
+	time_per_knote = "number",
+}
+
 function update_section:handle(params)
 	params.section:update({
 		name = params.name,

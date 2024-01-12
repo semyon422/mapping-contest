@@ -28,7 +28,7 @@ return {
 	{"/login_as", {
 		POST = {"auth.login_as", {
 			ok = {200},
-		}, "www_form"},
+		}, "www_form", "tonumber_id"},
 	}},
 	{"/register", {
 		GET = {"auth.get_register", {
@@ -64,7 +64,7 @@ return {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/users/" .. params.user.id}
 			end},
-		}, "www_form"},
+		}, "www_form", "update_user"},
 	}},
 	{"/users/:user_id/roles/:role", {
 		PUT = {"auth.give_role", {
@@ -96,19 +96,19 @@ return {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest_id}
 			end},
-		}, "www_form"},
+		}, "www_form", "update_contest"},
 	}},
 	{"/contests/:contest_id/votes", {
 		PATCH = {"contests.update_vote", {
 			ok = {200},
-		}, "www_form"},
+		}, "www_form", "tonumber_id"},
 	}},
 	{"/contests/:contest_id/sections", {
 		POST = {"contests.create_section", {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest_id}
 			end},
-		}, "www_form"},
+		}, "www_form", "update_section"},
 	}},
 	{"/contests/:contest_id/tracks", {
 		POST = {"contests.submit_track", {
@@ -146,7 +146,7 @@ return {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest_id}
 			end},
-		}, "www_form"},
+		}, "www_form", "update_section"},
 		DELETE = {"contests.delete_section", {
 			deleted = {204, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest_id}
