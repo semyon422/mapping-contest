@@ -9,7 +9,6 @@ register.validate = {
 	name = {"*", "string", {"#", 1, 64}},
 	discord = {"*", "string", {"#", 1, 64}},
 	password = {"*", "string", {"#", 1, 64}},
-	["g-recaptcha-response"] = {"*", "string", {"#", 0, 1024}},
 }
 
 function register:handle(params)

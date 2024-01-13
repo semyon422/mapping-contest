@@ -8,7 +8,6 @@ login.access = {{"not_authed"}}
 login.validate = {
 	name = {"*", "string", {"#", 1, 64}},
 	password = {"*", "string", {"#", 1, 64}},
-	["g-recaptcha-response"] = {"*", "string", {"#", 0, 1024}},
 }
 
 local failed = "Login failed. Invalid email or password"
