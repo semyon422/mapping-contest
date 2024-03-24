@@ -1,0 +1,5 @@
+return {
+	reporter = "lcov",
+	reportfile = "lcov.info",
+	exclude = {}
+}

@@ -1,0 +1,5 @@
+#!/bin/bash
+. ./setenv
+rm luacov.stats.out
+luajit test.lua
+luacov

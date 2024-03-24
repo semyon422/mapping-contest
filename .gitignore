@@ -5,3 +5,5 @@ storages
 nginx.conf.compiled
 db.sqlite
 config.lua
+luacov.*
+lcov.info
