@@ -1,17 +1,19 @@
 local relations = require("rdb.relations")
 local voting = require("domain.voting")
+local Errors = require("domain.Errors")
 
 local get_contest = {}
 
-get_contest.access = {
-	{"contest_visible"},
-	{"contest_host"},
-}
-
-get_contest.models = {contest = {"contests", {id = "contest_id"}}}
-
 function get_contest:handle(params)
-	relations.preload({params.contest}, {
+	local contest, err = self.domain.contests:getContest(params.session_user, params.contest_id)
+	if not contest then
+		if err == Errors.not_found then
+			return "not_found", params
+		end
+		error("unknown error")
+	end
+
+	relations.preload({contest}, {
 		"host",
 		"sections",
 		"contest_users",
@@ -20,6 +22,7 @@ function get_contest:handle(params)
 		charts = {"track", "charter"},
 	})
 
+	params.contest = contest
 	params.section_vote_charts = voting.load_sections(params)
 
 	local user_id = params.session.user_id

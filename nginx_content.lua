@@ -1,11 +1,10 @@
 package.loaded.utf8 = require("lua-utf8")
 
-local WebApp = require("http.WebApp")
 local etlua_util = require("http.etlua_util")
+local App = require("app.App")
 
-local config = require("lapis.config").get()
-
-local webApp = WebApp(config)
+local app = App()
+app:load()
 
 table.insert(package.loaders, etlua_util.loader)
 
@@ -16,7 +15,7 @@ return function()
 	req.method = ngx.req.get_method()
 	req.uri = ngx.var.request_uri
 
-	local ok, code, headers, body = webApp:handle(req)
+	local ok, code, headers, body = app.webApp:handle(req)
 	if not ok then
 		ngx.status = 500
 		ngx.print("<pre>" .. tostring(code) .. "</pre>")
