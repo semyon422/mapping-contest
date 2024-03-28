@@ -1,9 +1,12 @@
 local http = require("lapis.nginx.http")
 local lapis_util = require("lapis.util")
+local Usecase = require("http.Usecase")
 
-local oauth = {}
+---@class usecases.OAuth: http.Usecase
+---@operator call: usecases.OAuth
+local OAuth = Usecase + {}
 
-function oauth:handle(params)
+function OAuth:handle(params)
 	local config = self.config
 	local models = self.models
 
@@ -64,4 +67,4 @@ function oauth:handle(params)
 	return "ok", params
 end
 
-return oauth
+return OAuth

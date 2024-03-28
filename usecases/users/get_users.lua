@@ -1,11 +1,14 @@
 local relations = require("rdb.relations")
+local Usecase = require("http.Usecase")
 
-local get_users = {}
+---@class usecases.GetUsers: http.Usecase
+---@operator call: usecases.GetUsers
+local GetUsers = Usecase + {}
 
-function get_users:handle(params)
-	params.users = self.models.users:select()
+function GetUsers:handle(params)
+	params.users = self.domain.users:getUsers()
 	relations.preload(params.users, "user_roles")
 	return "ok", params
 end
 
-return get_users
+return GetUsers

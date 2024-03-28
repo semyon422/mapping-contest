@@ -1,24 +1,24 @@
-local create_section = {}
+local Usecase = require("http.Usecase")
 
-create_section.access = {{"contest_host"}}
+---@class usecases.CreateSection: http.Usecase
+---@operator call: usecases.CreateSection
+local CreateSection = Usecase + {}
 
-create_section.models = {contest = {"contests", {id = "contest_id"}}}
+function CreateSection:authorize(params)
+	if not params.session_user then return end
+	return self.domain.contests:isContestEditable(params.session_user, params.contest)
+end
 
-create_section.validate = {
-	name = {"*", "string", {"#", 1, 128}},
-	time_base = "number",
-	time_per_knote = "number",
-}
-
-function create_section:handle(params)
-	self.models.sections:create({
+function CreateSection:handle(params)
+	local section, err = self.domain.sections:createSsection(params.session_user, params.contest_id, {
 		contest_id = params.contest.id,
 		name = params.name,
 		time_base = tonumber(params.time_base) or 0,
 		time_per_knote = tonumber(params.time_per_knote) or 0,
 	})
+	assert(section)
 
 	return "ok", params
 end
 
-return create_section
+return CreateSection

@@ -1,8 +1,15 @@
-local get_register = {}
+local Usecase = require("http.Usecase")
 
-get_register.access = {{"not_authed"}}
+---@class usecases.GetRegister: http.Usecase
+---@operator call: usecases.GetRegister
+local GetRegister = Usecase + {}
 
-function get_register:handle(params)
+function GetRegister:authorize(params)
+	if not params.session_user then return end
+	return not self.domain.auth:isLoggedIn(params.session_user)
+end
+
+function GetRegister:handle(params)
 	local config = self.config
 
 	params.recaptcha_site_key = config.recaptcha.site_key
@@ -11,4 +18,4 @@ function get_register:handle(params)
 	return "ok", params
 end
 
-return get_register
+return GetRegister

@@ -1,12 +1,19 @@
-local remove_role = {}
+local Usecase = require("http.Usecase")
 
-remove_role.access = {{"change_role"}}
+---@class usecases.RemoveRole: http.Usecase
+---@operator call: usecases.RemoveRole
+local RemoveRole = Usecase + {}
 
-remove_role.models = {user_role = {"user_roles", {"user_id", "role"}}}
+function RemoveRole:authorize(params)
+	if not params.session_user then return end
+	return self.domain.auth:canChangeRole(params.session_user, params.user)
+end
 
-function remove_role:handle(params)
+RemoveRole.models = {user_role = {"user_roles", {"user_id", "role"}}}
+
+function RemoveRole:handle(params)
 	params.user_role:delete()
 	return "ok", params
 end
 
-return remove_role
+return RemoveRole

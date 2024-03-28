@@ -1,13 +1,19 @@
 local osu_util = require("osu_util")
 local File = require("domain.File")
+local Usecase = require("http.Usecase")
 
-local submit_track = {}
+---@class usecases.SubmitTrack: http.Usecase
+---@operator call: usecases.SubmitTrack
+local SubmitTrack = Usecase + {}
 
-submit_track.access = {{"contest_host"}}
+function SubmitTrack:authorize(params)
+	if not params.session_user then return end
+	return self.domain.contests:isContestEditable(params.session_user, params.contest)
+end
 
-submit_track.models = {contest = {"contests", {id = "contest_id"}}}
+SubmitTrack.models = {contest = {"contests", {id = "contest_id"}}}
 
-submit_track.validate = {
+SubmitTrack.validate = {
 	contest_id = "integer",
 	file = {
 		tmpname = "string",
@@ -17,7 +23,7 @@ submit_track.validate = {
 	},
 }
 
-function submit_track:handle(params)
+function SubmitTrack:handle(params)
 	local models = self.models
 	local _file = params.file
 
@@ -66,4 +72,4 @@ function submit_track:handle(params)
 	return "ok", params
 end
 
-return submit_track
+return SubmitTrack

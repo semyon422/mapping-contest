@@ -1,26 +1,21 @@
 local Recaptcha = require("util.Recaptcha")
-local bcrypt = require("bcrypt")
+local Usecase = require("http.Usecase")
 
-local login = {}
+---@class usecases.Login: http.Usecase
+---@operator call: usecases.Login
+local Login = Usecase + {}
 
-login.access = {{"not_authed"}}
+function Login:authorize(params)
+	if not params.session_user then return end
+	return not self.domain.auth:isLoggedIn(params.session_user)
+end
 
-login.validate = {
+Login.validate = {
 	name = {"*", "string", {"#", 1, 64}},
 	password = {"*", "string", {"#", 1, 64}},
 }
 
-local failed = "Login failed. Invalid email or password"
-local function _login(users, name, password)
-	if not name or not password then return false, failed end
-	local user = users:find({name = name})
-	if not user then return false, failed end
-	local valid = bcrypt.verify(password, user.password)
-	if valid then return user end
-	return false, failed
-end
-
-function login:handle(params)
+function Login:handle(params)
 	local config = self.config
 
 	params.recaptcha_site_key = config.recaptcha.site_key
@@ -40,7 +35,7 @@ function login:handle(params)
 		end
 	end
 
-	local user, err = _login(self.models.users, params.name, params.password)
+	local user, err = self.domain.auth:login(params.name, params.password)
 
 	if not user then
 		params.errors = {err}
@@ -52,4 +47,4 @@ function login:handle(params)
 	return "ok", params
 end
 
-return login
+return Login

@@ -1,10 +1,12 @@
-local update_contest = {}
+local Usecase = require("http.Usecase")
 
-update_contest.access = {{"contest_host"}}
+---@class usecases.UpdateContest: http.Usecase
+---@operator call: usecases.UpdateContest
+local UpdateContest = Usecase + {}
 
-update_contest.models = {contest = {"contests", {id = "contest_id"}}}
+UpdateContest.models = {contest = {"contests", {id = "contest_id"}}}
 
-update_contest.validate = {
+UpdateContest.validate = {
 	name = {"*", "string", {"#", 1, 128}},
 	description = {"*", "string", {"#", 1, 1024}},
 	is_visible = "boolean",
@@ -12,7 +14,12 @@ update_contest.validate = {
 	is_voting_open = "boolean",
 }
 
-function update_contest:handle(params)
+function UpdateContest:authorize(params)
+	if not params.session_user then return end
+	return self.domain.contests:isContestEditable(params.session_user, params.contest)
+end
+
+function UpdateContest:handle(params)
 	local _contest = self.models.contests:find({name = params.name})
 	if _contest and _contest.id ~= params.contest.id then
 		params.errors = {"This name is already taken"}
@@ -30,4 +37,4 @@ function update_contest:handle(params)
 	return "ok", params
 end
 
-return update_contest
+return UpdateContest

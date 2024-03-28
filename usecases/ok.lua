@@ -1,7 +1,11 @@
-local ok = {}
+local Usecase = require("http.Usecase")
 
-function ok:handle(params)
+---@class usecases.Ok: http.Usecase
+---@operator call: usecases.Ok
+local Ok = Usecase + {}
+
+function Ok:handle(params)
 	return "ok", params
 end
 
-return ok
+return Ok

@@ -1,13 +1,16 @@
 local File = require("domain.File")
+local Usecase = require("http.Usecase")
 
-local get_file = {}
+---@class usecases.GetFile: http.Usecase
+---@operator call: usecases.GetFile
+local GetFile = Usecase + {}
 
-get_file.models = {file = {"files", {id = "file_id"}}}
+GetFile.models = {file = {"files", {id = "file_id"}}}
 
-function get_file:handle(params)
+function GetFile:handle(params)
 	local file = File(params.file.hash)
 	params.content = file:read()
 	return "ok", params
 end
 
-return get_file
+return GetFile

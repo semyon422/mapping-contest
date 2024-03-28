@@ -2,25 +2,29 @@ local relations = require("rdb.relations")
 local Sections = require("domain.Sections")
 local Votes = require("domain.Votes")
 local voting = require("domain.voting")
+local Usecase = require("http.Usecase")
 
-local update_vote = {}
+---@class usecases.UpdateVote: http.Usecase
+---@operator call: usecases.UpdateVote
+local UpdateVote = Usecase + {}
 
-update_vote.access = {
-	{"role_verified", "contest_voting_open", "not_charter"}
-}
+function UpdateVote:authorize(params)
+	if not params.session_user then return end
+	return self.domain.contests:canVote(params.session_user, params.contest, params.chart)
+end
 
-update_vote.models = {
+UpdateVote.models = {
 	contest = {"contests", {id = "contest_id"}},
 	chart = {"charts", {id = "chart_id"}},
 }
 
-update_vote.validate = {
+UpdateVote.validate = {
 	contest_id = "integer",
 	chart_id = "integer",
 	vote = {"one_of", unpack(Votes.list)},
 }
 
-function update_vote:handle(params)
+function UpdateVote:handle(params)
 	local models = self.models
 
 	local uccv = {
@@ -92,4 +96,4 @@ function update_vote:handle(params)
 	return "ok", params
 end
 
-return update_vote
+return UpdateVote

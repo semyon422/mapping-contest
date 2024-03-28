@@ -1,10 +1,17 @@
-local join_contest = {}
+local Usecase = require("http.Usecase")
 
-join_contest.access = {{"role_verified"}}
+---@class usecases.JoinContest: http.Usecase
+---@operator call: usecases.JoinContest
+local JoinContest = Usecase + {}
 
-join_contest.models = {contest = {"contests", {id = "contest_id"}}}
+function JoinContest:authorize(params)
+	if not params.session_user then return end
+	return self.domain.contests:canJoinContest(params.session_user, params.contest)
+end
 
-function join_contest:handle(params)
+JoinContest.models = {contest = {"contests", {id = "contest_id"}}}
+
+function JoinContest:handle(params)
 	self.models.contest_users:create({
 		contest_id = params.contest_id,
 		user_id = params.session.user_id,
@@ -14,4 +21,4 @@ function join_contest:handle(params)
 	return "ok", params
 end
 
-return join_contest
+return JoinContest

@@ -4,8 +4,10 @@ local class = require("class")
 ---@operator call: domain.Sections
 local Sections = class()
 
+---@param contestsRepo domain.IContestsRepo
 ---@param sectionsRepo domain.ISectionsRepo
-function Sections:new(sectionsRepo)
+function Sections:new(contestsRepo, sectionsRepo)
+	self.contestsRepo = contestsRepo
 	self.sectionsRepo = sectionsRepo
 end
 
@@ -17,7 +19,16 @@ function Sections:canCreateSection(user, contest)
 	return user.id == contest.host_id
 end
 
-function Sections:createSection(user, contest, _section)
+--[[
+create_section.validate = {
+	name = {"*", "string", {"#", 1, 128}},
+	time_base = "number",
+	time_per_knote = "number",
+}
+]]
+
+function Sections:createSection(user, contest_id, _section)
+	local contest = self.contestsRepo:getById(contest_id)
 	if not self:canCreateSection(user, contest) then
 		return nil, "deny"
 	end

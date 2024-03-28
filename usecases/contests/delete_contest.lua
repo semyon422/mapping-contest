@@ -1,12 +1,19 @@
-local delete_contest = {}
+local Usecase = require("http.Usecase")
 
-delete_contest.access = {{"contest_host"}}
+---@class usecases.DeleteContest: http.Usecase
+---@operator call: usecases.DeleteContest
+local DeleteContest = Usecase + {}
 
-delete_contest.models = {contest = {"contests", {id = "contest_id"}}}
+function DeleteContest:authorize(params)
+	if not params.session_user then return end
+	return self.domain.contests:isContestEditable(params.session_user, params.contest)
+end
 
-function delete_contest:handle(params)
+DeleteContest.models = {contest = {"contests", {id = "contest_id"}}}
+
+function DeleteContest:handle(params)
 	params.contest:delete()
 	return "deleted", params
 end
 
-return delete_contest
+return DeleteContest

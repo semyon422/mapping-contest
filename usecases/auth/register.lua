@@ -1,17 +1,23 @@
 local Recaptcha = require("util.Recaptcha")
 local bcrypt = require("bcrypt")
+local Usecase = require("http.Usecase")
 
-local register = {}
+---@class usecases.Register: http.Usecase
+---@operator call: usecases.Register
+local Register = Usecase + {}
 
-register.access = {{"not_authed"}}
+function Register:authorize(params)
+	if not params.session_user then return end
+	return not self.domain.auth:isLoggedIn(params.session_user)
+end
 
-register.validate = {
+Register.validate = {
 	name = {"*", "string", {"#", 1, 64}},
 	discord = {"*", "string", {"#", 1, 64}},
 	password = {"*", "string", {"#", 1, 64}},
 }
 
-function register:handle(params)
+function Register:handle(params)
 	local config = self.config
 
 	params.recaptcha_site_key = config.recaptcha.site_key
@@ -52,4 +58,4 @@ function register:handle(params)
 	return "ok", params
 end
 
-return register
+return Register

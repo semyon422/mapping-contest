@@ -1,10 +1,16 @@
 local http_util = require("http_util")
+local Usecase = require("http.Usecase")
 
-local get_login = {}
+---@class usecases.GetLogin: http.Usecase
+---@operator call: usecases.GetLogin
+local GetLogin = Usecase + {}
 
-get_login.access = {{"not_authed"}}
+function GetLogin:authorize(params)
+	if not params.session_user then return end
+	return not self.domain.auth:isLoggedIn(params.session_user)
+end
 
-function get_login:handle(params)
+function GetLogin:handle(params)
 	local config = self.config
 
 	params.recaptcha_site_key = config.recaptcha.site_key
@@ -21,4 +27,4 @@ function get_login:handle(params)
 	return "ok", params
 end
 
-return get_login
+return GetLogin

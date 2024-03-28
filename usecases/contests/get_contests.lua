@@ -1,8 +1,12 @@
-local get_contests = {}
+local Usecase = require("http.Usecase")
 
-function get_contests:handle(params)
-	params.contests = self.models.contests:select()
+---@class usecases.GetContests: http.Usecase
+---@operator call: usecases.GetContests
+local GetContests = Usecase + {}
+
+function GetContests:handle(params)
+	params.contests = self.domain.contests:getContests()
 	return "ok", params
 end
 
-return get_contests
+return GetContests

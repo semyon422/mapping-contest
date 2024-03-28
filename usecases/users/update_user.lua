@@ -1,38 +1,34 @@
 local bcrypt = require("bcrypt")
+local Usecase = require("http.Usecase")
 
-local update_user = {}
+---@class usecases.UpdateUser: http.Usecase
+---@operator call: usecases.UpdateUser
+local UpdateUser = Usecase + {}
 
-update_user.access = {{"role_admin"}}
+function UpdateUser:authorize(params)
+	if not params.session_user then return end
+	return self.domain.users:canUpdateUser(params.session_user, params.user)
+end
 
-update_user.models = {user = {"users", {id = "user_id"}}}
-
-update_user.validate = {
+UpdateUser.validate = {
 	osu_id = "integer",
 	name = {"*", "string", {"#", 1, 64}},
 	discord = {"*", "string", {"#", 1, 64}},
 	password = {"*", "string", {"#", 0, 64}},
 }
 
-function update_user:handle(params)
-	local _user = self.models.users:find({name = params.name})
-	if _user and _user.id ~= params.user.id then
-		params.errors = {"This name is already taken"}
-		return "validation", params
-	end
-
-	params.user:update({
+function UpdateUser:handle(params)
+	local user, err = self.domain.users:updateUser({
+		user_id = params.user_id,
 		osu_id = params.osu_id,
 		name = params.name,
 		discord = params.discord,
+		password = params.password,
 	})
-
-	if #params.password > 0 then
-		params.user:update({
-			password = bcrypt.digest(params.password, 10)
-		})
-	end
+	assert(user)
+	params.user = user
 
 	return "ok", params
 end
 
-return update_user
+return UpdateUser

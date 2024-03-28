@@ -1,15 +1,21 @@
 local osu_util = require("osu_util")
 local File = require("domain.File")
+local Usecase = require("http.Usecase")
 
-local submit_chart = {}
+---@class usecases.SubmitChart: http.Usecase
+---@operator call: usecases.SubmitChart
+local SubmitChart = Usecase + {}
 
-submit_chart.access = {{"role_verified", "contest_user", "is_submission_open"}}
+function SubmitChart:authorize(params)
+	if not params.session_user then return end
+	return self.domain.contests:canSubmitChart(params.session_user, params.contest)
+end
 
-submit_chart.models = {
+SubmitChart.models = {
 	contest = {"contests", {id = "contest_id"}, {"contest_users"}},
 }
 
-submit_chart.validate = {
+SubmitChart.validate = {
 	contest_id = "integer",
 	file = {
 		tmpname = "string",
@@ -19,7 +25,7 @@ submit_chart.validate = {
 	},
 }
 
-function submit_chart:handle(params)
+function SubmitChart:handle(params)
 	local models = self.models
 	local _file = params.file
 
@@ -70,4 +76,4 @@ function submit_chart:handle(params)
 	return "ok", params
 end
 
-return submit_chart
+return SubmitChart

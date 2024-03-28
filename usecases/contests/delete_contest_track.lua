@@ -1,13 +1,20 @@
-local delete_contest_track = {}
+local Usecase = require("http.Usecase")
 
-delete_contest_track.access = {{"contest_host"}}
+---@class usecases.DeleteContestTrack: http.Usecase
+---@operator call: usecases.DeleteContestTrack
+local DeleteContestTrack = Usecase + {}
 
-delete_contest_track.models = {
+function DeleteContestTrack:authorize(params)
+	if not params.session_user then return end
+	return self.domain.contests:isContestEditable(params.session_user, params.contest)
+end
+
+DeleteContestTrack.models = {
 	contest = {"contests", {id = "contest_id"}},
 	contest_track = {"contest_tracks", {"contest_id", "track_id"}},
 }
 
-function delete_contest_track:handle(params)
+function DeleteContestTrack:handle(params)
 	params.contest_track:delete()
 
 	-- local count = models.contest_tracks:count("track_id = ?", params.track_id)
@@ -20,4 +27,4 @@ function delete_contest_track:handle(params)
 	return "deleted", params
 end
 
-return delete_contest_track
+return DeleteContestTrack

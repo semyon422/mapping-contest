@@ -1,16 +1,23 @@
-local delete_section = {}
+local Usecase = require("http.Usecase")
 
-delete_section.access = {{"contest_host"}}
+---@class usecases.DeleteSection: http.Usecase
+---@operator call: usecases.DeleteSection
+local DeleteSection = Usecase + {}
 
-delete_section.models = {
+function DeleteSection:authorize(params)
+	if not params.session_user then return end
+	return self.domain.contests:isContestEditable(params.session_user, params.contest)
+end
+
+DeleteSection.models = {
 	contest = {"contests", {id = "contest_id"}},
 	section = {"sections", {id = "section_id"}},
 }
 
-function delete_section:handle(params)
+function DeleteSection:handle(params)
 	params.section:delete()
 
 	return "deleted", params
 end
 
-return delete_section
+return DeleteSection

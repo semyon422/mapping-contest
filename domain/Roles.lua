@@ -1,6 +1,14 @@
+local class = require("class")
 local enum = require("util.enum")
 
-local Roles = {}
+---@class domain.Roles
+---@operator call: domain.Roles
+local Roles = class()
+
+---@param rolesRepo domain.IUserRolesRepo
+function Roles:new(rolesRepo)
+	self.rolesRepo = rolesRepo
+end
 
 Roles.enum = enum({
 	admin = 0,
@@ -42,5 +50,25 @@ end
 
 assert(Roles:belongs("below", "admin", "verified"))
 assert(Roles:belongs("above", "verified", "admin"))
+
+function Roles:hasRole(user, role)
+	for _, user_role in ipairs(user.user_roles) do
+		local _role = user_role.role
+		if _role == role or Roles:belongs("below", _role, role) then
+			return true
+		end
+	end
+end
+
+function Roles:give(user_id, role)
+	self.rolesRepo:create({
+		user_id = user_id,
+		role = role,
+	})
+end
+
+function Roles:take(user_id, role)
+	self.rolesRepo:deleteByIdRole(user_id, role)
+end
 
 return Roles

@@ -1,22 +1,20 @@
-local create_contest = {}
+local Usecase = require("http.Usecase")
 
-create_contest.access = {{"role_host"}}
+---@class usecases.CreateContest: http.Usecase
+---@operator call: usecases.CreateContest
+local CreateContest = Usecase + {}
 
-function create_contest:handle(params)
-	local time = os.time()
-	local contest = self.models.contests:create({
-		host_id = params.session.user_id,
-		name = time,
-		description = "",
-		created_at = time,
-		is_visible = false,
-		is_voting_open = false,
-		is_submission_open = false,
-	})
-	contest:update({name = "Contest " .. contest.id})
+function CreateContest:authorize(params)
+	if not params.session_user then return end
+	return self.domain.contests:canCreateContest(params.session_user)
+end
+
+function CreateContest:handle(params)
+	local contest, err = self.domain.contests:createContest(params.session_user)
+	assert(contest)
 	params.contest = contest
 
 	return "created", params
 end
 
-return create_contest
+return CreateContest

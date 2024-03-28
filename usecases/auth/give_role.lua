@@ -1,15 +1,17 @@
-local give_role = {}
+local Usecase = require("http.Usecase")
 
-give_role.access = {{"change_role"}}
+---@class usecases.GiveRole: http.Usecase
+---@operator call: usecases.GiveRole
+local GiveRole = Usecase + {}
 
-give_role.models = {user = {"users", {id = "user_id"}}}
+function GiveRole:authorize(params)
+	if not params.session_user then return end
+	return self.domain.auth:canChangeRole(params.session_user, params.user)
+end
 
-function give_role:handle(params)
-	self.models.user_roles:create({
-		user_id = params.user_id,
-		role = params.role,
-	})
+function GiveRole:handle(params)
+	self.domain.roles:give(params.user_id, params.role)
 	return "ok", params
 end
 
-return give_role
+return GiveRole

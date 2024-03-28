@@ -1,19 +1,26 @@
-local update_section = {}
+local Usecase = require("http.Usecase")
 
-update_section.access = {{"contest_host"}}
+---@class usecases.UpdateSection: http.Usecase
+---@operator call: usecases.UpdateSection
+local UpdateSection = Usecase + {}
 
-update_section.models = {
+function UpdateSection:authorize(params)
+	if not params.session_user then return end
+	return self.domain.contests:isContestEditable(params.session_user, params.contest)
+end
+
+UpdateSection.models = {
 	contest = {"contests", {id = "contest_id"}},
 	section = {"sections", {id = "section_id"}},
 }
 
-update_section.validate = {
+UpdateSection.validate = {
 	name = {"*", "string", {"#", 1, 128}},
 	time_base = "number",
 	time_per_knote = "number",
 }
 
-function update_section:handle(params)
+function UpdateSection:handle(params)
 	params.section:update({
 		name = params.name,
 		time_base = tonumber(params.time_base) or 0,
@@ -23,4 +30,4 @@ function update_section:handle(params)
 	return "ok", params
 end
 
-return update_section
+return UpdateSection

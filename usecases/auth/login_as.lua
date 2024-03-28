@@ -1,15 +1,22 @@
-local login_as = {}
+local Usecase = require("http.Usecase")
 
-login_as.access = {{"role_admin"}}
+---@class usecases.LoginAs: http.Usecase
+---@operator call: usecases.LoginAs
+local LoginAs = Usecase + {}
 
-login_as.validate = {
+function LoginAs:authorize(params)
+	if not params.session_user then return end
+	return self.domain.auth:canLoginAs(params.session_user, params.user)
+end
+
+LoginAs.validate = {
 	user_id = "integer",
 }
 
-function login_as:handle(params)
+function LoginAs:handle(params)
 	params.session.user_id = params.user_id
 
 	return "ok", params
 end
 
-return login_as
+return LoginAs

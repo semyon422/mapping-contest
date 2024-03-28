@@ -1,7 +1,7 @@
-local class = require("class")
+local IRepo = require("domain.repos.IRepo")
 
----@class domain.ITracksRepo
+---@class domain.ITracksRepo: domain.IRepo
 ---@operator call: domain.ITracksRepo
-local ITracksRepo = class()
+local ITracksRepo = IRepo + {}
 
 return ITracksRepo
