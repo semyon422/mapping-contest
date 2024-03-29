@@ -9,4 +9,9 @@ local IUsersRepo = IRepo + {}
 function IUsersRepo:getByName(user_name)
 end
 
+---@param osu_id number
+---@return table?
+function IUsersRepo:getByOsuId(osu_id)
+end
+
 return IUsersRepo

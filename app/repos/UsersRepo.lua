@@ -21,6 +21,12 @@ function UsersRepo:getByName(user_name)
 	return self.models.users:find({name = assert(user_name)})
 end
 
+---@param osu_id number
+---@return table?
+function UsersRepo:getByOsuId(osu_id)
+	return self.models.users:find({osu_id = assert(osu_id)})
+end
+
 ---@return table?
 function UsersRepo:getAll()
 	return self.models.users:select()

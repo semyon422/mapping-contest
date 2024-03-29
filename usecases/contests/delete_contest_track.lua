@@ -9,21 +9,8 @@ function DeleteContestTrack:authorize(params)
 	return self.domain.contests:isContestEditable(params.session_user, params.contest)
 end
 
-DeleteContestTrack.models = {
-	contest = {"contests", {id = "contest_id"}},
-	contest_track = {"contest_tracks", {"contest_id", "track_id"}},
-}
-
 function DeleteContestTrack:handle(params)
-	params.contest_track:delete()
-
-	-- local count = models.contest_tracks:count("track_id = ?", params.track_id)
-	-- if count ~= 0 then
-	-- 	return
-	-- end
-
-	-- ctx.track:delete()
-
+	self.domain.contestTracks:delete(params.contest_id, params.track_id)
 	return "deleted", params
 end
 

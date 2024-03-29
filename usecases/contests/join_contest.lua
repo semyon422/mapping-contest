@@ -6,17 +6,11 @@ local JoinContest = Usecase + {}
 
 function JoinContest:authorize(params)
 	if not params.session_user then return end
-	return self.domain.contests:canJoinContest(params.session_user, params.contest)
+	return self.domain.contests:canJoinContest(params.session_user)
 end
 
-JoinContest.models = {contest = {"contests", {id = "contest_id"}}}
-
 function JoinContest:handle(params)
-	self.models.contest_users:create({
-		contest_id = params.contest_id,
-		user_id = params.session.user_id,
-		started_at = os.time(),
-	})
+	self.domain.contestUsers:joinContest(params.contest_id, params.session.user_id)
 
 	return "ok", params
 end

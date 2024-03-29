@@ -9,10 +9,8 @@ function DeleteContest:authorize(params)
 	return self.domain.contests:isContestEditable(params.session_user, params.contest)
 end
 
-DeleteContest.models = {contest = {"contests", {id = "contest_id"}}}
-
 function DeleteContest:handle(params)
-	params.contest:delete()
+	self.domain.contests:deleteContest(params.contest_id)
 	return "deleted", params
 end
 

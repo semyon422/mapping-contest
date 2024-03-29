@@ -5,9 +5,9 @@ local enum = require("util.enum")
 ---@operator call: domain.Roles
 local Roles = class()
 
----@param rolesRepo domain.IUserRolesRepo
-function Roles:new(rolesRepo)
-	self.rolesRepo = rolesRepo
+---@param userRolesRepo domain.IUserRolesRepo
+function Roles:new(userRolesRepo)
+	self.userRolesRepo = userRolesRepo
 end
 
 Roles.enum = enum({
@@ -61,14 +61,14 @@ function Roles:hasRole(user, role)
 end
 
 function Roles:give(user_id, role)
-	self.rolesRepo:create({
+	self.userRolesRepo:create({
 		user_id = user_id,
 		role = role,
 	})
 end
 
 function Roles:take(user_id, role)
-	self.rolesRepo:deleteByIdRole(user_id, role)
+	self.userRolesRepo:deleteByIdRole(user_id, role)
 end
 
 return Roles

@@ -9,10 +9,8 @@ function RemoveRole:authorize(params)
 	return self.domain.auth:canChangeRole(params.session_user, params.user)
 end
 
-RemoveRole.models = {user_role = {"user_roles", {"user_id", "role"}}}
-
 function RemoveRole:handle(params)
-	params.user_role:delete()
+	self.domain.roles:take(params.user_id, params.role)
 	return "ok", params
 end
 

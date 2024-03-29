@@ -1,5 +1,4 @@
 local relations = require("rdb.relations")
-local voting = require("domain.voting")
 local Errors = require("domain.Errors")
 local Usecase = require("http.Usecase")
 
@@ -31,7 +30,7 @@ function GetContest:handle(params)
 	})
 
 	params.contest = contest
-	params.section_vote_charts = voting.load_sections(params)
+	params.section_vote_charts = {}
 
 	local user_id = params.session.user_id
 	if user_id then

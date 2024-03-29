@@ -6,8 +6,10 @@ local Errors = require("domain.Errors")
 local Contests = class()
 
 ---@param contestsRepo domain.IContestsRepo
-function Contests:new(contestsRepo)
+---@param roles domain.Roles
+function Contests:new(contestsRepo, roles)
 	self.contestsRepo = contestsRepo
+	self.roles = roles
 end
 
 function Contests:isContestAccessable(user, contest)
@@ -16,6 +18,29 @@ end
 
 function Contests:isContestEditable(user, contest)
 	return user.id == contest.host_id
+end
+
+function Contests:canCreateContest(user)
+	return self.roles:hasRole(user, "host")
+end
+
+function Contests:canSubmitChart(user, contest, contest_users)
+	local _contest_user
+	for _, contest_user in ipairs(contest_users) do
+		if contest_user.user_id == user.id then
+			_contest_user = contest_user
+			break
+		end
+	end
+	return contest.is_submission_open and _contest_user and self.roles:hasRole(user, "verified")
+end
+
+function Contests:canJoinContest(user)
+	return self.roles:hasRole(user, "role_verified")
+end
+
+function Contests:canVote(user, contest, chart)
+	return contest.is_voting_open and user.id ~= chart.charter_id and self.roles:hasRole(user, "verified")
 end
 
 function Contests:getContest(user, contest_id)
@@ -35,39 +60,53 @@ end
 
 function Contests:createContest(user)
 	-- TODO: check host role, validate contest
+	local time = os.time()
 	local contest = self.contestsRepo:create({
 		host_id = user.id,
+		name = time,
+		description = "",
+		created_at = time,
+		is_visible = false,
+		is_voting_open = false,
+		is_submission_open = false,
 	})
-
-	-- local time = os.time()
-	-- local contest = self.models.contests:create({
-	-- 	host_id = params.session.user_id,
-	-- 	name = time,
-	-- 	description = "",
-	-- 	created_at = time,
-	-- 	is_visible = false,
-	-- 	is_voting_open = false,
-	-- 	is_submission_open = false,
-	-- })
-	-- contest:update({name = "Contest " .. contest.id})
+	contest.name = "Contest " .. contest.id
+	self.contestsRepo:update(contest)
 
 	return contest
 end
 
-function Contests:canCreateContest(user)
-	-- return self.domain.roles:hasRole(params.session_user, "host")
+function Contests:deleteContest(user, contest_id)
+	local contest = self.contestsRepo:getById(contest_id)
+	if not self:isContestEditable(user, contest) then
+		return
+	end
+	self.contestsRepo:deleteById(contest_id)
 end
 
-function Contests:canSubmitChart(user, contest)
-	-- {{"role_verified", "contest_user", "is_submission_open"}}
-end
 
-function Contests:canJoinContest(user, contest)
-	-- {{"role_verified"}}
-end
+-- UpdateContest.validate = {
+-- 	name = {"*", "string", {"#", 1, 128}},
+-- 	description = {"*", "string", {"#", 1, 1024}},
+-- 	is_visible = "boolean",
+-- 	is_submission_open = "boolean",
+-- 	is_voting_open = "boolean",
+-- }
 
-function Contests:canVote(user, contest, chart)
-	-- {"role_verified", "contest_voting_open", "not_charter"}
+function Contests:updateContest(user, contest_id, params)
+	local contest = self.contestsRepo:getById(contest_id)
+	if not self:isContestEditable(user, contest) then
+		return
+	end
+
+	self.contestsRepo:update({
+		id = contest_id,
+		name = params.name,
+		description = params.description,
+		is_visible = params.is_visible,
+		is_voting_open = params.is_voting_open,
+		is_submission_open = params.is_submission_open,
+	})
 end
 
 return Contests

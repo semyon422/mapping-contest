@@ -9,14 +9,8 @@ function DeleteSection:authorize(params)
 	return self.domain.contests:isContestEditable(params.session_user, params.contest)
 end
 
-DeleteSection.models = {
-	contest = {"contests", {id = "contest_id"}},
-	section = {"sections", {id = "section_id"}},
-}
-
 function DeleteSection:handle(params)
-	params.section:delete()
-
+	self.domain.sections:deleteSections(params.section_id)
 	return "deleted", params
 end
 

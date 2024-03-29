@@ -9,13 +9,8 @@ function LoginAs:authorize(params)
 	return self.domain.auth:canLoginAs(params.session_user, params.user)
 end
 
-LoginAs.validate = {
-	user_id = "integer",
-}
-
 function LoginAs:handle(params)
 	params.session.user_id = params.user_id
-
 	return "ok", params
 end
 

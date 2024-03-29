@@ -9,13 +9,8 @@ function DeleteChart:authorize(params)
 	return self.domain.charts:canDelete(params.session_user, params.chart)
 end
 
-DeleteChart.models = {
-	contest = {"contests", {id = "contest_id"}},
-	chart = {"charts", {id = "chart_id"}, {"contest"}},  -- TODO: refactor this, contest loads twice
-}
-
 function DeleteChart:handle(params)
-	params.chart:delete()
+	self.domain.charts:delete(params.session_user, params.chart_id)
 	return "deleted", params
 end
 

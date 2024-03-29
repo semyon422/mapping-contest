@@ -5,25 +5,27 @@ local Users = require("domain.Users")
 local Tracks = require("domain.Tracks")
 local Charts = require("domain.Charts")
 local ContestTracks = require("domain.ContestTracks")
+local ContestUsers = require("domain.ContestUsers")
 local Auth = require("domain.Auth")
 local Roles = require("domain.Roles")
+local Votes = require("domain.Votes")
 
 ---@class domain.Domain
 ---@operator call: domain.Domain
 local Domain = class()
 
----@param contestsRepo domain.IContestsRepo
----@param sectionsRepo domain.ISectionsRepo
----@param usersRepo domain.IUsersRepo
-function Domain:new(contestsRepo, sectionsRepo, usersRepo)
-	self.contests = Contests(contestsRepo)
-	self.sections = Sections(contestsRepo, sectionsRepo)
-	self.contestTracks = ContestTracks()
-	self.users = Users(usersRepo)
+---@param repos domain.IRepos
+function Domain:new(repos)
+	self.sections = Sections(repos.contestsRepo, repos.sectionsRepo)
+	self.contestTracks = ContestTracks(repos.contestTracksRepo, repos.filesRepo, repos.tracksRepo)
+	self.contestUsers = ContestUsers(repos.contestUsersRepo)
+	self.users = Users(repos.usersRepo)
 	self.tracks = Tracks()
-	self.charts = Charts()
-	self.roles = Roles()
-	self.auth = Auth(usersRepo)
+	self.charts = Charts(repos.chartsRepo, repos.contestsRepo, repos.filesRepo, repos.tracksRepo)
+	self.roles = Roles(repos.userRolesRepo)
+	self.votes = Votes(repos.votesRepo, repos.sectionsRepo, repos.contestUsersRepo, repos.chartsRepo)
+	self.auth = Auth(repos.usersRepo, repos.userRolesRepo, self.roles)
+	self.contests = Contests(repos.contestsRepo, self.roles)
 end
 
 return Domain

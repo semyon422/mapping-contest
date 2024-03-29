@@ -10,6 +10,18 @@ function IRepo:getById(obj_id)
 	return {}
 end
 
+---@param conds table
+---@return table?
+function IRepo:get(conds)
+	return {}
+end
+
+---@param conds table
+---@return table
+function IRepo:select(conds)
+	return {}
+end
+
 ---@return table
 function IRepo:getAll()
 	return {}
@@ -22,11 +34,17 @@ function IRepo:create(obj)
 end
 
 ---@param conds table
+---@return table
 function IRepo:delete(conds)
+	return {}
 end
 
 ---@param obj_id number
 function IRepo:deleteById(obj_id)
+end
+
+---@param obj table
+function IRepo:update(obj)
 end
 
 return IRepo

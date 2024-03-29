@@ -37,21 +37,8 @@ function Register:handle(params)
 		end
 	end
 
-	local user = self.models.users:find({name = params.name})
-	if user then
-		params.errors = {"This name is already taken"}
-		return "validation", params
-	end
-
-	local time = os.time()
-	user = self.models.users:create({
-		osu_id = 0,
-		name = params.name,
-		discord = params.discord,
-		password = bcrypt.digest(params.password, 10),
-		latest_activity = time,
-		created_at = time,
-	})
+	local user = self.domain.auth:register(params.name, params.password, params.discord)
+	assert(user)
 
 	params.session.user_id = user.id
 

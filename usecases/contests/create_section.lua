@@ -10,7 +10,7 @@ function CreateSection:authorize(params)
 end
 
 function CreateSection:handle(params)
-	local section, err = self.domain.sections:createSsection(params.session_user, params.contest_id, {
+	local section, err = self.domain.sections:createSection(params.session_user, params.contest_id, {
 		contest_id = params.contest.id,
 		name = params.name,
 		time_base = tonumber(params.time_base) or 0,
