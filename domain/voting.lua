@@ -1,4 +1,4 @@
--- local Votes = require("domain.Votes")
+local Votes = require("domain.Votes")
 
 local voting = {}
 

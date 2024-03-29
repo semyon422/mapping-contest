@@ -61,6 +61,10 @@ local function assign_section(charts, sections, contest_users)
 	end
 end
 
+function Votes:canUpdateVote(user, contest, chart, vote)
+
+end
+
 function Votes:updateVote(user, contest_id, chart_id, vote)
 	local uccv = {
 		contest_id = contest_id,

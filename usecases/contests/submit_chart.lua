@@ -8,7 +8,7 @@ local SubmitChart = Usecase + {}
 
 function SubmitChart:authorize(params)
 	if not params.session_user then return end
-	return self.domain.contests:canSubmitChart(params.session_user, params.contest)
+	return self.domain.contests:canSubmitChart(params.session_user, params.contest, params.contest_users)
 end
 
 function SubmitChart:handle(params)

@@ -1,11 +1,11 @@
 <% local Datetime = require("util.Datetime") %>
 <% local datetime = Datetime(config.timezone) %>
-<% local can_submit_track = view:authorize("contests.submit_track") %>
+<% local can_submit_track = page:canSubmitTrack() %>
 
 <section>
 	<h4>
 		<%= contest.name %>
-		<% if view:authorize("contests.update_contest") then %>
+		<% if page:canUpdateContest() then %>
 			<a href="/contests/<%= contest.id %>?edit">
 				<i class="fas fa-edit"></i>
 			</a>
@@ -16,7 +16,7 @@
 			<p>
 				<%- contest.description %>
 			</p>
-			<% if view:authorize("contests.submit_chart") then %>
+			<% if page:canSubmitChart() then %>
 				<a role="button" href="/contests/<%= contest.id %>?submit_chart">
 					Submit chart
 				</a>
@@ -30,7 +30,7 @@
 						</span>
 						<span id="charting_timer"></span>
 					</p>
-				<% elseif view:authorize("contests.join_contest") then %>
+				<% elseif page:canJoinContest() then %>
 					<a role="button" href="#"
 						hx-swap="none"
 						hx-confirm="The timer will start. Are you sure?"
@@ -61,7 +61,7 @@
 								hx-boost="false"
 							><%= track.artist %> - <%= track.title %></a>
 							</td>
-							<% if view({contest_track = contest_track}):authorize("contests.delete_contest_track") then %>
+							<% if page:canDeleteContestTrack(contest_track) then %>
 								<td>
 								<a href="#" hx-swap="none" hx-delete="/contests/<%= contest.id %>/tracks/<%= track.id %>"
 									hx-confirm="Delete this track?"
@@ -87,7 +87,7 @@
 	<% local Votes = require("domain.Votes") %>
 	<% local vote_icons = {"check", "times", "heart"} %>
 
-	<% if view:authorize("contests.create_section") then %>
+	<% if page:canCreateSection() then %>
 		<a href="/contests/<%= contest.id %>?create_section">Create section</a>
 	<% end %>
 	<table id="votes"
@@ -103,7 +103,7 @@
 							data-tooltip="<%= section.time_base %> min + <%= section.time_per_knote %> min / 1000 notes">
 							<%= section.name %>
 						</b>
-						<% if view:authorize("contests.update_contest") then %>
+						<% if page:canUpdateContest() then %>
 							<a href="/contests/<%= contest.id %>?edit_section=<%= section.id %>" hx-boost="false">
 								<i class="fas fa-edit"></i>
 							</a>
@@ -113,7 +113,7 @@
 				</tr>
 				<% for _, vote_chart in ipairs(section_vote_charts[j]) do %>
 					<% local chart = vote_chart.chart %>
-					<% local vote_allowed = view({chart = chart}):authorize("contests.update_vote") %>
+					<% local vote_allowed = page:canUpdateVote(chart) %>
 					<tr>
 						<% chart.contest = contest %>
 						<td><a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a></td>
@@ -144,7 +144,7 @@
 							<% end %>
 						</td>
 						<td>
-							<% if view({chart = chart}):authorize("contests.delete_chart") then %>
+							<% if page:canDeleteChart(chart) then %>
 							<a href="#" hx-swap="none" hx-delete="/contests/<%= contest.id %>/charts/<%= chart.id %>"
 								hx-confirm="Are you sure you wish to delete this chart?"
 								_="on htmx:afterRequest trigger update_charts"
