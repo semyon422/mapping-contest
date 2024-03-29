@@ -5,11 +5,6 @@ local Usecase = require("http.Usecase")
 ---@operator call: usecases.UpdateUser
 local UpdateUser = Usecase + {}
 
-function UpdateUser:authorize(params)
-	if not params.session_user then return end
-	return self.domain.users:canUpdateUser(params.session_user, params.user)
-end
-
 UpdateUser.validate = {
 	osu_id = "integer",
 	name = {"*", "string", {"#", 1, 64}},
@@ -28,7 +23,7 @@ function UpdateUser:handle(params)
 	assert(user)
 	params.user = user
 
-	return "ok", params
+	return "ok"
 end
 
 return UpdateUser

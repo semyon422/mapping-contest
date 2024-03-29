@@ -5,16 +5,6 @@ local Usecase = require("http.Usecase")
 ---@operator call: usecases.Login
 local Login = Usecase + {}
 
-function Login:authorize(params)
-	if not params.session_user then return end
-	return not self.domain.auth:isLoggedIn(params.session_user)
-end
-
-Login.validate = {
-	name = {"*", "string", {"#", 1, 64}},
-	password = {"*", "string", {"#", 1, 64}},
-}
-
 function Login:handle(params)
 	local config = self.config
 
@@ -31,7 +21,7 @@ function Login:handle(params)
 		)
 		if not success then
 			params.errors = {message}
-			return "validation", params
+			return "validation"
 		end
 	end
 
@@ -39,12 +29,12 @@ function Login:handle(params)
 
 	if not user then
 		params.errors = {err}
-		return "validation", params
+		return "validation"
 	end
 
 	params.session.user_id = user.id
 
-	return "ok", params
+	return "ok"
 end
 
 return Login

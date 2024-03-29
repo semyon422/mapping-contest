@@ -4,11 +4,6 @@ local Usecase = require("http.Usecase")
 ---@operator call: usecases.UpdateSection
 local UpdateSection = Usecase + {}
 
-function UpdateSection:authorize(params)
-	if not params.session_user then return end
-	return self.domain.contests:isContestEditable(params.session_user, params.contest)
-end
-
 function UpdateSection:handle(params)
 	self.domain.sections:updateSection(params.session_user, params.contest_id, {
 		name = params.name,
@@ -16,7 +11,7 @@ function UpdateSection:handle(params)
 		time_per_knote = tonumber(params.time_per_knote) or 0,
 	})
 
-	return "ok", params
+	return "ok"
 end
 
 return UpdateSection

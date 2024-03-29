@@ -5,12 +5,10 @@ local Usecase = require("http.Usecase")
 ---@operator call: usecases.GetFile
 local GetFile = Usecase + {}
 
-GetFile.models = {file = {"files", {id = "file_id"}}}
-
 function GetFile:handle(params)
 	local file = File(params.file.hash)
 	params.content = file:read()
-	return "ok", params
+	return "ok"
 end
 
 return GetFile

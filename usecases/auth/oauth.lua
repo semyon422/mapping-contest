@@ -9,7 +9,7 @@ function OAuth:handle(params)
 	assert(user)
 
 	params.session.user_id = user.id
-	return "ok", params
+	return "ok"
 end
 
 return OAuth

@@ -1,21 +1,9 @@
 local Recaptcha = require("util.Recaptcha")
-local bcrypt = require("bcrypt")
 local Usecase = require("http.Usecase")
 
 ---@class usecases.Register: http.Usecase
 ---@operator call: usecases.Register
 local Register = Usecase + {}
-
-function Register:authorize(params)
-	if not params.session_user then return end
-	return not self.domain.auth:isLoggedIn(params.session_user)
-end
-
-Register.validate = {
-	name = {"*", "string", {"#", 1, 64}},
-	discord = {"*", "string", {"#", 1, 64}},
-	password = {"*", "string", {"#", 1, 64}},
-}
 
 function Register:handle(params)
 	local config = self.config
@@ -33,7 +21,7 @@ function Register:handle(params)
 		)
 		if not success then
 			params.errors = {message}
-			return "validation", params
+			return "validation"
 		end
 	end
 
@@ -42,7 +30,7 @@ function Register:handle(params)
 
 	params.session.user_id = user.id
 
-	return "ok", params
+	return "ok"
 end
 
 return Register

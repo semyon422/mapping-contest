@@ -5,7 +5,7 @@ local Usecase = require("http.Usecase")
 local Ok = Usecase + {}
 
 function Ok:handle(params)
-	return "ok", params
+	return "ok"
 end
 
 return Ok

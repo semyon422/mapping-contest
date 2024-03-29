@@ -8,7 +8,7 @@ local GetUser = Usecase + {}
 function GetUser:handle(params)
 	params.user = self.domain.users:getUser(params.user_id)
 	relations.preload({params.user}, "user_roles")
-	return "ok", params
+	return "ok"
 end
 
 return GetUser

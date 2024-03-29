@@ -5,11 +5,6 @@ local Usecase = require("http.Usecase")
 ---@operator call: usecases.GetLogin
 local GetLogin = Usecase + {}
 
-function GetLogin:authorize(params)
-	if not params.session_user then return end
-	return not self.domain.auth:isLoggedIn(params.session_user)
-end
-
 function GetLogin:handle(params)
 	local config = self.config
 
@@ -24,7 +19,7 @@ function GetLogin:handle(params)
 		state = "csrf_token",
 	})
 
-	return "ok", params
+	return "ok"
 end
 
 return GetLogin

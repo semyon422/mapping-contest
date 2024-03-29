@@ -6,7 +6,7 @@ local GetContests = Usecase + {}
 
 function GetContests:handle(params)
 	params.contests = self.domain.contests:getContests()
-	return "ok", params
+	return "ok"
 end
 
 return GetContests

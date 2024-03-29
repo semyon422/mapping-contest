@@ -4,14 +4,9 @@ local Usecase = require("http.Usecase")
 ---@operator call: usecases.LoginAs
 local LoginAs = Usecase + {}
 
-function LoginAs:authorize(params)
-	if not params.session_user then return end
-	return self.domain.auth:canLoginAs(params.session_user, params.user)
-end
-
 function LoginAs:handle(params)
 	params.session.user_id = params.user_id
-	return "ok", params
+	return "ok"
 end
 
 return LoginAs
