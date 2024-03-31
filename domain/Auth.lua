@@ -20,8 +20,8 @@ function Auth:isLoggedIn(user)
 	return user ~= nil
 end
 
-function Auth:canChangeRole(role, target_user)
-	for _, user_role in ipairs(target_user.user_roles) do
+function Auth:canChangeRole(user, role)
+	for _, user_role in ipairs(user.user_roles) do
 		if self.roles:belongs("below", user_role.role, role) then
 			return true
 		end

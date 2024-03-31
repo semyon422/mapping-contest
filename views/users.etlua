@@ -23,8 +23,7 @@
 					<td>
 						<% for i, role_name in ipairs(Roles.list) do %>
 							<% local exist = roles_map[role_name] %>
-							<% local usecase_name = exist and "auth.remove_role" or "auth.give_role" %>
-							<% local changable = view({role = role_name}):authorize(usecase_name) %>
+							<% local changable = page:canChangeRole(role_name) %>
 							<% if not changable and exist then %>
 								<code
 									class="role_<%= changable and "ch" or "nc" %>_<%= exist and "ex" or "ne" %>"
@@ -37,8 +36,8 @@
 					<td>
 						<% for i, role_name in ipairs(Roles.list) do %>
 							<% local exist = roles_map[role_name] %>
-							<% local usecase_name = exist and "auth.remove_role" or "auth.give_role" %>
-							<% local changable = view({role = role_name}):authorize(usecase_name) %><% if changable then %>
+							<% local changable = page:canChangeRole(role_name) %>
+							<% if changable then %>
 								<a href="#" class="role_display"
 									hx-<%= exist and "delete" or "put" %>="/users/<%= user.id %>/roles/<%= role_name %>"
 								>

@@ -20,4 +20,9 @@ function ContestsRepo:getAll()
 	return self.models.contests:select()
 end
 
+---@param contest table
+function ContestsRepo:update(contest)
+	return self.models.contests:update(contest, {id = assert(contest.id)})
+end
+
 return ContestsRepo

@@ -5,7 +5,7 @@ local Usecase = require("http.Usecase")
 local UpdateContest = Usecase + {}
 
 function UpdateContest:handle(params)
-	self.domain.contests:updateContest({
+	self.domain.contests:updateContest(params.session_user, params.contest_id, {
 		name = params.name,
 		description = params.description,
 		is_visible = params.is_visible,

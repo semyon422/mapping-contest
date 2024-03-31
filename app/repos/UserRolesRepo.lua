@@ -9,7 +9,14 @@ function UserRolesRepo:new(appDatabase)
 	self.models = appDatabase.models
 end
 
-function UserRolesRepo:deleteByIdRole(user_id, role)
+function UserRolesRepo:give(user_id, role)
+	self.models.user_roles:create({
+		user_id = assert(user_id),
+		role = assert(role),
+	})
+end
+
+function UserRolesRepo:take(user_id, role)
 	self.models.user_roles:delete({
 		user_id = assert(user_id),
 		role = assert(role),

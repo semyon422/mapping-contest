@@ -4,7 +4,10 @@ local IRepo = require("domain.repos.IRepo")
 ---@operator call: domain.IUserRolesRepo
 local IUserRolesRepo = IRepo + {}
 
-function IUserRolesRepo:deleteByIdRole(user_id, role)
+function IUserRolesRepo:give(user_id, role)
+end
+
+function IUserRolesRepo:take(user_id, role)
 end
 
 return IUserRolesRepo

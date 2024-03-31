@@ -27,8 +27,7 @@
 				<td>
 					<% for i, role_name in ipairs(Roles.list) do %>
 						<% local exist = roles_map[role_name] %>
-						<% local usecase_name = exist and "auth.remove_role" or "auth.give_role" %>
-						<% local changable = view({role = role_name}):authorize(usecase_name) %>
+						<% local changable = page:canChangeRole(role_name) %>
 						<% if changable then %>
 							<a href="#" class="role_display"
 								hx-<%= exist and "delete" or "put" %>="/users/<%= user.id %>/roles/<%= role_name %>"
@@ -57,13 +56,13 @@
 	</a>
 <% end %>
 
-<% if view:authorize("users.update_user") then %>
+<% if page:canUpdateUser() then %>
 	<a href="#" role="button" _="on click toggle @open on #modal_edit_user">
 		Edit
 	</a>
 <% end %>
 
-<% if user.id ~= session.user_id and view:authorize("auth.login_as") then %>
+<% if user.id ~= session.user_id and page:canLoginAs() then %>
 	<a
 		href="#"
 		role="button"

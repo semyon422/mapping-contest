@@ -61,14 +61,11 @@ function Roles:hasRole(user, role)
 end
 
 function Roles:give(user_id, role)
-	self.userRolesRepo:create({
-		user_id = user_id,
-		role = role,
-	})
+	self.userRolesRepo:give(user_id, role)
 end
 
 function Roles:take(user_id, role)
-	self.userRolesRepo:deleteByIdRole(user_id, role)
+	self.userRolesRepo:take(user_id, role)
 end
 
 return Roles
