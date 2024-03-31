@@ -3,6 +3,7 @@ local class = require("class")
 ---@class domain.IRepo
 ---@operator call: domain.IRepo
 local IRepo = class()
+class.to_interface(IRepo)
 
 ---@param obj_id number
 ---@return table?

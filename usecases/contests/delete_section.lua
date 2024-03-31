@@ -5,7 +5,7 @@ local Usecase = require("http.Usecase")
 local DeleteSection = Usecase + {}
 
 function DeleteSection:handle(params)
-	self.domain.sections:deleteSections(params.section_id)
+	self.domain.sections:deleteSection(params.session_user, params.section_id)
 	return "deleted"
 end
 

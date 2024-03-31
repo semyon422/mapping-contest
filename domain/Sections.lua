@@ -32,7 +32,7 @@ function Sections:createSection(user, contest_id, _section)
 	if not self:canCreateSection(user, contest) then
 		return nil, "deny"
 	end
-	self.sectionsRepo:create(_section)
+	return self.sectionsRepo:create(_section)
 end
 
 -- UpdateSection.validate = {
@@ -41,21 +41,23 @@ end
 -- 	time_per_knote = "number",
 -- }
 
-function Sections:updateSection(user, contest_id, _section)
-	local contest = self.contestsRepo:getById(contest_id)
+function Sections:updateSection(user, section_id, _section)
+	local section = self.sectionsRepo:getById(section_id)
+	local contest = self.contestsRepo:getById(section.contest_id)
 	if not self:canCreateSection(user, contest) then
 		return nil, "deny"
 	end
-	-- self.sectionsRepo:update(_section)
-	-- params.section:update({
-	-- 	name = params.name,
-	-- 	time_base = tonumber(params.time_base) or 0,
-	-- 	time_per_knote = tonumber(params.time_per_knote) or 0,
-	-- })
+	_section.id = section.id
+	self.sectionsRepo:update(_section)
 end
 
-function Sections:deleteSections(section_id)
-
+function Sections:deleteSection(user, section_id)
+	local section = self.sectionsRepo:getById(section_id)
+	local contest = self.contestsRepo:getById(section.contest_id)
+	if not self:canCreateSection(user, contest) then
+		return nil, "deny"
+	end
+	self.sectionsRepo:deleteById(section_id)
 end
 
 return Sections

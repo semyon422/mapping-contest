@@ -6,12 +6,14 @@ local bcrypt = require("bcrypt")
 local Users = class()
 
 ---@param usersRepo domain.IUsersRepo
-function Users:new(usersRepo)
+---@param roles domain.Roles
+function Users:new(usersRepo, roles)
 	self.usersRepo = usersRepo
+	self.roles = roles
 end
 
 function Users:canUpdateUser(user, target_user)
-
+	return self.roles:hasRole(user, "admin")
 end
 
 ---@param user_id number
@@ -25,9 +27,12 @@ function Users:getUsers()
 end
 
 ---@param user_params table
-function Users:updateUser(user_params)
-	local user = self.usersRepo:getById(user_params.id)
+function Users:updateUser(s_user, user_id, user_params)
+	local user = self.usersRepo:getById(user_id)
 	if not user then
+		return
+	end
+	if not self:canUpdateUser(s_user, user) then
 		return
 	end
 

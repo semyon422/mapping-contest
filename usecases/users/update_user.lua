@@ -13,8 +13,7 @@ UpdateUser.validate = {
 }
 
 function UpdateUser:handle(params)
-	local user, err = self.domain.users:updateUser({
-		user_id = params.user_id,
+	local user, err = self.domain.users:updateUser(params.session_user, params.user_id, {
 		osu_id = params.osu_id,
 		name = params.name,
 		discord = params.discord,

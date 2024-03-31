@@ -5,7 +5,7 @@ local Usecase = require("http.Usecase")
 local DeleteContest = Usecase + {}
 
 function DeleteContest:handle(params)
-	self.domain.contests:deleteContest(params.contest_id)
+	self.domain.contests:deleteContest(params.session_user, params.contest_id)
 	return "deleted"
 end
 

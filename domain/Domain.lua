@@ -19,13 +19,13 @@ function Domain:new(repos)
 	self.sections = Sections(repos.contestsRepo, repos.sectionsRepo)
 	self.contestTracks = ContestTracks(repos.contestTracksRepo, repos.filesRepo, repos.tracksRepo)
 	self.contestUsers = ContestUsers(repos.contestUsersRepo)
-	self.users = Users(repos.usersRepo)
 	self.tracks = Tracks()
 	self.charts = Charts(repos.chartsRepo, repos.contestsRepo, repos.filesRepo, repos.tracksRepo)
 	self.roles = Roles(repos.userRolesRepo)
 	self.votes = Votes(repos.votesRepo, repos.sectionsRepo, repos.contestUsersRepo, repos.chartsRepo)
 	self.auth = Auth(repos.usersRepo, repos.userRolesRepo, self.roles)
 	self.contests = Contests(repos.contestsRepo, self.roles)
+	self.users = Users(repos.usersRepo, self.roles)
 end
 
 return Domain
