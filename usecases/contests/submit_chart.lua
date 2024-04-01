@@ -5,7 +5,7 @@ local Usecase = require("http.Usecase")
 local SubmitChart = Usecase + {}
 
 function SubmitChart:handle(params)
-	self.domain.charts:submit(params)
+	self.domain.charts:submit(params.session_user, params.file, params.contest_id)
 	return "ok"
 end
 

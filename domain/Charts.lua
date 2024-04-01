@@ -44,7 +44,7 @@ end
 -- 	},
 -- }
 
-function Charts:submit(_file, contest_id, user_id)
+function Charts:submit(user, _file, contest_id)
 	local osz, err = osu_util.parse_osz(_file.tmpname)
 	if not osz then
 		assert(os.remove(_file.tmpname))
@@ -81,7 +81,7 @@ function Charts:submit(_file, contest_id, user_id)
 
 	local chart = self.chartsRepo:create({
 		track_id = track.id,
-		charter_id = user_id,
+		charter_id = user.id,
 		contest_id = contest_id,
 		file_id = file.id,
 		name = osz.Version,
