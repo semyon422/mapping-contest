@@ -1,3 +1,9 @@
 [submodule "aqua"]
 	path = aqua
 	url = https://github.com/semyon422/aqua
+[submodule "minizip"]
+	path = minizip
+	url = https://github.com/luapower/minizip
+[submodule "glue"]
+	path = glue
+	url = https://github.com/luapower/glue

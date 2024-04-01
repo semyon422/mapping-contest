@@ -8,3 +8,5 @@ pkg.addc("tree/lib/lua/5.1")
 -- pkg.add(os.getenv("OR_ROOT") .. "/lualib")
 -- pkg.addc(os.getenv("OR_ROOT") .. "/lualib")
 
+pkg.add("glue")
+pkg.add("minizip")
