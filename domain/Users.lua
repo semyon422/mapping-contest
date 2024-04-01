@@ -19,16 +19,16 @@ end
 ---@param user_id number
 ---@return table?
 function Users:getUser(user_id)
-	return self.usersRepo:getById(user_id)
+	return self.usersRepo:findById(user_id)
 end
 
 function Users:getUsers()
-	return self.usersRepo:getAll()
+	return self.usersRepo:select()
 end
 
 ---@param user_params table
 function Users:updateUser(s_user, user_id, user_params)
-	local user = self.usersRepo:getById(user_id)
+	local user = self.usersRepo:findById(user_id)
 	if not user then
 		return
 	end
@@ -36,7 +36,7 @@ function Users:updateUser(s_user, user_id, user_params)
 		return
 	end
 
-	local _user = self.usersRepo:getByName(user_params.name)
+	local _user = self.usersRepo:findByName(user_params.name)
 	if _user and _user.id ~= user.id then
 		-- params.errors = {"This name is already taken"}
 		return

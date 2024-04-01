@@ -7,36 +7,13 @@ class.to_interface(IRepo)
 
 ---@param obj_id number
 ---@return table?
-function IRepo:getById(obj_id)
-	return {}
-end
-
----@param conds table
----@return table?
-function IRepo:get(conds)
-	return {}
-end
-
----@param conds table
----@return table
-function IRepo:select(conds)
-	return {}
-end
-
----@return table
-function IRepo:getAll()
+function IRepo:findById(obj_id)
 	return {}
 end
 
 ---@param obj table
 ---@return table
-function IRepo:create(obj)
-	return {}
-end
-
----@param conds table
----@return table
-function IRepo:delete(conds)
+function IRepo:updateById(obj)
 	return {}
 end
 
@@ -44,8 +21,49 @@ end
 function IRepo:deleteById(obj_id)
 end
 
----@param obj table
-function IRepo:update(obj)
+-- Model methods
+
+---@param conds table?
+---@return table
+function IRepo:select(conds)
+	return {}
+end
+
+---@param conds table
+---@return table?
+function IRepo:find(conds)
+	return {}
+end
+
+---@param conds table?
+---@return number
+function IRepo:count(conds)
+	return 0
+end
+
+---@param values_array table
+---@return table
+function IRepo:insert(values_array)
+	return {}
+end
+
+---@param values table
+---@return table
+function IRepo:create(values)
+	return {}
+end
+
+---@param values table
+---@param conds table?
+---@return table
+function IRepo:update(values, conds)
+	return {}
+end
+
+---@param conds table?
+---@return table
+function IRepo:delete(conds)
+	return {}
 end
 
 return IRepo

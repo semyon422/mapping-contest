@@ -5,7 +5,7 @@ local IRepo = require("domain.repos.IRepo")
 local IFilesRepo = IRepo + {}
 
 ---@param hash string
-function IFilesRepo:getByHash(hash)
+function IFilesRepo:findByHash(hash)
 end
 
 return IFilesRepo

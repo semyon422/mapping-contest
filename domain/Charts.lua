@@ -22,11 +22,11 @@ function Charts:canDelete(user, chart, contest)
 end
 
 function Charts:delete(user, chart_id)
-	local chart = self.chartsRepo:getById(chart_id)
+	local chart = self.chartsRepo:findById(chart_id)
 	if not chart then
 		return
 	end
-	local contest = self.contestsRepo:getById(chart.contest_id)
+	local contest = self.contestsRepo:findById(chart.contest_id)
 	if not self:canDelete(user, chart, contest) then
 		return
 	end
@@ -55,7 +55,7 @@ function Charts:submit(user, _file, contest_id)
 	local d_file = File(hash)
 	assert(os.rename(_file.tmpname, d_file:get_path()))
 
-	local file = self.filesRepo:getByHash(hash)
+	local file = self.filesRepo:findByHash(hash)
 	if not file then
 		file = self.filesRepo:create({
 			hash = hash,
@@ -66,7 +66,7 @@ function Charts:submit(user, _file, contest_id)
 		})
 	end
 
-	local track = self.tracksRepo:get({
+	local track = self.tracksRepo:find({
 		title = osz.Title,
 		artist = osz.Artist,
 	})

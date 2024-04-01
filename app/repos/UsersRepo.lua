@@ -1,35 +1,22 @@
 local IUsersRepo = require("domain.repos.IUsersRepo")
+local Repo = require("app.repos.Repo")
 
----@class app.UsersRepo: domain.IUsersRepo
+---@class app.UsersRepo: app.Repo, domain.IUsersRepo
 ---@operator call: app.UsersRepo
-local UsersRepo = IUsersRepo + {}
+local UsersRepo = Repo + IUsersRepo
 
----@param appDatabase app.AppDatabase
-function UsersRepo:new(appDatabase)
-	self.models = appDatabase.models
-end
-
----@param user_id number
----@return table?
-function UsersRepo:getById(user_id)
-	return self.models.users:find({id = assert(user_id)})
-end
+UsersRepo.model_name = "users"
 
 ---@param user_name string
 ---@return table?
-function UsersRepo:getByName(user_name)
+function UsersRepo:findByName(user_name)
 	return self.models.users:find({name = assert(user_name)})
 end
 
 ---@param osu_id number
 ---@return table?
-function UsersRepo:getByOsuId(osu_id)
+function UsersRepo:findByOsuId(osu_id)
 	return self.models.users:find({osu_id = assert(osu_id)})
-end
-
----@return table?
-function UsersRepo:getAll()
-	return self.models.users:select()
 end
 
 return UsersRepo

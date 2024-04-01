@@ -39,7 +39,7 @@ function Auth:login(name, password)
 		return nil, failed
 	end
 
-	local user = self.usersRepo:getByName(name)
+	local user = self.usersRepo:findByName(name)
 	if not user then
 		return nil, failed
 	end
@@ -52,7 +52,7 @@ function Auth:login(name, password)
 end
 
 function Auth:register(name, password, discord)
-	local user = self.usersRepo:getByName(name)
+	local user = self.usersRepo:findByName(name)
 	if user then
 		return nil, "This name is already taken"
 	end
@@ -82,7 +82,7 @@ function Auth:oauth(code)
 		return nil, err
 	end
 
-	local user = self.usersRepo:getByOsuId(me.id)
+	local user = self.usersRepo:findByOsuId(me.id)
 	if user then
 		user:update({
 			name = me.username,

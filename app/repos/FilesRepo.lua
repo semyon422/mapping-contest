@@ -1,43 +1,15 @@
 local IFilesRepo = require("domain.repos.IFilesRepo")
+local Repo = require("app.repos.Repo")
 
----@class app.FilesRepo: domain.IFilesRepo
+---@class app.FilesRepo: app.Repo, domain.IFilesRepo
 ---@operator call: app.FilesRepo
-local FilesRepo = IFilesRepo + {}
+local FilesRepo = Repo + IFilesRepo
 
----@param appDatabase app.AppDatabase
-function FilesRepo:new(appDatabase)
-	self.models = appDatabase.models
-end
-
----@param file_id number
----@return table?
-function FilesRepo:getById(file_id)
-	return self.models.files:find({id = assert(file_id)})
-end
+FilesRepo.model_name = "files"
 
 ---@param hash string
-function FilesRepo:getByHash(hash)
-	return self.models.files:find({hash = assert(hash)})
-end
-
----@param file_id number
-function FilesRepo:deleteById(file_id)
-	return self.models.files:delete({id = assert(file_id)})
-end
-
----@return table?
-function FilesRepo:getAll()
-	return self.models.files:select()
-end
-
----@param file table
-function FilesRepo:update(file)
-	return self.models.files:update(file, {id = assert(file.id)})
-end
-
----@param file table
-function FilesRepo:create(file)
-	return self.models.files:create(file)
+function FilesRepo:findByHash(hash)
+	return self.model:find({hash = assert(hash)})
 end
 
 return FilesRepo

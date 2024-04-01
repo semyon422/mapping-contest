@@ -44,7 +44,7 @@ function Contests:canVote(user, contest, chart)
 end
 
 function Contests:getContest(user, contest_id)
-	local contest = self.contestsRepo:getById(contest_id)
+	local contest = self.contestsRepo:findById(contest_id)
 	if not contest then
 		return nil, Errors.not_found
 	end
@@ -55,7 +55,7 @@ function Contests:getContest(user, contest_id)
 end
 
 function Contests:getContests()
-	return self.contestsRepo:getAll()
+	return self.contestsRepo:select()
 end
 
 function Contests:createContest(user)
@@ -77,7 +77,7 @@ function Contests:createContest(user)
 end
 
 function Contests:deleteContest(user, contest_id)
-	local contest = self.contestsRepo:getById(contest_id)
+	local contest = self.contestsRepo:findById(contest_id)
 	if not self:isContestEditable(user, contest) then
 		return
 	end
@@ -94,7 +94,7 @@ end
 -- }
 
 function Contests:updateContest(user, contest_id, params)
-	local contest = self.contestsRepo:getById(contest_id)
+	local contest = self.contestsRepo:findById(contest_id)
 	if not self:isContestEditable(user, contest) then
 		return
 	end

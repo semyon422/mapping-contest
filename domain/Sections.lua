@@ -28,7 +28,7 @@ create_section.validate = {
 ]]
 
 function Sections:createSection(user, contest_id, _section)
-	local contest = self.contestsRepo:getById(contest_id)
+	local contest = self.contestsRepo:findById(contest_id)
 	if not self:canCreateSection(user, contest) then
 		return nil, "deny"
 	end
@@ -42,8 +42,8 @@ end
 -- }
 
 function Sections:updateSection(user, section_id, _section)
-	local section = self.sectionsRepo:getById(section_id)
-	local contest = self.contestsRepo:getById(section.contest_id)
+	local section = self.sectionsRepo:findById(section_id)
+	local contest = self.contestsRepo:findById(section.contest_id)
 	if not self:canCreateSection(user, contest) then
 		return nil, "deny"
 	end
@@ -52,8 +52,8 @@ function Sections:updateSection(user, section_id, _section)
 end
 
 function Sections:deleteSection(user, section_id)
-	local section = self.sectionsRepo:getById(section_id)
-	local contest = self.contestsRepo:getById(section.contest_id)
+	local section = self.sectionsRepo:findById(section_id)
+	local contest = self.contestsRepo:findById(section.contest_id)
 	if not self:canCreateSection(user, contest) then
 		return nil, "deny"
 	end

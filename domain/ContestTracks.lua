@@ -43,7 +43,7 @@ function ContestTracks:create(_file, contest_id)
 	local d_file = File(hash)
 	assert(os.rename(_file.tmpname, d_file:get_path()))
 
-	local file = self.filesRepo:get({hash = hash})
+	local file = self.filesRepo:find({hash = hash})
 	local track
 	if not file then
 		file = self.filesRepo:create({
@@ -60,7 +60,7 @@ function ContestTracks:create(_file, contest_id)
 			created_at = os.time(),
 		})
 	else
-		track = self.tracksRepo:get({file_id = file.id})
+		track = self.tracksRepo:find({file_id = file.id})
 	end
 
 	local contest_track = {
@@ -68,7 +68,7 @@ function ContestTracks:create(_file, contest_id)
 		track_id = track.id,
 	}
 
-	local found_contest_track = self.contestTracksRepo:get(contest_track)
+	local found_contest_track = self.contestTracksRepo:find(contest_track)
 	if found_contest_track then
 		return found_contest_track
 	end

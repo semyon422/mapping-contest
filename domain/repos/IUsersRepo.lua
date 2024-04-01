@@ -6,12 +6,12 @@ local IUsersRepo = IRepo + {}
 
 ---@param user_name string
 ---@return table?
-function IUsersRepo:getByName(user_name)
+function IUsersRepo:findByName(user_name)
 end
 
 ---@param osu_id number
 ---@return table?
-function IUsersRepo:getByOsuId(osu_id)
+function IUsersRepo:findByOsuId(osu_id)
 end
 
 return IUsersRepo

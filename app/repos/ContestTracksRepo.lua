@@ -1,12 +1,10 @@
 local IContestTracksRepo = require("domain.repos.IContestTracksRepo")
+local Repo = require("app.repos.Repo")
 
----@class app.ContestTracksRepo: domain.IContestTracksRepo
+---@class app.ContestTracksRepo: app.Repo, domain.IContestTracksRepo
 ---@operator call: app.ContestTracksRepo
-local ContestTracksRepo = IContestTracksRepo + {}
+local ContestTracksRepo = Repo + IContestTracksRepo
 
----@param appDatabase app.AppDatabase
-function ContestTracksRepo:new(appDatabase)
-	self.models = appDatabase.models
-end
+ContestTracksRepo.model_name = "contest_tracks"
 
 return ContestTracksRepo

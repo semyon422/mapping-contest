@@ -1,12 +1,10 @@
 local IVotesRepo = require("domain.repos.IVotesRepo")
+local Repo = require("app.repos.Repo")
 
----@class app.VotesRepo: domain.IVotesRepo
+---@class app.VotesRepo: app.Repo, domain.IVotesRepo
 ---@operator call: app.VotesRepo
-local VotesRepo = IVotesRepo + {}
+local VotesRepo = Repo + IVotesRepo
 
----@param appDatabase app.AppDatabase
-function VotesRepo:new(appDatabase)
-	self.models = appDatabase.models
-end
+VotesRepo.model_name = "user_contest_chart_votes"
 
 return VotesRepo
