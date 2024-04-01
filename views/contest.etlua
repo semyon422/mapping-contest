@@ -53,15 +53,14 @@
 			</h6>
 			<table id="tracks" hx-select="#tracks" hx-swap="outerHTML" hx-get hx-trigger="update_tracks">
 				<tbody>
-					<% for _, contest_track in ipairs(contest.contest_tracks) do %>
-						<% local track = contest_track.track %>
+					<% for _, track in ipairs(contest.tracks) do %>
 						<tr>
 							<td><a
 								href="/files/<%= track.file_id %>"
 								hx-boost="false"
 							><%= track.artist %> - <%= track.title %></a>
 							</td>
-							<% if page:canDeleteContestTrack(contest_track) then %>
+							<% if page:canDeleteTrack(track) then %>
 								<td>
 								<a href="#" hx-swap="none" hx-delete="/contests/<%= contest.id %>/tracks/<%= track.id %>"
 									hx-confirm="Delete this track?"

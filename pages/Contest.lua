@@ -16,8 +16,8 @@ function Contest:load()
 		"host",
 		"sections",
 		"contest_users",
+		"tracks",
 		user_contest_chart_votes = "user",
-		contest_tracks = "track",
 		charts = {"track", "charter"},
 	})
 
@@ -52,7 +52,7 @@ function Contest:canSubmitTrack()
 	return self:canUpdateContest()
 end
 
-function Contest:canDeleteContestTrack(contest_track)
+function Contest:canDeleteTrack(track)
 	return self:canUpdateContest()
 end
 

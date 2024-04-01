@@ -118,7 +118,7 @@ return {
 		}, "multipart_file"},
 	}},
 	{"/contests/:contest_id/tracks/:track_id", {
-		DELETE = {"contests.delete_contest_track", {
+		DELETE = {"contests.delete_track", {
 			deleted = {204},
 		}},
 	}},

@@ -5,7 +5,7 @@ local Usecase = require("http.Usecase")
 local SubmitTrack = Usecase + {}
 
 function SubmitTrack:handle(params)
-	self.domain.contestTracks:create(params)
+	self.domain.tracks:create(params.session_user, params.file, params.contest_id)
 	return "ok"
 end
 

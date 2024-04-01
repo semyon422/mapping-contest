@@ -36,7 +36,7 @@ function Contests:canSubmitChart(user, contest, contest_users)
 end
 
 function Contests:canJoinContest(user)
-	return self.roles:hasRole(user, "role_verified")
+	return self.roles:hasRole(user, "verified")
 end
 
 function Contests:canVote(user, contest, chart)

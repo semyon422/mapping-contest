@@ -51,6 +51,15 @@ function Charts:submit(user, _file, contest_id)
 		return nil, err
 	end
 
+	local track = self.tracksRepo:find({
+		title = osz.Title,
+		artist = osz.Artist,
+	})
+	if not track then
+		assert(os.remove(_file.tmpname))
+		return nil, err
+	end
+
 	local hash = _file.hash
 	local d_file = File(hash)
 	assert(os.rename(_file.tmpname, d_file:get_path()))
@@ -62,19 +71,6 @@ function Charts:submit(user, _file, contest_id)
 			name = _file.filename,
 			uploaded = true,
 			size = _file.size,
-			created_at = os.time(),
-		})
-	end
-
-	local track = self.tracksRepo:find({
-		title = osz.Title,
-		artist = osz.Artist,
-	})
-	if not track then
-		track = self.tracksRepo:create({
-			file_id = file.id,
-			title = osz.Title,
-			artist = osz.Artist,
 			created_at = os.time(),
 		})
 	end
