@@ -1,7 +1,5 @@
 local class = require("class")
 local bcrypt = require("bcrypt")
-local http = require("lapis.nginx.http")
-local lapis_util = require("lapis.util")
 
 ---@class domain.Auth
 ---@operator call: domain.Auth
@@ -10,10 +8,12 @@ local Auth = class()
 ---@param usersRepo domain.IUsersRepo
 ---@param userRolesRepo domain.IUserRolesRepo
 ---@param roles domain.Roles
-function Auth:new(usersRepo, userRolesRepo, roles)
+---@param osuApiFactory domain.IOsuApiFactory
+function Auth:new(usersRepo, userRolesRepo, roles, osuApiFactory)
 	self.usersRepo = usersRepo
 	self.userRolesRepo = userRolesRepo
 	self.roles = roles
+	self.osuApiFactory = osuApiFactory
 end
 
 function Auth:isLoggedIn(user)
@@ -70,32 +70,17 @@ function Auth:register(name, password, discord)
 	return user
 end
 
-function Auth:oauth(osu_oauth, code)
-	local body, status_code = http.simple("https://osu.ppy.sh/oauth/token", {
-		client_id = osu_oauth.client_id,
-		client_secret = osu_oauth.client_secret,
-		code = code,
-		grant_type = "authorization_code",
-		redirect_uri = osu_oauth.redirect_uri,
-	})
-
-	if status_code ~= 200 then
-		return nil, body
+function Auth:oauth(code)
+	local osuApi = self.osuApiFactory:getOsuApi()
+	local ok, err = osuApi:oauth(code)
+	if not ok then
+		return nil, err
 	end
 
-	local res = lapis_util.from_json(body)
-
-	body, status_code = http.simple({
-		url = "https://osu.ppy.sh/api/v2/me",
-		method = "GET",
-		headers = {["Authorization"] = "Bearer " .. res.access_token}
-	})
-
-	if status_code ~= 200 then
-		return nil, body
+	local me, err = osuApi:me()
+	if not me then
+		return nil, err
 	end
-
-	local me = lapis_util.from_json(body)
 
 	local user = self.usersRepo:getByOsuId(me.id)
 	if user then

@@ -5,7 +5,7 @@ local Usecase = require("http.Usecase")
 local OAuth = Usecase + {}
 
 function OAuth:handle(params)
-	local user = self.domain.auth:oauth(self.config.osu_oauth, params.code)
+	local user = self.domain.auth:oauth(params.code)
 	assert(user)
 
 	params.session.user_id = user.id
