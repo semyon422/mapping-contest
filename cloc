@@ -1,2 +1,2 @@
 #!/bin/bash
-cloc --exclude-dir=tree,aqua --include-lang=Lua .
+cloc --exclude-dir=tree,aqua,minizip,glue --include-lang=Lua .
