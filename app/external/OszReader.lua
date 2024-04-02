@@ -1,6 +1,9 @@
 local zip = require("zip")
+local IOszReader = require("domain.external.IOszReader")
 
-local osu_util = {}
+---@class app.OszReader: domain.IOszReader
+---@operator call: app.OszReader
+local OszReader = IOszReader + {}
 
 local function parse_osu(file)
 	local osu = {}
@@ -24,7 +27,11 @@ local function parse_osu(file)
 	return osu
 end
 
-function osu_util.parse_osz(path)
+---@param osz_file table
+---@return table?
+---@return string?
+function OszReader:read(osz_file)
+	local path = osz_file.path  -- not a good solution
 	local zf, err = zip.open(path)
 	if not zf then
 		return nil, err
@@ -46,4 +53,4 @@ function osu_util.parse_osz(path)
 	return osu
 end
 
-return osu_util
+return OszReader

@@ -1,6 +1,4 @@
 local class = require("class")
-local osu_util = require("osu_util")
-local File = require("domain.File")
 
 ---@class domain.Tracks
 ---@operator call: domain.Tracks
@@ -8,9 +6,11 @@ local Tracks = class()
 
 ---@param filesRepo domain.IFilesRepo
 ---@param tracksRepo domain.ITracksRepo
-function Tracks:new(filesRepo, tracksRepo)
+---@param oszReader domain.IOszReader
+function Tracks:new(filesRepo, tracksRepo, oszReader)
 	self.filesRepo = filesRepo
 	self.tracksRepo = tracksRepo
+	self.oszReader = oszReader
 end
 
 function Tracks:delete(user, track_id)
@@ -28,15 +28,12 @@ end
 -- }
 
 function Tracks:create(user, _file, contest_id)
-	local osz, err = osu_util.parse_osz(_file.tmpname)
+	local osz, err = self.oszReader:read(_file)
 	if not osz then
-		assert(os.remove(_file.tmpname))
 		return nil, err
 	end
 
 	local hash = _file.hash
-	local d_file = File(hash)
-	assert(os.rename(_file.tmpname, d_file:get_path()))
 
 	local file = self.filesRepo:find({hash = hash})
 	if not file then

@@ -5,6 +5,7 @@ local Domain = require("domain.Domain")
 
 local Repos = require("app.repos.Repos")
 local OsuApiFactory = require("app.external.OsuApiFactory")
+local OszReader = require("app.external.OszReader")
 
 ---@class app.App
 ---@operator call: app.App
@@ -15,9 +16,10 @@ function App:new()
 
 	self.appDatabase = AppDatabase()
 	self.osuApiFactory = OsuApiFactory(config.osu_oauth)
+	self.oszReader = OszReader()
 
 	self.repos = Repos(self.appDatabase)
-	self.domain = Domain(self.repos, self.osuApiFactory)
+	self.domain = Domain(self.repos, self.osuApiFactory, self.oszReader)
 
 	self.webApp = WebApp(config, self.domain, self.appDatabase.models)
 end

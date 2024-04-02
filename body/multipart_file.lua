@@ -19,7 +19,11 @@ return function(content_type)
 	local headers = {}
 	local filename
 	local file
-	local tmpname = "temp/" .. os.tmpname():match("/([^/]+)$")
+
+	local tname = os.tmpname()
+	os.remove(tname)
+	local tmpname = "temp/" .. tname:match("/([^/]+)$")
+
 	local hash = resty_md5:new()
 	local size = 0
 
@@ -52,10 +56,13 @@ return function(content_type)
 			file:close()
 			local _hash = hash:final()
 			if not _hash then return end
+			local s_hash = resty_string.to_hex(_hash)
+			local path = "storages/" .. s_hash
+			os.rename(tmpname, path)
 			return {[attachment_name] = {
-				tmpname = tmpname,
+				path = path,
 				filename = filename,
-				hash = resty_string.to_hex(_hash),
+				hash = s_hash,
 				size = size,
 			}}
 		elseif typ == "eof" then

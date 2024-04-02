@@ -5,7 +5,11 @@ local Usecase = require("http.Usecase")
 local SubmitChart = Usecase + {}
 
 function SubmitChart:handle(params)
-	self.domain.charts:submit(params.session_user, params.file, params.contest_id)
+	local file = params.file
+	local chart = self.domain.charts:submit(params.session_user, file, params.contest_id)
+	if not chart then
+		assert(os.remove(file.path))
+	end
 	return "ok"
 end
 

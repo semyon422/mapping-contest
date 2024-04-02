@@ -15,11 +15,13 @@ local AnonUser = require("domain.AnonUser")
 local Domain = class()
 
 ---@param repos domain.IRepos
-function Domain:new(repos, osuApiFactory)
+---@param osuApiFactory domain.IOsuApiFactory
+---@param oszReader domain.IOszReader
+function Domain:new(repos, osuApiFactory, oszReader)
 	self.sections = Sections(repos.contestsRepo, repos.sectionsRepo)
 	self.contestUsers = ContestUsers(repos.contestUsersRepo)
-	self.tracks = Tracks(repos.filesRepo, repos.tracksRepo)
-	self.charts = Charts(repos.chartsRepo, repos.contestsRepo, repos.filesRepo, repos.tracksRepo)
+	self.tracks = Tracks(repos.filesRepo, repos.tracksRepo, oszReader)
+	self.charts = Charts(repos.chartsRepo, repos.contestsRepo, repos.filesRepo, repos.tracksRepo, oszReader)
 	self.roles = Roles(repos.userRolesRepo)
 	self.votes = Votes(repos.votesRepo, repos.sectionsRepo, repos.contestUsersRepo, repos.chartsRepo)
 	self.auth = Auth(repos.usersRepo, repos.userRolesRepo, self.roles, osuApiFactory)

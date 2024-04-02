@@ -1,6 +1,4 @@
 local class = require("class")
-local File = require("domain.File")
-local osu_util = require("osu_util")
 
 ---@class domain.Charts
 ---@operator call: domain.Charts
@@ -10,11 +8,13 @@ local Charts = class()
 ---@param contestsRepo domain.IContestsRepo
 ---@param filesRepo domain.IFilesRepo
 ---@param tracksRepo domain.ITracksRepo
-function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo)
+---@param oszReader domain.IOszReader
+function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, oszReader)
 	self.chartsRepo = chartsRepo
 	self.contestsRepo = contestsRepo
 	self.filesRepo = filesRepo
 	self.tracksRepo = tracksRepo
+	self.oszReader = oszReader
 end
 
 function Charts:canDelete(user, chart, contest)
@@ -45,9 +45,8 @@ end
 -- }
 
 function Charts:submit(user, _file, contest_id)
-	local osz, err = osu_util.parse_osz(_file.tmpname)
+	local osz, err = self.oszReader:read(_file)
 	if not osz then
-		assert(os.remove(_file.tmpname))
 		return nil, err
 	end
 
@@ -56,13 +55,10 @@ function Charts:submit(user, _file, contest_id)
 		artist = osz.Artist,
 	})
 	if not track then
-		assert(os.remove(_file.tmpname))
 		return nil, err
 	end
 
 	local hash = _file.hash
-	local d_file = File(hash)
-	assert(os.rename(_file.tmpname, d_file:get_path()))
 
 	local file = self.filesRepo:findByHash(hash)
 	if not file then
