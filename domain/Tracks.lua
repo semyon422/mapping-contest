@@ -6,7 +6,7 @@ local Tracks = class()
 
 ---@param filesRepo domain.IFilesRepo
 ---@param tracksRepo domain.ITracksRepo
----@param oszReader domain.IOszReader
+---@param oszReader domain.OszReader
 function Tracks:new(filesRepo, tracksRepo, oszReader)
 	self.filesRepo = filesRepo
 	self.tracksRepo = tracksRepo
@@ -28,7 +28,7 @@ end
 -- }
 
 function Tracks:create(user, _file, contest_id)
-	local osz, err = self.oszReader:read(_file)
+	local osz, err = self.oszReader:read(_file.path)
 	if not osz then
 		return nil, err
 	end

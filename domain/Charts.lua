@@ -8,7 +8,7 @@ local Charts = class()
 ---@param contestsRepo domain.IContestsRepo
 ---@param filesRepo domain.IFilesRepo
 ---@param tracksRepo domain.ITracksRepo
----@param oszReader domain.IOszReader
+---@param oszReader domain.OszReader
 function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, oszReader)
 	self.chartsRepo = chartsRepo
 	self.contestsRepo = contestsRepo
@@ -45,7 +45,7 @@ end
 -- }
 
 function Charts:submit(user, _file, contest_id)
-	local osz, err = self.oszReader:read(_file)
+	local osz, err = self.oszReader:read(_file.path)
 	if not osz then
 		return nil, err
 	end
