@@ -10,7 +10,6 @@ local Roles = require("domain.Roles")
 local Votes = require("domain.Votes")
 local AnonUser = require("domain.AnonUser")
 local OszReader = require("domain.OszReader")
-local ChartsetRepacker = require("domain.ChartsetRepacker")
 
 ---@class domain.Domain
 ---@operator call: domain.Domain
@@ -21,7 +20,6 @@ local Domain = class()
 ---@param archiveFactory domain.IArchiveFactory
 function Domain:new(repos, osuApiFactory, archiveFactory)
 	self.oszReader = OszReader(archiveFactory)
-	self.chartsetRepacker = ChartsetRepacker(archiveFactory)
 
 	self.sections = Sections(repos.contestsRepo, repos.sectionsRepo)
 	self.contestUsers = ContestUsers(repos.contestUsersRepo)
@@ -32,7 +30,7 @@ function Domain:new(repos, osuApiFactory, archiveFactory)
 		repos.filesRepo,
 		repos.tracksRepo,
 		self.oszReader,
-		self.chartsetRepacker
+		archiveFactory
 	)
 	self.roles = Roles(repos.userRolesRepo)
 	self.votes = Votes(repos.votesRepo, repos.sectionsRepo, repos.contestUsersRepo, repos.chartsRepo)

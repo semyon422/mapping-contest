@@ -18,8 +18,12 @@ function Contest:load()
 		"contest_users",
 		"tracks",
 		user_contest_chart_votes = "user",
-		charts = {"track", "charter"},
+		charts = {"track", "charter", "file"},
 	})
+
+	for _, chart in ipairs(params.contest.charts) do
+		chart.name = self.domain.charts.nameGenerator:generate(chart.file.hash)
+	end
 
 	params.section_vote_charts = voting.load_sections(params)
 

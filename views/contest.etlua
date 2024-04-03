@@ -115,7 +115,7 @@
 					<% local vote_allowed = page:canUpdateVote(chart) %>
 					<tr>
 						<% chart.contest = contest %>
-						<td><a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a></td>
+						<td><%= chart.name %></td>
 						<td>
 							<a
 								href="/charts/<%= chart.id %>/download"

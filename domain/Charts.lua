@@ -1,4 +1,7 @@
 local class = require("class")
+local ChartNameGenerator = require("domain.ChartNameGenerator")
+local ChartRepacker = require("domain.ChartRepacker")
+local ChartAnoner = require("domain.ChartAnoner")
 
 ---@class domain.Charts
 ---@operator call: domain.Charts
@@ -9,14 +12,15 @@ local Charts = class()
 ---@param filesRepo domain.IFilesRepo
 ---@param tracksRepo domain.ITracksRepo
 ---@param oszReader domain.OszReader
----@param chartsetRepacker domain.ChartsetRepacker
-function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, oszReader, chartsetRepacker)
+---@param archiveFactory domain.IArchiveFactory
+function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, oszReader, archiveFactory)
 	self.chartsRepo = chartsRepo
 	self.contestsRepo = contestsRepo
 	self.filesRepo = filesRepo
 	self.tracksRepo = tracksRepo
 	self.oszReader = oszReader
-	self.chartsetRepacker = chartsetRepacker
+	self.archiveFactory = archiveFactory
+	self.nameGenerator = ChartNameGenerator()
 end
 
 function Charts:canDelete(user, chart, contest)
@@ -43,7 +47,12 @@ function Charts:getChartRepacked(user, chart_id, path_out)
 	local chart = self.chartsRepo:findById(chart_id)
 	local file = self.filesRepo:findById(chart.file_id)
 	local path = "storages/" .. file.hash
-	self.chartsetRepacker:repack(path, path_out)
+	local name = self.nameGenerator:generate(file.hash)
+
+	local chartAnoner = ChartAnoner(name)
+	local chartRepacker = ChartRepacker(self.archiveFactory, chartAnoner)
+	chartRepacker:repack(path, path_out)
+
 	return file.name
 end
 
