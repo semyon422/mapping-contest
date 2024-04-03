@@ -118,7 +118,7 @@
 						<td><a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a></td>
 						<td>
 							<a
-								href="/files/<%= chart.file_id %>"
+								href="/charts/<%= chart.id %>/download"
 								hx-boost="false"
 								data-tooltip="<%= datetime:to_text(chart.submitted_at) %>, <%= chart.notes %> notes"
 							><%= chart.track.title %></a>

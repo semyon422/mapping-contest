@@ -9,12 +9,14 @@ local Charts = class()
 ---@param filesRepo domain.IFilesRepo
 ---@param tracksRepo domain.ITracksRepo
 ---@param oszReader domain.OszReader
-function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, oszReader)
+---@param chartsetRepacker domain.ChartsetRepacker
+function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, oszReader, chartsetRepacker)
 	self.chartsRepo = chartsRepo
 	self.contestsRepo = contestsRepo
 	self.filesRepo = filesRepo
 	self.tracksRepo = tracksRepo
 	self.oszReader = oszReader
+	self.chartsetRepacker = chartsetRepacker
 end
 
 function Charts:canDelete(user, chart, contest)
@@ -31,6 +33,18 @@ function Charts:delete(user, chart_id)
 		return
 	end
 	self.chartsRepo:deleteById(chart_id)
+end
+
+function Charts:getChart(user, chart_id)
+	return self.chartsRepo:findById(chart_id)
+end
+
+function Charts:getChartRepacked(user, chart_id, path_out)
+	local chart = self.chartsRepo:findById(chart_id)
+	local file = self.filesRepo:findById(chart.file_id)
+	local path = "storages/" .. file.hash
+	self.chartsetRepacker:repack(path, path_out)
+	return file.name
 end
 
 

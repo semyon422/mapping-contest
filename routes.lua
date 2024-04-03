@@ -153,6 +153,19 @@ return {
 			end},
 		}, "www_form"},
 	}},
+	{"/charts/:chart_id/download", {
+		GET = {"contests.download_chart", {
+			ok = {200, "File", function(result)
+				return {
+					["Pragma"] = "public",
+					["Cache-Control"] = "must-revalidate, post-check=0, pre-check=0",
+					["Content-Disposition"] = 'attachment; filename="' .. result.filename .. '"',
+					["Content-Transfer-Encoding"] = "binary",
+					["Content-Type"] = "application/octet-stream",
+				}
+			end},
+		}},
+	}},
 	-- other
 	{"/files/:file_id", {
 		GET = {"get_file", {
