@@ -4,12 +4,29 @@ local IFileConverter = require("domain.IFileConverter")
 ---@operator call: domain.ChartAnoner
 local ChartAnoner = IFileConverter + {}
 
-function ChartAnoner:new(chart_name)
-	self.chart_name = chart_name
+local defaults = {
+	Title = "",
+	TitleUnicode = "",
+	Artist = "",
+	ArtistUnicode = "",
+	Creator = "",
+	Version = "",
+	Source = "",
+	Tags = "",
+	BeatmapID = "0",
+	BeatmapSetID = "-1",
+}
+
+function ChartAnoner:new(metadata)
+	self.metadata = metadata
 end
 
 function ChartAnoner:anonOsu(s)
-	return s:gsub("Creator:[^\n]+", "Creator:" .. self.chart_name)
+	for k, v in pairs(defaults) do
+		v = self.metadata[k] or v
+		s = s:gsub(k .. ":[^\n]+", k .. ":" .. v)
+	end
+	return s
 end
 
 ---@param filename string

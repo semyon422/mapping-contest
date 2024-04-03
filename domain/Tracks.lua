@@ -53,6 +53,7 @@ function Tracks:create(user, _file, contest_id)
 			contest_id = contest_id,
 			title = osz.Title,
 			artist = osz.Artist,
+			meta = osz,
 			created_at = os.time(),
 		})
 	end

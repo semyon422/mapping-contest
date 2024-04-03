@@ -14,11 +14,11 @@ local function parse_osu(s)
 	local HitObjects = 0
 
 	local block
-	for line in (s .. "\n"):gmatch("([^\n]*)\n") do
+	for line in (s:gsub("\r\n", "\n") .. "\n"):gmatch("([^\n]*)\n") do
 		if line:find("^%[") then
 			block = line:match("^%[(.+)%]")
 		else
-			if line:find("^%a+:.*$") then
+			if block == "Metadata" and line:find("^%a+:.*$") then
 				local key, value = line:match("^(%a+):%s?(.*)")
 				osu[key] = value
 			elseif block == "HitObjects" and line ~= "" then

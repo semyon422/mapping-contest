@@ -46,10 +46,15 @@ end
 function Charts:getChartRepacked(user, chart_id, path_out)
 	local chart = self.chartsRepo:findById(chart_id)
 	local file = self.filesRepo:findById(chart.file_id)
-	local path = "storages/" .. file.hash
+	local track = self.tracksRepo:findById(chart.track_id)
 	local name = self.nameGenerator:generate(file.hash)
+	local path = "storages/" .. file.hash
 
-	local chartAnoner = ChartAnoner(name)
+	local meta = track.meta
+	meta.Creator = name
+	meta.Version = name
+	local chartAnoner = ChartAnoner(meta)
+
 	local chartRepacker = ChartRepacker(self.archiveFactory, chartAnoner)
 	chartRepacker:repack(path, path_out)
 

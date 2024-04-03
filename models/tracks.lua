@@ -1,3 +1,5 @@
+local stbl = require("stbl")
+
 local tracks = {}
 
 tracks.table_name = "tracks"
@@ -9,6 +11,7 @@ CREATE TABLE IF NOT EXISTS "tracks" (
 	"contest_id" INTEGER NOT NULL,
 	"title" TEXT NOT NULL,
 	"artist" TEXT NOT NULL,
+	"meta" TEXT NOT NULL,
 	"created_at" INTEGER NOT NULL,
 	FOREIGN KEY (file_id) references files(id) ON DELETE CASCADE,
 	FOREIGN KEY (contest_id) references contests(id) ON DELETE CASCADE,
@@ -16,7 +19,9 @@ CREATE TABLE IF NOT EXISTS "tracks" (
 );
 ]]
 
-tracks.types = {}
+tracks.types = {
+	meta = stbl,
+}
 
 tracks.relations = {
 	file = {belongs_to = "files", key = "file_id"},
