@@ -64,8 +64,8 @@ function Contest:canCreateSection()
 	return self:canUpdateContest()
 end
 
-function Contest:canUpdateVote(chart)
-	return self.domain.votes:canUpdateVote(chart)
+function Contest:canUpdateVote(chart, vote)
+	return self.domain.votes:canUpdateVote(self.user, self.contest, chart, vote)
 end
 
 function Contest:canDeleteChart(chart)

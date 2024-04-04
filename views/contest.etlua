@@ -112,7 +112,6 @@
 				</tr>
 				<% for _, vote_chart in ipairs(section_vote_charts[j]) do %>
 					<% local chart = vote_chart.chart %>
-					<% local vote_allowed = page:canUpdateVote(chart) %>
 					<tr>
 						<% chart.contest = contest %>
 						<td><%= chart.name %></td>
@@ -125,6 +124,7 @@
 						</td>
 						<td>
 							<% for i, vote_name in ipairs(Votes.list) do %>
+								<% local vote_allowed = page:canUpdateVote(chart, vote_name) %>
 								<% if vote_allowed then %>
 									<a href="#" class="vote_counter"
 										hx-patch="/contests/<%= contest.id %>/votes"

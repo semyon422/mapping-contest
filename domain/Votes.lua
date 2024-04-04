@@ -62,7 +62,7 @@ local function assign_section(charts, sections, contest_users)
 end
 
 function Votes:canUpdateVote(user, contest, chart, vote)
-
+	return user.id ~= chart.charter_id
 end
 
 function Votes:updateVote(user, contest_id, chart_id, vote)
@@ -93,7 +93,7 @@ function Votes:updateVote(user, contest_id, chart_id, vote)
 	local chart
 	for _, _chart in ipairs(charts) do
 		if _chart.id == chart_id then
-			chart = chart
+			chart = _chart
 		end
 	end
 	local section_index = chart.section_index
