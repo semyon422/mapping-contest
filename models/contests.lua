@@ -12,6 +12,7 @@ CREATE TABLE IF NOT EXISTS "contests" (
 	"is_visible" INTEGER NOT NULL,
 	"is_submission_open" INTEGER NOT NULL,
 	"is_voting_open" INTEGER NOT NULL,
+	"is_anon" INTEGER NOT NULL,
 	FOREIGN KEY (host_id) references users(id) ON DELETE CASCADE
 );
 ]]
@@ -20,6 +21,7 @@ contests.types = {
 	is_visible = "boolean",
 	is_submission_open = "boolean",
 	is_voting_open = "boolean",
+	is_anon = "boolean",
 }
 
 contests.relations = {

@@ -197,6 +197,13 @@
 				Voting open
 			</label>
 
+			<label for="is_anon">
+				<input type="checkbox" id="is_anon" name="is_anon" role="switch"
+					<%= contest.is_anon and "checked" or "" %>
+				>
+				Anonymized
+			</label>
+
 			<button>Save</button>
 		</form>
 		<button class="contrast" hx-delete hx-confirm="Delete this contest?">Delete</button>

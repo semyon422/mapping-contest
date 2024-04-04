@@ -69,6 +69,7 @@ function Contests:createContest(user)
 		is_visible = false,
 		is_voting_open = false,
 		is_submission_open = false,
+		is_anon = true,
 	})
 	contest.name = "Contest " .. contest.id
 	self.contestsRepo:update(contest)
@@ -106,6 +107,7 @@ function Contests:updateContest(user, contest_id, params)
 		is_visible = params.is_visible,
 		is_voting_open = params.is_voting_open,
 		is_submission_open = params.is_submission_open,
+		is_anon = params.is_anon,
 	})
 end
 
