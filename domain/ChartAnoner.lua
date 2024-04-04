@@ -22,11 +22,13 @@ function ChartAnoner:new(metadata)
 end
 
 function ChartAnoner:anonOsu(s)
+	local md = self.metadata
 	for k, v in pairs(defaults) do
-		v = self.metadata[k] or v
+		v = md[k] or v
 		s = s:gsub(k .. ":[^\n]+", k .. ":" .. v)
 	end
-	return s
+	local filename = ("%s - %s (%s) [%s].osu"):format(md.Artist, md.Title, md.Creator, md.Version)
+	return filename, s
 end
 
 ---@param filename string
@@ -35,7 +37,7 @@ end
 ---@return string
 function ChartAnoner:convert(filename, data)
 	if filename:find("%.osu$") then
-		data = self:anonOsu(data)
+		filename, data = self:anonOsu(data)
 	end
 	return filename, data
 end

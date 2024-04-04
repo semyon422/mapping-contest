@@ -58,7 +58,7 @@ function Charts:getChartRepacked(user, chart_id, path_out)
 	local chartRepacker = ChartRepacker(self.archiveFactory, chartAnoner)
 	chartRepacker:repack(path, path_out)
 
-	return file.name
+	return ("%s - %s (%s).osz"):format(meta.Artist, meta.Title, name)
 end
 
 
