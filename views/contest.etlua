@@ -86,6 +86,7 @@
 	<% local Votes = require("domain.Votes") %>
 	<% local vote_icons = {"check", "times", "heart"} %>
 
+	Total votes: <%= #contest.user_contest_chart_votes %><br>
 	<% if page:canCreateSection() then %>
 		<a href="/contests/<%= contest.id %>?create_section">Create section</a>
 	<% end %>
