@@ -56,7 +56,7 @@
 					<% for _, track in ipairs(contest.tracks) do %>
 						<tr>
 							<td><a
-								href="/files/<%= track.file_id %>"
+								href="/tracks/<%= track.id %>/download"
 								hx-boost="false"
 							><%= track.artist %> - <%= track.title %></a>
 							</td>

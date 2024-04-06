@@ -17,6 +17,13 @@ function Tracks:delete(user, track_id)
 	self.tracksRepo:deleteById(track_id)
 end
 
+function Tracks:getTrackFile(user, track_id)
+	local track = self.tracksRepo:findById(track_id)
+	local file = self.filesRepo:findById(track.file_id)
+	local path = "storages/" .. file.hash
+	return file.name, path
+end
+
 -- SubmitTrack.validate = {
 -- 	contest_id = "integer",
 -- 	file = {

@@ -166,14 +166,13 @@ return {
 			end},
 		}},
 	}},
-	-- other
-	{"/files/:file_id", {
-		GET = {"get_file", {
-			ok = {200, "file", function(result)
+	{"/tracks/:track_id/download", {
+		GET = {"contests.download_track", {
+			ok = {200, "File", function(result)
 				return {
 					["Pragma"] = "public",
 					["Cache-Control"] = "must-revalidate, post-check=0, pre-check=0",
-					["Content-Disposition"] = 'attachment; filename="' .. result.file.name .. '"',
+					["Content-Disposition"] = 'attachment; filename="' .. result.filename .. '"',
 					["Content-Transfer-Encoding"] = "binary",
 					["Content-Type"] = "application/octet-stream",
 				}
