@@ -33,7 +33,13 @@ function Domain:new(repos, osuApiFactory, archiveFactory)
 		archiveFactory
 	)
 	self.roles = Roles(repos.userRolesRepo)
-	self.votes = Votes(repos.votesRepo, repos.sectionsRepo, repos.contestUsersRepo, repos.chartsRepo)
+	self.votes = Votes(
+		repos.votesRepo,
+		repos.sectionsRepo,
+		repos.contestUsersRepo,
+		repos.chartsRepo,
+		repos.contestsRepo
+	)
 	self.auth = Auth(repos.usersRepo, repos.userRolesRepo, self.roles, osuApiFactory)
 	self.contests = Contests(repos.contestsRepo, self.roles)
 	self.users = Users(repos.usersRepo, self.roles)

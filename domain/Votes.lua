@@ -10,11 +10,13 @@ local Votes = class()
 ---@param sectionsRepo domain.ISectionsRepo
 ---@param contestUsersRepo domain.IContestUsersRepo
 ---@param chartsRepo domain.IChartsRepo
-function Votes:new(votesRepo, sectionsRepo, contestUsersRepo, chartsRepo)
+---@param contestsRepo domain.IContestsRepo
+function Votes:new(votesRepo, sectionsRepo, contestUsersRepo, chartsRepo, contestsRepo)
 	self.votesRepo = votesRepo
 	self.sectionsRepo = sectionsRepo
 	self.contestUsersRepo = contestUsersRepo
 	self.chartsRepo = chartsRepo
+	self.contestsRepo = contestsRepo
 end
 
 Votes.enum = enum({
@@ -62,10 +64,19 @@ local function assign_section(charts, sections, contest_users)
 end
 
 function Votes:canUpdateVote(user, contest, chart, vote)
-	return user.id ~= chart.charter_id
+	return
+		user.id > 0 and
+		contest.is_voting_open and
+		user.id ~= chart.charter_id
 end
 
 function Votes:updateVote(user, contest_id, chart_id, vote)
+	local contest = self.contestsRepo:findById(contest_id)
+	local chart = self.chartsRepo:findById(chart_id)
+	if not self:canUpdateVote(user, contest, chart, vote) then
+		return
+	end
+
 	local uccv = {
 		contest_id = contest_id,
 		user_id = user.id,

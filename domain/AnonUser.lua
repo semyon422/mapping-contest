@@ -4,6 +4,8 @@ local class = require("class")
 ---@operator call: domain.AnonUser
 local AnonUser = class()
 
+AnonUser.id = 0
+
 function AnonUser:new()
 	self.user_roles = {}
 end
