@@ -5,7 +5,7 @@ local class = require("class")
 local ChartRepacker = class()
 
 ---@param archiveFactory domain.IArchiveFactory
----@param fileConverter domain.IFileConverter
+---@param fileConverter domain.IFileConverter?
 function ChartRepacker:new(archiveFactory, fileConverter)
 	self.archiveFactory = archiveFactory
 	self.fileConverter = fileConverter
@@ -27,7 +27,11 @@ function ChartRepacker:repackPartial(out, added_files, path_in, options)
 	end
 	_in:close()
 
-	local new_files = self.fileConverter:convert(files, options)
+	local new_files = files
+	if self.fileConverter then
+		new_files = self.fileConverter:convert(files, options)
+	end
+
 	for filename, data in pairs(new_files) do
 		if not added_files[filename] then
 			out:add_file(filename)
