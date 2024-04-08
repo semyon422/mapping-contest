@@ -19,7 +19,10 @@ end
 
 ---@param filename string
 function Archive:add_file(filename)
-	self.z:add_file(filename)
+	self.z:add_file({
+		filename = filename,
+		date = os.date("*t"),
+	})
 end
 
 ---@param size number
