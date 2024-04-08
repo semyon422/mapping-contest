@@ -22,7 +22,8 @@ function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, oszReader, 
 	self.archiveFactory = archiveFactory
 	self.nameGenerator = ChartNameGenerator()
 	self.chartAnoner = ChartAnoner()
-	self.chartRepacker = ChartRepacker(self.archiveFactory, self.chartAnoner)
+	self.chartRepacker = ChartRepacker(self.archiveFactory)
+	self.chartAnonRepacker = ChartRepacker(self.archiveFactory, self.chartAnoner)
 end
 
 function Charts:canDelete(user, chart, contest)
@@ -46,21 +47,26 @@ function Charts:getChart(user, chart_id)
 end
 
 function Charts:getChartRepacked(user, chart_id, path_out)
-	local chart = self.chartsRepo:findById(chart_id)
-	local file = self.filesRepo:findById(chart.file_id)
-	local track = self.tracksRepo:findById(chart.track_id)
+	local chart = assert(self.chartsRepo:findById(chart_id))
+	local contest = assert(self.contestsRepo:findById(chart.contest_id))
+	local file = assert(self.filesRepo:findById(chart.file_id))
+	local track = assert(self.tracksRepo:findById(chart.track_id))
 
 	local path = "storages/" .. file.hash
 	local name = self.nameGenerator:generate(file.hash)
 
-	local paths = {{path, {track.meta, name}}}
-	self.chartRepacker:repack(paths, path_out)
+	if not contest.is_anon then
+		return file.name, path
+	end
 
-	return ("%s - %s (%s).osz"):format(track.meta.Artist, track.meta.Title, name)
+	local paths = {{path, {track.meta, name}}}
+	self.chartAnonRepacker:repack(paths, path_out)
+
+	return ("%s - %s (%s).osz"):format(track.meta.Artist, track.meta.Title, name), path_out
 end
 
 function Charts:getPack(user, contest_id, path_out)
-	local contest = self.contestsRepo:findById(contest_id)
+	local contest = assert(self.contestsRepo:findById(contest_id))
 	local charts = self.chartsRepo:selectWithRels({contest_id = assert(contest_id)})
 	local paths = {}
 	for _, chart in ipairs(charts) do
@@ -70,9 +76,13 @@ function Charts:getPack(user, contest_id, path_out)
 		})
 	end
 
-	self.chartRepacker:repack(paths, path_out)
+	if not contest.is_anon then
+		self.chartRepacker:repack(paths, path_out)
+		return ("%s (%s charts).osz"):format(contest.name, #charts)
+	end
 
-	return ("%s (%s charts).osz"):format(contest.name, #charts)
+	self.chartAnonRepacker:repack(paths, path_out)
+	return ("%s (%s charts) anonymized.osz"):format(contest.name, #charts)
 end
 
 -- SubmitChart.validate = {

@@ -6,8 +6,10 @@ local DownloadChart = Usecase + {}
 
 function DownloadChart:handle(params)
 	local path_out = os.tmpname()
-	local filename = self.domain.charts:getChartRepacked(params.session_user, params.chart_id, path_out)
-	local f = assert(io.open(path_out, "rb"))
+	local filename, read_path = self.domain.charts:getChartRepacked(
+		params.session_user, params.chart_id, path_out
+	)
+	local f = assert(io.open(read_path, "rb"))
 	params.content = f:read("*a")
 	params.filename = filename
 	f:close()
