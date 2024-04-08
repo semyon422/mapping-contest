@@ -11,22 +11,31 @@ function ChartRepacker:new(archiveFactory, fileConverter)
 	self.fileConverter = fileConverter
 end
 
-function ChartRepacker:repack(path_in, path_out)
-	local _in = self.archiveFactory:open(path_in, "r")
-	local out = self.archiveFactory:open(path_out, "w")
+function ChartRepacker:repackPartial(path_in, out)
+	local files = {}
 
-	local filename, data
+	local _in = self.archiveFactory:open(path_in, "r")
 	for info in _in:files() do
 		_in:open_file()
-		data = _in:read(info.uncompressed_size)
+		local data = _in:read(info.uncompressed_size)
 		_in:close_file()
-		filename, data = self.fileConverter:convert(info.filename, data)
+		files[info.filename] = data
+	end
+	_in:close()
+
+	local new_files = self.fileConverter:convert(files)
+	for filename, data in pairs(new_files) do
 		out:add_file(filename)
 		out:write(data)
 		out:close_file()
 	end
+end
 
-	_in:close()
+function ChartRepacker:repack(paths, path_out)
+	local out = self.archiveFactory:open(path_out, "w")
+	for _, path_in in ipairs(paths) do
+		self:repackPartial(path_in, out)
+	end
 	out:close()
 end
 

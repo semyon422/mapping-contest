@@ -4,12 +4,10 @@ local class = require("class")
 ---@operator call: domain.IFileConverter
 local IFileConverter = class()
 
----@param filename string
----@param data string
----@return string
----@return string
-function IFileConverter:convert(filename, data)
-	return filename, data
+---@param files table
+---@return table
+function IFileConverter:convert(files)
+	return {}
 end
 
 return IFileConverter

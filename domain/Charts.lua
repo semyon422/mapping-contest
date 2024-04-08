@@ -51,16 +51,13 @@ function Charts:getChartRepacked(user, chart_id, path_out)
 	local path = "storages/" .. file.hash
 
 	local meta = track.meta
-	meta.Creator = name
-	meta.Version = name
-	local chartAnoner = ChartAnoner(meta)
+	local chartAnoner = ChartAnoner(meta, name)
 
 	local chartRepacker = ChartRepacker(self.archiveFactory, chartAnoner)
-	chartRepacker:repack(path, path_out)
+	chartRepacker:repack({path}, path_out)
 
 	return ("%s - %s (%s).osz"):format(meta.Artist, meta.Title, name)
 end
-
 
 -- SubmitChart.validate = {
 -- 	contest_id = "integer",
