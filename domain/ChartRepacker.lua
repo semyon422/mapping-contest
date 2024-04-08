@@ -11,7 +11,11 @@ function ChartRepacker:new(archiveFactory, fileConverter)
 	self.fileConverter = fileConverter
 end
 
-function ChartRepacker:repackPartial(path_in, out)
+---@param out domain.IArchive
+---@param added_files table
+---@param path_in string
+---@param options table
+function ChartRepacker:repackPartial(out, added_files, path_in, options)
 	local files = {}
 
 	local _in = self.archiveFactory:open(path_in, "r")
@@ -23,18 +27,25 @@ function ChartRepacker:repackPartial(path_in, out)
 	end
 	_in:close()
 
-	local new_files = self.fileConverter:convert(files)
+	local new_files = self.fileConverter:convert(files, options)
 	for filename, data in pairs(new_files) do
-		out:add_file(filename)
-		out:write(data)
-		out:close_file()
+		if not added_files[filename] then
+			out:add_file(filename)
+			out:write(data)
+			out:close_file()
+			added_files[filename] = true
+		end
 	end
 end
 
+---@param paths table
+---@param path_out string
 function ChartRepacker:repack(paths, path_out)
 	local out = self.archiveFactory:open(path_out, "w")
-	for _, path_in in ipairs(paths) do
-		self:repackPartial(path_in, out)
+	local added_files = {}
+	for _, po in ipairs(paths) do
+		local path_in, options = unpack(po)
+		self:repackPartial(out, added_files, path_in, options)
 	end
 	out:close()
 end

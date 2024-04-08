@@ -21,6 +21,8 @@ function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, oszReader, 
 	self.oszReader = oszReader
 	self.archiveFactory = archiveFactory
 	self.nameGenerator = ChartNameGenerator()
+	self.chartAnoner = ChartAnoner()
+	self.chartRepacker = ChartRepacker(self.archiveFactory, self.chartAnoner)
 end
 
 function Charts:canDelete(user, chart, contest)
@@ -47,16 +49,30 @@ function Charts:getChartRepacked(user, chart_id, path_out)
 	local chart = self.chartsRepo:findById(chart_id)
 	local file = self.filesRepo:findById(chart.file_id)
 	local track = self.tracksRepo:findById(chart.track_id)
-	local name = self.nameGenerator:generate(file.hash)
+
 	local path = "storages/" .. file.hash
+	local name = self.nameGenerator:generate(file.hash)
 
-	local meta = track.meta
-	local chartAnoner = ChartAnoner(meta, name)
+	local paths = {{path, {track.meta, name}}}
+	self.chartRepacker:repack(paths, path_out)
 
-	local chartRepacker = ChartRepacker(self.archiveFactory, chartAnoner)
-	chartRepacker:repack({path}, path_out)
+	return ("%s - %s (%s).osz"):format(track.meta.Artist, track.meta.Title, name)
+end
 
-	return ("%s - %s (%s).osz"):format(meta.Artist, meta.Title, name)
+function Charts:getPack(user, contest_id, path_out)
+	local contest = self.contestsRepo:findById(contest_id)
+	local charts = self.chartsRepo:selectWithRels({contest_id = assert(contest_id)})
+	local paths = {}
+	for _, chart in ipairs(charts) do
+		table.insert(paths, {
+			"storages/" .. chart.file.hash,
+			{chart.track.meta, self.nameGenerator:generate(chart.file.hash)}
+		})
+	end
+
+	self.chartRepacker:repack(paths, path_out)
+
+	return ("%s (%s charts).osz"):format(contest.name, #charts)
 end
 
 -- SubmitChart.validate = {

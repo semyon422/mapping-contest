@@ -217,6 +217,7 @@
 		</form>
 		<button class="contrast" hx-delete hx-confirm="Delete this contest?">Delete</button>
 		<div id="edit_errors"></div>
+		<a hx-boost="false" href="/contests/<%= contest.id %>/download_pack">download pack</a>
 	</article>
 </dialog>
 <% end %>
