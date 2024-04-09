@@ -102,7 +102,7 @@
 							data-tooltip="<%= section.time_base %> min + <%= section.time_per_knote %> min / 1000 notes">
 							<%= section.name %>
 						</b>
-						<% if page:canUpdateContest() then %>
+						<% if page:canUpdateSection() then %>
 							<a href="/contests/<%= contest.id %>?edit_section=<%= section.id %>" hx-boost="false">
 								<i class="fas fa-edit"></i>
 							</a>

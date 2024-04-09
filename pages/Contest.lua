@@ -60,17 +60,10 @@ function Contest:canUpdateContest()
 	return self.domain.contests:canUpdateContest(self.user, self.contest)
 end
 
-function Contest:canSubmitTrack()
-	return self:canUpdateContest()
-end
-
-function Contest:canDeleteTrack(track)
-	return self:canUpdateContest()
-end
-
-function Contest:canCreateSection()
-	return self:canUpdateContest()
-end
+function Contest:canSubmitTrack() return self:canUpdateContest() end
+function Contest:canDeleteTrack(track) return self:canUpdateContest() end
+function Contest:canCreateSection() return self:canUpdateContest() end
+function Contest:canUpdateSection() return self:canUpdateContest() end
 
 function Contest:canUpdateVote(chart, vote)
 	return self.domain.votes:canUpdateVote(self.user, self.contest, chart, vote)
