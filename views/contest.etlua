@@ -1,6 +1,5 @@
 <% local Datetime = require("util.Datetime") %>
 <% local datetime = Datetime(config.timezone) %>
-<% local can_submit_track = page:canSubmitTrack() %>
 
 <section>
 	<h4>
@@ -42,10 +41,10 @@
 			<% end %>
 		</div>
 		<div>
-			<% if contest_user or can_submit_track or contest.is_voting_open then %>
+			<% if page:canGetTracks() then %>
 			<h6>
 				Tracks
-				<% if can_submit_track then %>
+				<% if page:canSubmitTrack() then %>
 					<a href="/contests/<%= contest.id %>?add_track">
 						<i class="fas fa-plus"></i>
 					</a>
@@ -79,7 +78,7 @@
 	</div>
 </section>
 
-<% if contest_user or can_submit_track or contest.is_voting_open then %>
+<% if page:canGetVotes() then %>
 <section>
 	<% local Sections = require("domain.Sections") %>
 

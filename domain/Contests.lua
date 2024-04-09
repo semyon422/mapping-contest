@@ -12,16 +12,24 @@ function Contests:new(contestsRepo, roles)
 	self.roles = roles
 end
 
-function Contests:isContestAccessable(user, contest)
+function Contests:canGetContest(user, contest)
 	return contest.is_visible or user.id == contest.host_id
 end
 
-function Contests:isContestEditable(user, contest)
+function Contests:canUpdateContest(user, contest)
 	return user.id == contest.host_id
 end
 
 function Contests:canCreateContest(user)
 	return self.roles:hasRole(user, "host")
+end
+
+function Contests:canGetTracks(user, contest_user, contest)
+	return contest_user ~= nil or self:canUpdateContest(user, contest)
+end
+
+function Contests:canGetVotes(user, contest_user, contest)
+	return contest_user ~= nil or not contest.is_submission_open or self:canUpdateContest(user, contest)
 end
 
 function Contests:canSubmitChart(user, contest, contest_users)
@@ -48,7 +56,7 @@ function Contests:getContest(user, contest_id)
 	if not contest then
 		return nil, Errors.not_found
 	end
-	if not self:isContestAccessable(user, contest) then
+	if not self:canGetContest(user, contest) then
 		return nil, Errors.forbidden
 	end
 	return contest
@@ -79,7 +87,7 @@ end
 
 function Contests:deleteContest(user, contest_id)
 	local contest = self.contestsRepo:findById(contest_id)
-	if not self:isContestEditable(user, contest) then
+	if not self:canUpdateContest(user, contest) then
 		return
 	end
 	self.contestsRepo:deleteById(contest_id)
@@ -96,7 +104,7 @@ end
 
 function Contests:updateContest(user, contest_id, params)
 	local contest = self.contestsRepo:findById(contest_id)
-	if not self:isContestEditable(user, contest) then
+	if not self:canUpdateContest(user, contest) then
 		return
 	end
 

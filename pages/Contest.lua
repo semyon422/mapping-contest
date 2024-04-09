@@ -48,8 +48,16 @@ function Contest:canJoinContest()
 	return self.domain.contests:canJoinContest(self.user)
 end
 
+function Contest:canGetTracks()
+	return self.domain.contests:canGetTracks(self.user, self.params.contest_user, self.contest)
+end
+
+function Contest:canGetVotes()
+	return self.domain.contests:canGetVotes(self.user, self.params.contest_user, self.contest)
+end
+
 function Contest:canUpdateContest()
-	return self.domain.contests:isContestEditable(self.user, self.contest)
+	return self.domain.contests:canUpdateContest(self.user, self.contest)
 end
 
 function Contest:canSubmitTrack()

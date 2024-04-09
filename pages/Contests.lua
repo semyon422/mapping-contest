@@ -11,7 +11,7 @@ function Contests:canCreateContest()
 end
 
 function Contests:canGetContest(contest)
-	return self.domain.contests:isContestAccessable(self.user, contest)
+	return self.domain.contests:canGetContest(self.user, contest)
 end
 
 return Contests
