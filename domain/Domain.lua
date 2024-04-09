@@ -21,18 +21,28 @@ local Domain = class()
 function Domain:new(repos, osuApiFactory, archiveFactory)
 	self.oszReader = OszReader(archiveFactory)
 
+	self.roles = Roles(repos.userRolesRepo)
 	self.sections = Sections(repos.contestsRepo, repos.sectionsRepo)
 	self.contestUsers = ContestUsers(repos.contestUsersRepo)
-	self.tracks = Tracks(repos.filesRepo, repos.tracksRepo, self.oszReader)
+	self.contests = Contests(repos.contestsRepo, self.roles)
+	self.tracks = Tracks(
+		repos.filesRepo,
+		repos.tracksRepo,
+		repos.contestsRepo,
+		repos.contestUsersRepo,
+		self.oszReader,
+		self.contests
+	)
 	self.charts = Charts(
 		repos.chartsRepo,
 		repos.contestsRepo,
 		repos.filesRepo,
 		repos.tracksRepo,
+		repos.contestUsersRepo,
 		self.oszReader,
-		archiveFactory
+		archiveFactory,
+		self.contests
 	)
-	self.roles = Roles(repos.userRolesRepo)
 	self.votes = Votes(
 		repos.votesRepo,
 		repos.sectionsRepo,
@@ -41,7 +51,6 @@ function Domain:new(repos, osuApiFactory, archiveFactory)
 		repos.contestsRepo
 	)
 	self.auth = Auth(repos.usersRepo, repos.userRolesRepo, self.roles, osuApiFactory)
-	self.contests = Contests(repos.contestsRepo, self.roles)
 	self.users = Users(repos.usersRepo, self.roles)
 
 	self.anonUser = AnonUser()

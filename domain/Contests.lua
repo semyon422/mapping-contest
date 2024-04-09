@@ -32,15 +32,8 @@ function Contests:canGetVotes(user, contest_user, contest)
 	return contest_user ~= nil or not contest.is_submission_open or self:canUpdateContest(user, contest)
 end
 
-function Contests:canSubmitChart(user, contest, contest_users)
-	local _contest_user
-	for _, contest_user in ipairs(contest_users) do
-		if contest_user.user_id == user.id then
-			_contest_user = contest_user
-			break
-		end
-	end
-	return contest.is_submission_open and _contest_user and self.roles:hasRole(user, "verified")
+function Contests:canSubmitChart(user, contest, contest_user)
+	return contest.is_submission_open and contest_user ~= nil and self.roles:hasRole(user, "verified")
 end
 
 function Contests:canJoinContest(user)
@@ -67,7 +60,10 @@ function Contests:getContests()
 end
 
 function Contests:createContest(user)
-	-- TODO: check host role, validate contest
+	if not self:canCreateContest(user) then
+		return
+	end
+
 	local time = os.time()
 	local contest = self.contestsRepo:create({
 		host_id = user.id,

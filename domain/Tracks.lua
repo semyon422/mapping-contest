@@ -6,20 +6,53 @@ local Tracks = class()
 
 ---@param filesRepo domain.IFilesRepo
 ---@param tracksRepo domain.ITracksRepo
+---@param contestsRepo domain.IContestsRepo
+---@param contestUsersRepo domain.IContestUsersRepo
 ---@param oszReader domain.OszReader
-function Tracks:new(filesRepo, tracksRepo, oszReader)
+---@param contests domain.Contests
+function Tracks:new(filesRepo, tracksRepo, contestsRepo, contestUsersRepo, oszReader, contests)
 	self.filesRepo = filesRepo
 	self.tracksRepo = tracksRepo
+	self.contestsRepo = contestsRepo
+	self.contestUsersRepo = contestUsersRepo
 	self.oszReader = oszReader
+	self.contests = contests
+end
+
+function Tracks:canDeleteTrack(user, contest, track)
+	return self.contests:canUpdateContest(user, contest)
+end
+
+function Tracks:canGetTrackFile(user, contest_user, contest, track)
+	return user.id > 0 and self.contests:canGetVotes(user, contest_user, contest)
+end
+
+function Tracks:canSubmitTrack(user, contest)
+	return self.contests:canUpdateContest(user, contest)
 end
 
 function Tracks:delete(user, track_id)
+	local track = assert(self.tracksRepo:findById(track_id))
+	local contest = assert(self.contestsRepo:findById(track.contest_id))
+	if not self:canDeleteTrack(user, contest, track) then
+		return
+	end
 	self.tracksRepo:deleteById(track_id)
 end
 
 function Tracks:getTrackFile(user, track_id)
-	local track = self.tracksRepo:findById(track_id)
-	local file = self.filesRepo:findById(track.file_id)
+	local track = assert(self.tracksRepo:findById(track_id))
+	local contest = assert(self.contestsRepo:findById(track.contest_id))
+	local contest_user = self.contestUsersRepo:find({
+		user_id = user.id,
+		contest_id = contest.id
+	})
+
+	if not self:canGetTrackFile(user, contest_user, contest, track) then
+		return
+	end
+
+	local file = assert(self.filesRepo:findById(track.file_id))
 	local path = "storages/" .. file.hash
 	return file.name, path
 end
@@ -35,6 +68,11 @@ end
 -- }
 
 function Tracks:create(user, _file, contest_id)
+	local contest = assert(self.contestsRepo:findById(contest_id))
+	if not self:canSubmitTrack(user, contest) then
+		return
+	end
+
 	local osz, err = self.oszReader:read(_file.path)
 	if not osz then
 		return nil, err

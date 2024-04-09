@@ -41,7 +41,7 @@ function Contest:load()
 end
 
 function Contest:canSubmitChart()
-	return self.domain.contests:canSubmitChart(self.user, self.contest, self.contest_users)
+	return self.domain.contests:canSubmitChart(self.user, self.contest, self.params.contest_user)
 end
 
 function Contest:canJoinContest()
@@ -56,14 +56,26 @@ function Contest:canGetVotes()
 	return self.domain.contests:canGetVotes(self.user, self.params.contest_user, self.contest)
 end
 
+function Contest:canGetChartFile(chart)
+	return self.domain.charts:canGetChartFile(self.user, self.params.contest_user, self.contest, chart)
+end
+
 function Contest:canUpdateContest()
 	return self.domain.contests:canUpdateContest(self.user, self.contest)
 end
 
-function Contest:canSubmitTrack() return self:canUpdateContest() end
-function Contest:canDeleteTrack(track) return self:canUpdateContest() end
-function Contest:canCreateSection() return self:canUpdateContest() end
-function Contest:canUpdateSection() return self:canUpdateContest() end
+function Contest:canCreateSection()
+	return self.domain.sections:canCreateSection(self.user, self.contest)
+end
+function Contest:canUpdateSection() return self:canCreateSection() end
+
+function Contest:canSubmitTrack()
+	return self.domain.tracks:canSubmitTrack(self.user, self.contest)
+end
+
+function Contest:canDeleteTrack(track)
+	return self.domain.tracks:canDeleteTrack(self.user, self.contest, track)
+end
 
 function Contest:canUpdateVote(chart, vote)
 	return self.domain.votes:canUpdateVote(self.user, self.contest, chart, vote)

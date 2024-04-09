@@ -122,11 +122,15 @@
 							<% end %>
 						</td>
 						<td>
+							<% if page:canGetChartFile(chart) then %>
 							<a
 								href="/charts/<%= chart.id %>/download"
 								hx-boost="false"
 								data-tooltip="<%= datetime:to_text(chart.submitted_at) %>, <%= chart.notes %> notes"
 							><%= chart.track.title %></a>
+							<% else %>
+							<%= chart.track.title %>
+							<% end %>
 						</td>
 						<td>
 							<% for i, vote_name in ipairs(Votes.list) do %>

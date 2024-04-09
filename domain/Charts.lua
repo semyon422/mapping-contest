@@ -11,23 +11,39 @@ local Charts = class()
 ---@param contestsRepo domain.IContestsRepo
 ---@param filesRepo domain.IFilesRepo
 ---@param tracksRepo domain.ITracksRepo
+---@param contestUsersRepo domain.IContestUsersRepo
 ---@param oszReader domain.OszReader
 ---@param archiveFactory domain.IArchiveFactory
-function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, oszReader, archiveFactory)
+---@param contests domain.Contests
+function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, contestUsersRepo, oszReader, archiveFactory, contests)
 	self.chartsRepo = chartsRepo
 	self.contestsRepo = contestsRepo
 	self.filesRepo = filesRepo
 	self.tracksRepo = tracksRepo
+	self.contestUsersRepo = contestUsersRepo
 	self.oszReader = oszReader
 	self.archiveFactory = archiveFactory
+	self.contests = contests
 	self.nameGenerator = ChartNameGenerator()
 	self.chartAnoner = ChartAnoner()
 	self.chartRepacker = ChartRepacker(self.archiveFactory)
 	self.chartAnonRepacker = ChartRepacker(self.archiveFactory, self.chartAnoner)
 end
 
+function Charts:canSubmitChart(user, contest, contest_user)
+	return self.contests:canSubmitChart(user, contest, contest_user)
+end
+
 function Charts:canDelete(user, chart, contest)
 	return user.id == contest.host_id or user.id == chart.charter_id and contest.is_submission_open
+end
+
+function Charts:canGetChartFile(user, contest_user, contest, chart)
+	return user.id > 0 and self.contests:canGetVotes(user, contest_user, contest)
+end
+
+function Charts:canGetPackFile(user, contest)
+	return user.id == contest.host_id
 end
 
 function Charts:delete(user, chart_id)
@@ -42,13 +58,18 @@ function Charts:delete(user, chart_id)
 	self.chartsRepo:deleteById(chart_id)
 end
 
-function Charts:getChart(user, chart_id)
-	return self.chartsRepo:findById(chart_id)
-end
-
-function Charts:getChartRepacked(user, chart_id, path_out)
+function Charts:getChartFile(user, chart_id, path_out)
 	local chart = assert(self.chartsRepo:findById(chart_id))
 	local contest = assert(self.contestsRepo:findById(chart.contest_id))
+	local contest_user = self.contestUsersRepo:find({
+		user_id = user.id,
+		contest_id = contest.id
+	})
+
+	if not self:canGetChartFile(user, contest_user, contest, chart) then
+		return
+	end
+
 	local file = assert(self.filesRepo:findById(chart.file_id))
 	local track = assert(self.tracksRepo:findById(chart.track_id))
 
@@ -65,8 +86,12 @@ function Charts:getChartRepacked(user, chart_id, path_out)
 	return ("%s - %s (%s).osz"):format(track.meta.Artist, track.meta.Title, name), path_out
 end
 
-function Charts:getPack(user, contest_id, path_out)
+function Charts:getPackFile(user, contest_id, path_out)
 	local contest = assert(self.contestsRepo:findById(contest_id))
+	if not self:canGetPackFile(user, contest) then
+		return
+	end
+
 	local charts = self.chartsRepo:selectWithRels({contest_id = assert(contest_id)})
 	local paths = {}
 	for _, chart in ipairs(charts) do
@@ -96,6 +121,16 @@ end
 -- }
 
 function Charts:submit(user, _file, contest_id)
+	local contest = assert(self.contestsRepo:findById(contest_id))
+	local contest_user = self.contestUsersRepo:find({
+		user_id = user.id,
+		contest_id = contest.id
+	})
+
+	if not self:canSubmitChart(user, contest, contest_user) then
+		return
+	end
+
 	local osz, err = self.oszReader:read(_file.path)
 	if not osz then
 		return nil, err
