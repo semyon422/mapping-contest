@@ -108,7 +108,7 @@
 							</a>
 						<% end %>
 					</th>
-					<td colspan="2">Max <i class="fas fa-heart"></i>: <%= Sections:get_max_heart_votes(#section_vote_charts) %></td>
+					<td colspan="2">Max <i class="fas fa-heart"></i>: <%= Sections:get_max_heart_votes(#section_vote_charts[j]) %></td>
 				</tr>
 				<% for _, vote_chart in ipairs(section_vote_charts[j]) do %>
 					<% local chart = vote_chart.chart %>
