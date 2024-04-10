@@ -20,10 +20,10 @@ local defaults = {
 }
 
 function ChartAnoner:anonOsu(osu, audio_hash, bg_hash, metadata, chart_name)
-	osu.sections.General.AudioFilename = ("%08X.%s"):format(
+	osu.sections.General.AudioFilename = ("%s.%s"):format(
 		audio_hash, osu.sections.General.AudioFilename:match('%.(.-)$')
 	)
-	osu.background = ("%08X.%s"):format(bg_hash, osu.background:match('%.(.-)$'))
+	osu.background = ("%s.%s"):format(bg_hash, osu.background:match('%.(.-)$'))
 
 	local md = osu.sections.Metadata
 	for k, v in pairs(defaults) do
@@ -58,8 +58,8 @@ function ChartAnoner:convert(files, options)
 
 	local filename = self:anonOsu(
 		osu,
-		crc32.hash(files[audio_file_name] or ""),
-		crc32.hash(files[bg_file_name] or ""),
+		crc32.format(crc32.hash(files[audio_file_name] or "")),
+		crc32.format(crc32.hash(files[bg_file_name] or "")),
 		options[1],
 		options[2]
 	)
