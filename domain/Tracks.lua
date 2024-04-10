@@ -24,7 +24,7 @@ function Tracks:canDeleteTrack(user, contest, track)
 end
 
 function Tracks:canGetTrackFile(user, contest_user, contest, track)
-	return user.id > 0 and self.contests:canGetVotes(user, contest_user, contest)
+	return self.contests:canGetTracks(user, contest_user, contest)
 end
 
 function Tracks:canSubmitTrack(user, contest)
