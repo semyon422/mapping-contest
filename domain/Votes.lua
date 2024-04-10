@@ -55,11 +55,37 @@ local function get_chart_contest_user(chart, contest_users)
 	end
 end
 
-local function assign_section(charts, sections, contest_users)
+function Votes:assign_section(charts, sections, contest_users)
 	for _, chart in ipairs(charts) do
 		local contest_user = get_chart_contest_user(chart, contest_users)
-		local duration = chart.submitted_at - contest_user.started_at
+		chart.started_at = contest_user.started_at
+		local duration = chart.submitted_at - chart.started_at
 		chart.section_index = get_section(duration, chart.notes, sections)
+	end
+end
+
+local function assign_votes(chart, uccvs, user)
+	local votes_count, is_voted = {}, {}
+	for _, vote in ipairs(Votes.list) do
+		votes_count[vote] = 0
+		is_voted[vote] = false
+	end
+	chart.votes_count, chart.is_voted = votes_count, is_voted
+
+	for _, uccv in ipairs(uccvs) do
+		if uccv.chart_id == chart.id then
+			local vote = uccv.vote
+			votes_count[vote] = votes_count[vote] + 1
+			if uccv.user_id == user.id then
+				is_voted[vote] = true
+			end
+		end
+	end
+end
+
+function Votes:assign_votes(charts, uccvs, user)
+	for _, chart in ipairs(charts) do
+		assign_votes(chart, uccvs, user)
 	end
 end
 
@@ -99,7 +125,7 @@ function Votes:updateVote(user, contest_id, chart_id, vote)
 	local contest_users = self.contestUsersRepo:select({contest_id = contest_id})
 	local charts = self.chartsRepo:select({contest_id = contest_id})
 
-	assign_section(charts, sections, contest_users)
+	self:assign_section(charts, sections, contest_users)
 
 	local chart
 	for _, _chart in ipairs(charts) do

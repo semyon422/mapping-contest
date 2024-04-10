@@ -1,5 +1,4 @@
-<% local Datetime = require("util.Datetime") %>
-<% local datetime = Datetime(config.timezone) %>
+<% local time_util = require("time_util") %>
 
 <section>
 	<h4>
@@ -108,10 +107,8 @@
 							</a>
 						<% end %>
 					</th>
-					<td colspan="2">Max <i class="fas fa-heart"></i>: <%= Sections:get_max_heart_votes(#section_vote_charts[j]) %></td>
-				</tr>
-				<% for _, vote_chart in ipairs(section_vote_charts[j]) do %>
-					<% local chart = vote_chart.chart %>
+					<td colspan="2">Max <i class="fas fa-heart"></i>: <%= page:getMaxHearts(j) %></td>
+				<% for _, chart in ipairs(section_charts[j]) do %>
 					<tr>
 						<% chart.contest = contest %>
 						<td>
@@ -126,7 +123,7 @@
 							<a
 								href="/charts/<%= chart.id %>/download"
 								hx-boost="false"
-								data-tooltip="<%= datetime:to_text(chart.submitted_at) %>, <%= chart.notes %> notes"
+								data-tooltip="<%= time_util.format(chart.submitted_at - chart.started_at) %>, <%= chart.notes %> notes"
 							><%= chart.track.title %></a>
 							<% else %>
 							<%= chart.track.title %>
@@ -142,11 +139,11 @@
 										hx-swap="none"
 									>
 								<% end %>
-								<% local tag = vote_chart.voted[vote_name] and "kbd" or "code" %>
+								<% local tag = chart.is_voted[vote_name] and "kbd" or "code" %>
 								<<%= tag %> class="<%= vote_allowed and "" or "vote_inactive" %>">
 									<i class="fas fa-<%= vote_icons[i] %>"></i>
 									<% if not contest.is_anon then %>
-									<%= #vote_chart[vote_name] %>
+									<%= chart.votes_count[vote_name] %>
 									<% end %>
 								</<%= tag %>>
 								<% if vote_allowed then %>

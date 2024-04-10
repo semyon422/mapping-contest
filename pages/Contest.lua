@@ -1,6 +1,6 @@
 local Page = require("http.Page")
 local relations = require("rdb.relations")
-local voting = require("domain.voting")
+local Datetime = require("util.Datetime")
 
 ---@class pages.Contest: http.Page
 ---@operator call: pages.Contest
@@ -10,7 +10,10 @@ Contest.view = {layout = "contest"}
 
 function Contest:load()
 	local params = self.params
-	self.contest = params.contest
+	params.datetime = Datetime(self.config.timezone)
+
+	local contest = params.contest
+	self.contest = contest
 
 	relations.preload({self.contest}, {
 		"host",
@@ -25,7 +28,17 @@ function Contest:load()
 		chart.name = self.domain.charts.nameGenerator:generate(chart.file.hash)
 	end
 
-	params.section_vote_charts = voting.load_sections(params)
+	self.domain.votes:assign_section(contest.charts, contest.sections, contest.contest_users)
+	self.domain.votes:assign_votes(contest.charts, contest.user_contest_chart_votes, params.session_user)
+
+	local section_charts = {}
+	params.section_charts = section_charts
+	for i = 1, #contest.sections do
+		section_charts[i] = {}
+	end
+	for _, chart in ipairs(contest.charts) do
+		table.insert(section_charts[chart.section_index], chart)
+	end
 
 	local user_id = params.session.user_id
 	if user_id then
@@ -38,6 +51,10 @@ function Contest:load()
 	end
 
 	self.contest_users = self.contest.contest_users
+end
+
+function Contest:getMaxHearts(section_index)
+	return self.domain.sections:get_max_heart_votes(#self.params.section_charts[section_index])
 end
 
 function Contest:canSubmitChart()
