@@ -105,6 +105,8 @@ function Auth:oauth(code)
 		user_id = user.id,
 		role = "verified",
 	})
+
+	return user
 end
 
 return Auth
