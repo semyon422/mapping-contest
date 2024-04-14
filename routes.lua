@@ -1,8 +1,10 @@
+local path_util = require("path_util")
+
 local function download_headers(result)
 	return {
 		["Pragma"] = "public",
 		["Cache-Control"] = "must-revalidate, post-check=0, pre-check=0",
-		["Content-Disposition"] = 'attachment; filename="' .. result.filename .. '"',
+		["Content-Disposition"] = 'attachment; filename="' .. path_util.fix_illegal(result.filename) .. '"',
 		["Content-Transfer-Encoding"] = "binary",
 		["Content-Type"] = "application/octet-stream",
 	}
