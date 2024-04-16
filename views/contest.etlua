@@ -115,7 +115,10 @@
 							<% if contest.is_anon then %>
 								<%= chart.name %>
 							<% else %>
-								<a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a>
+								<a
+									href="/users/<%= chart.charter.id %>"
+									data-tooltip="<%= chart.name %>"
+								><%= chart.charter.name %></a>
 							<% end %>
 						</td>
 						<td>
