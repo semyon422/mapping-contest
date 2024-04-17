@@ -3,6 +3,7 @@ local ChartNameGenerator = require("domain.ChartNameGenerator")
 local ChartRepacker = require("domain.ChartRepacker")
 local ChartAnoner = require("domain.ChartAnoner")
 local ChartFormatter = require("domain.ChartFormatter")
+local PackMetadata = require("domain.PackMetadata")
 
 ---@class domain.Charts
 ---@operator call: domain.Charts
@@ -112,7 +113,10 @@ function Charts:getPackFile(user, contest_id, path_out)
 	end
 
 	if not contest.is_anon then
-		self.chartRepacker:repack(paths, path_out)
+		local pm = PackMetadata(contest.name, host.name, charts)
+		local filename, data = pm:getFile()
+		local more_files = {[filename] = data}
+		self.chartRepacker:repack(paths, path_out, more_files)
 		return ("%s (%s charts).osz"):format(contest.name, #charts)
 	end
 
