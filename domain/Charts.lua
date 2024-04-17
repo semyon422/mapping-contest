@@ -2,6 +2,7 @@ local class = require("class")
 local ChartNameGenerator = require("domain.ChartNameGenerator")
 local ChartRepacker = require("domain.ChartRepacker")
 local ChartAnoner = require("domain.ChartAnoner")
+local ChartFormatter = require("domain.ChartFormatter")
 
 ---@class domain.Charts
 ---@operator call: domain.Charts
@@ -12,21 +13,24 @@ local Charts = class()
 ---@param filesRepo domain.IFilesRepo
 ---@param tracksRepo domain.ITracksRepo
 ---@param contestUsersRepo domain.IContestUsersRepo
+---@param usersRepo domain.IUsersRepo
 ---@param oszReader domain.OszReader
 ---@param archiveFactory domain.IArchiveFactory
 ---@param contests domain.Contests
-function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, contestUsersRepo, oszReader, archiveFactory, contests)
+function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, contestUsersRepo, usersRepo, oszReader, archiveFactory, contests)
 	self.chartsRepo = chartsRepo
 	self.contestsRepo = contestsRepo
 	self.filesRepo = filesRepo
 	self.tracksRepo = tracksRepo
 	self.contestUsersRepo = contestUsersRepo
+	self.usersRepo = usersRepo
 	self.oszReader = oszReader
 	self.archiveFactory = archiveFactory
 	self.contests = contests
 	self.nameGenerator = ChartNameGenerator()
 	self.chartAnoner = ChartAnoner()
-	self.chartRepacker = ChartRepacker(self.archiveFactory)
+	self.chartFormatter = ChartFormatter()
+	self.chartRepacker = ChartRepacker(self.archiveFactory, self.chartFormatter)
 	self.chartAnonRepacker = ChartRepacker(self.archiveFactory, self.chartAnoner)
 end
 
@@ -91,13 +95,19 @@ function Charts:getPackFile(user, contest_id, path_out)
 	if not self:canGetPackFile(user, contest) then
 		return
 	end
+	local host = assert(self.usersRepo:findById(contest.host_id))
 
 	local charts = self.chartsRepo:selectWithRels({contest_id = assert(contest_id)})
 	local paths = {}
 	for _, chart in ipairs(charts) do
 		table.insert(paths, {
 			"storages/" .. chart.file.hash,
-			{chart.track.meta, self.nameGenerator:generate(chart.file.hash)}
+			{
+				meta = chart.track.meta,
+				hashname = self.nameGenerator:generate(chart.file.hash),
+				charter = chart.charter.name,
+				host = host.name,
+			}
 		})
 	end
 

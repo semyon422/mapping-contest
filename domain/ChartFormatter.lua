@@ -2,9 +2,9 @@ local IFileConverter = require("domain.IFileConverter")
 local Osu = require("domain.Osu")
 local crc32 = require("crc32")
 
----@class domain.ChartAnoner: domain.IFileConverter
----@operator call: domain.ChartAnoner
-local ChartAnoner = IFileConverter + {}
+---@class domain.ChartFormatter: domain.IFileConverter
+---@operator call: domain.ChartFormatter
+local ChartFormatter = IFileConverter + {}
 
 local defaults = {
 	Title = "",
@@ -19,19 +19,20 @@ local defaults = {
 	BeatmapSetID = "-1",
 }
 
-function ChartAnoner:anonOsu(osu, audio_hash, bg_hash, metadata, chart_name)
+function ChartFormatter:formatOsu(osu, audio_hash, bg_hash, options)
 	osu.sections.General.AudioFilename = ("%s.%s"):format(
 		audio_hash, osu.sections.General.AudioFilename:match('%.(.-)$')
 	)
 	osu.background = ("%s.%s"):format(bg_hash, osu.background:match('%.(.-)$'))
 
 	local md = osu.sections.Metadata
+	local Version = md.Version
 	for k, v in pairs(defaults) do
-		v = metadata[k] or v
+		v = options.meta[k] or v
 		md[k] = v
 	end
-	md.Creator = chart_name
-	md.Version = chart_name
+	md.Creator = options.host
+	md.Version = ("%s's %s"):format(options.charter, Version)
 
 	return ("%s - %s (%s) [%s].osu"):format(md.Artist, md.Title, md.Creator, md.Version)
 end
@@ -39,7 +40,7 @@ end
 ---@param files table
 ---@param options table
 ---@return table
-function ChartAnoner:convert(files, options)
+function ChartFormatter:convert(files, options)
 	local new_files = {}
 
 	local osu_file_name, osu_file_size
@@ -56,12 +57,11 @@ function ChartAnoner:convert(files, options)
 	local audio_file_name = osu.sections.General.AudioFilename
 	local bg_file_name = osu.background
 
-	local filename = self:anonOsu(
+	local filename = self:formatOsu(
 		osu,
 		crc32.format(crc32.hash(files[audio_file_name] or "")),
 		crc32.format(crc32.hash(files[bg_file_name] or "")),
-		options.meta,
-		options.hashname
+		options
 	)
 
 	new_files[filename] = osu:encode()
@@ -71,4 +71,4 @@ function ChartAnoner:convert(files, options)
 	return new_files
 end
 
-return ChartAnoner
+return ChartFormatter

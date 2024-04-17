@@ -39,6 +39,7 @@ function Domain:new(repos, osuApiFactory, archiveFactory)
 		repos.filesRepo,
 		repos.tracksRepo,
 		repos.contestUsersRepo,
+		repos.usersRepo,
 		self.oszReader,
 		archiveFactory,
 		self.contests

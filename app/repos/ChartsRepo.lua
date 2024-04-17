@@ -12,7 +12,7 @@ ChartsRepo.model_name = "charts"
 ---@return table
 function ChartsRepo:selectWithRels(conds)
 	local charts = self:select(conds)
-	relations.preload(charts, {"file", "track"})
+	relations.preload(charts, {"file", "track", "charter"})
 	return charts
 end
 
