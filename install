@@ -4,7 +4,6 @@ luarocks install lapis
 luarocks install inspect
 luarocks install lsqlite3
 luarocks install bcrypt
-luarocks install luazip
 luarocks install luautf8
 luarocks install luacov
 luarocks install luacov-reporter-lcov

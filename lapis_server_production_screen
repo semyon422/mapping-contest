@@ -1,3 +1,0 @@
-#!/bin/bash
-. ./setenv
-screen -dmS mapping-contest lapis server --environment production
