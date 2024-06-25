@@ -19,6 +19,7 @@ local Domain = class()
 ---@param osuApiFactory domain.IOsuApiFactory
 ---@param archiveFactory domain.IArchiveFactory
 function Domain:new(repos, osuApiFactory, archiveFactory)
+	self.repos = repos
 	self.oszReader = OszReader(archiveFactory)
 
 	self.roles = Roles(repos.userRolesRepo)
@@ -55,6 +56,20 @@ function Domain:new(repos, osuApiFactory, archiveFactory)
 	self.users = Users(repos.usersRepo, self.roles)
 
 	self.anonUser = AnonUser()
+end
+
+---@param user_id integer
+function Domain:getUser(user_id)
+	local anonUser = self.anonUser
+	if not user_id then
+		return anonUser
+	end
+	local user = self.repos.usersRepo:findById(user_id)
+	if not user then
+		return anonUser
+	end
+	user.user_roles = self.repos.userRolesRepo:select({user_id = user_id})
+	return user
 end
 
 return Domain
