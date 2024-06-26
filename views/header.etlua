@@ -1,16 +1,16 @@
-<nav>
-	<ul>
-		<li><strong>CIS SMC</strong></li>
-		<li><a href="/contests">Contests</a></li>
-		<li><a href="/users">Users</a></li>
+<nav class="navbar">
+	<div class="navbar-brand">
+		<strong class="navbar-item">CIS SMC</strong>
+	</div>
+	<div class="navbar-start">
+		<a class="navbar-item" href="/contests">Contests</a>
+		<a class="navbar-item" href="/users">Users</a>
 		<% if session.user_id then %>
-			<li>
-				<a href="/users/<%= session.user_id %>">
-					Profile
-				</a>
-			</li>
+			<a class="navbar-item" href="/users/<%= session.user_id %>">
+				Profile
+			</a>
 		<% else %>
-			<li><a href="/login_options">Login</a></li>
+			<a class="navbar-item" href="/login_options">Login</a>
 		<% end %>
-	</ul>
+	</div>
 </nav>

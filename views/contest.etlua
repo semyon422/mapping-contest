@@ -1,7 +1,7 @@
 <% local time_util = require("time_util") %>
 
-<section>
-	<h4>
+<section class="section">
+	<h4 class="title is-4">
 		<%= contest.name %>
 		<% if page:canUpdateContest() then %>
 			<a href="/contests/<%= contest.id %>?edit">
@@ -10,7 +10,7 @@
 		<% end %>
 	</h4>
 	<div class="grid">
-		<div>
+		<div class="cell">
 			<p>
 				<%- contest.description %>
 			</p>
@@ -39,7 +39,7 @@
 				<% end %>
 			<% end %>
 		</div>
-		<div>
+		<div class="cell">
 			<% if page:canGetTracks() then %>
 			<h6>
 				Tracks
@@ -78,7 +78,7 @@
 </section>
 
 <% if page:canGetVotes() then %>
-<section>
+<section class="section">
 	<% local Sections = require("domain.Sections") %>
 
 	<% local Votes = require("domain.Votes") %>
@@ -89,6 +89,7 @@
 		<a href="/contests/<%= contest.id %>?create_section">Create section</a>
 	<% end %>
 	<table id="votes"
+		class="table is-narrow is-hoverable is-fullwidth is-striped is-bordered"
 		hx-select="#votes"
 		hx-get
 		hx-trigger="update_votes"
@@ -175,12 +176,14 @@
 <% end %>
 
 <% if edit then %>
-<dialog id="modal_edit_contest" open>
-	<article>
-		<header>
-			<a href="/contests/<%= contest.id %>" aria-label="Close" class="close"></a>
-			Edit contest
+<div id="modal_edit_contest" class="modal is-active">
+	<div class="modal-background"></div>
+	<div class="modal-card">
+		<header class="modal-card-head">
+			<p class="modal-card-title">Edit contest</p>
+			<a href="/contests/<%= contest.id %>" aria-label="close" class="delete"></a>
 		</header>
+		<section class="modal-card-body">
 		<form hx-patch hx-target="#edit_errors" autocomplete="off">
 			<label for="name">Name</label>
 			<input id="name" type="text" name="name" required value="<%= contest.name %>">
@@ -218,11 +221,16 @@
 
 			<button>Save</button>
 		</form>
-		<button class="contrast" hx-delete hx-confirm="Delete this contest?">Delete</button>
-		<div id="edit_errors"></div>
-		<a hx-boost="false" href="/contests/<%= contest.id %>/download_pack">download pack</a>
-	</article>
-</dialog>
+		</section>
+		<footer class="modal-card-foot">
+			<div class="buttons">
+			<button class="contrast" hx-delete hx-confirm="Delete this contest?">Delete</button>
+			<div id="edit_errors"></div>
+			<a hx-boost="false" href="/contests/<%= contest.id %>/download_pack">download pack</a>
+			</div>
+		</footer>
+	</div>
+</div>
 <% end %>
 
 <% if add_track then %>
