@@ -183,52 +183,75 @@
 			<p class="modal-card-title">Edit contest</p>
 			<a href="/contests/<%= contest.id %>" aria-label="close" class="delete"></a>
 		</header>
-		<section class="modal-card-body">
 		<form hx-patch hx-target="#edit_errors" autocomplete="off">
-			<label for="name">Name</label>
-			<input id="name" type="text" name="name" required value="<%= contest.name %>">
-
-			<label for="description">Description</label>
-			<textarea id="description" name="description" required maxlength="1024"><%= contest.description %></textarea>
-
-			<label for="is_visible">
-				<input type="checkbox" id="is_visible" name="is_visible" role="switch"
-					<%= contest.is_visible and "checked" or "" %>
-				>
-				Visible
-			</label>
-
-			<label for="is_submission_open">
-				<input type="checkbox" id="is_submission_open" name="is_submission_open" role="switch"
-					<%= contest.is_submission_open and "checked" or "" %>
-				>
-				Submission open
-			</label>
-
-			<label for="is_voting_open">
-				<input type="checkbox" id="is_voting_open" name="is_voting_open" role="switch"
-					<%= contest.is_voting_open and "checked" or "" %>
-				>
-				Voting open
-			</label>
-
-			<label for="is_anon">
-				<input type="checkbox" id="is_anon" name="is_anon" role="switch"
-					<%= contest.is_anon and "checked" or "" %>
-				>
-				Anonymized
-			</label>
-
-			<button>Save</button>
-		</form>
-		</section>
-		<footer class="modal-card-foot">
-			<div class="buttons">
-			<button class="contrast" hx-delete hx-confirm="Delete this contest?">Delete</button>
-			<div id="edit_errors"></div>
-			<a hx-boost="false" href="/contests/<%= contest.id %>/download_pack">download pack</a>
+			<section class="modal-card-body">
+			<div class="field">
+				<label class="label">Name</label>
+				<div class="control">
+					<input class="input" id="name" type="text" name="name" required value="<%= contest.name %>">
+				</div>
 			</div>
-		</footer>
+
+			<div class="field">
+				<label class="label">Description</label>
+				<div class="control">
+					<textarea id="description" name="description" class="textarea" required maxlength="1024"><%= contest.description %></textarea>
+				</div>
+			</div>
+
+			<div class="field">
+				<div class="control">
+					<label class="checkbox">
+						<input type="checkbox" id="is_visible" name="is_visible"
+							<%= contest.is_visible and "checked" or "" %>
+						>
+						Visible
+					</label>
+				</div>
+			</div>
+
+			<div class="field">
+				<div class="control">
+					<label class="checkbox">
+						<input type="checkbox" id="is_submission_open" name="is_submission_open"
+							<%= contest.is_submission_open and "checked" or "" %>
+						>
+						Submission open
+					</label>
+				</div>
+			</div>
+
+			<div class="field">
+				<div class="control">
+					<label class="checkbox">
+						<input type="checkbox" id="is_voting_open" name="is_voting_open" role="switch"
+							<%= contest.is_voting_open and "checked" or "" %>
+						>
+						Voting open
+					</label>
+				</div>
+			</div>
+
+			<div class="field">
+				<div class="control">
+					<label class="checkbox">
+						<input type="checkbox" id="is_anon" name="is_anon" role="switch"
+							<%= contest.is_anon and "checked" or "" %>
+						>
+						Anonymized
+					</label>
+				</div>
+			</div>
+			<div id="edit_errors"></div>
+			</section>
+			<footer class="modal-card-foot">
+				<div class="buttons">
+					<button class="button is-link">Save</button>
+					<button class="button is-link is-light" hx-delete hx-confirm="Delete this contest?">Delete</button>
+					<a hx-boost="false" href="/contests/<%= contest.id %>/download_pack">download pack</a>
+				</div>
+			</footer>
+		</form>
 	</div>
 </div>
 <% end %>
