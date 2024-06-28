@@ -41,7 +41,7 @@
 		</div>
 		<div class="cell">
 			<% if page:canGetTracks() then %>
-			<h6>
+			<h6 class="title is-6">
 				Tracks
 				<% if page:canSubmitTrack() then %>
 					<a href="/contests/<%= contest.id %>?add_track">
@@ -49,7 +49,14 @@
 					</a>
 				<% end %>
 			</h6>
-			<table id="tracks" hx-select="#tracks" hx-swap="outerHTML" hx-get hx-trigger="update_tracks">
+			<table
+				class="table is-narrow is-hoverable is-fullwidth is-bordered"
+				id="tracks"
+				hx-select="#tracks"
+				hx-swap="outerHTML"
+				hx-get
+				hx-trigger="update_tracks"
+			>
 				<tbody>
 					<% for _, track in ipairs(contest.tracks) do %>
 						<tr>
@@ -89,7 +96,7 @@
 		<a href="/contests/<%= contest.id %>?create_section">Create section</a>
 	<% end %>
 	<table id="votes"
-		class="table is-narrow is-hoverable is-fullwidth is-striped is-bordered"
+		class="table is-narrow is-hoverable is-fullwidth is-bordered"
 		hx-select="#votes"
 		hx-get
 		hx-trigger="update_votes"

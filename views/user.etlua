@@ -1,7 +1,11 @@
 <% local Roles = require("domain.Roles") %>
 
 <div id="user" hx-select="#user" hx-swap="outerHTML" hx-get hx-trigger="update_user">
-	<table hx-swap="none" _="on htmx:afterRequest trigger update_user">
+	<table
+		class="table is-narrow is-hoverable is-fullwidth is-bordered"
+		hx-swap="none"
+		_="on htmx:afterRequest trigger update_user"
+	>
 		<tbody>
 			<%
 				local roles_map = {}

@@ -3,7 +3,7 @@
 	<a href="#" hx-post="/contests">Create new contest</a>
 	<% end %>
 
-	<table class="table">
+	<table class="table is-narrow is-hoverable is-fullwidth is-bordered">
 		<thead>
 			<tr>
 			<th scope="col">#</th>
