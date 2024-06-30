@@ -67,12 +67,12 @@
 							</td>
 							<% if page:canDeleteTrack(track) then %>
 								<td>
-								<a href="#" hx-swap="none" hx-delete="/contests/<%= contest.id %>/tracks/<%= track.id %>"
+								<a href="#"
+									class="delete"
+									hx-swap="none" hx-delete="/contests/<%= contest.id %>/tracks/<%= track.id %>"
 									hx-confirm="Delete this track?"
 									_="on htmx:afterRequest trigger update_tracks"
-								>
-									<i class="fas fa-times"></i>
-								</a>
+								></a>
 								</td>
 							<% end %>
 						</tr>
@@ -177,12 +177,11 @@ end
 						</td>
 						<td>
 							<% if page:canDeleteChart(chart) then %>
-							<a href="#" hx-swap="none" hx-delete="/contests/<%= contest.id %>/charts/<%= chart.id %>"
+							<a href="#" class="delete"
+								hx-swap="none" hx-delete="/contests/<%= contest.id %>/charts/<%= chart.id %>"
 								hx-confirm="Are you sure you wish to delete this chart?"
 								_="on htmx:afterRequest trigger update_charts"
-							>
-								<i class="fas fa-times"></i>
-							</a>
+							></a>
 							<% end %>
 						</td>
 					</tr>
@@ -205,64 +204,64 @@ end
 		</header>
 		<form hx-patch hx-target="#edit_errors" autocomplete="off">
 			<section class="modal-card-body">
-			<div class="field">
-				<label class="label">Name</label>
-				<div class="control">
-					<input class="input" id="name" type="text" name="name" required value="<%= contest.name %>">
+				<div class="field">
+					<label class="label">Name</label>
+					<div class="control">
+						<input class="input" id="name" type="text" name="name" required value="<%= contest.name %>">
+					</div>
 				</div>
-			</div>
 
-			<div class="field">
-				<label class="label">Description</label>
-				<div class="control">
-					<textarea id="description" name="description" class="textarea" required maxlength="1024"><%= contest.description %></textarea>
+				<div class="field">
+					<label class="label">Description</label>
+					<div class="control">
+						<textarea id="description" name="description" class="textarea" required maxlength="1024"><%= contest.description %></textarea>
+					</div>
 				</div>
-			</div>
 
-			<div class="field">
-				<div class="control">
-					<label class="checkbox">
-						<input type="checkbox" id="is_visible" name="is_visible"
-							<%= contest.is_visible and "checked" or "" %>
-						>
-						Visible
-					</label>
+				<div class="field">
+					<div class="control">
+						<label class="checkbox">
+							<input type="checkbox" id="is_visible" name="is_visible"
+								<%= contest.is_visible and "checked" or "" %>
+							>
+							Visible
+						</label>
+					</div>
 				</div>
-			</div>
 
-			<div class="field">
-				<div class="control">
-					<label class="checkbox">
-						<input type="checkbox" id="is_submission_open" name="is_submission_open"
-							<%= contest.is_submission_open and "checked" or "" %>
-						>
-						Submission open
-					</label>
+				<div class="field">
+					<div class="control">
+						<label class="checkbox">
+							<input type="checkbox" id="is_submission_open" name="is_submission_open"
+								<%= contest.is_submission_open and "checked" or "" %>
+							>
+							Submission open
+						</label>
+					</div>
 				</div>
-			</div>
 
-			<div class="field">
-				<div class="control">
-					<label class="checkbox">
-						<input type="checkbox" id="is_voting_open" name="is_voting_open" role="switch"
-							<%= contest.is_voting_open and "checked" or "" %>
-						>
-						Voting open
-					</label>
+				<div class="field">
+					<div class="control">
+						<label class="checkbox">
+							<input type="checkbox" id="is_voting_open" name="is_voting_open" role="switch"
+								<%= contest.is_voting_open and "checked" or "" %>
+							>
+							Voting open
+						</label>
+					</div>
 				</div>
-			</div>
 
-			<div class="field">
-				<div class="control">
-					<label class="checkbox">
-						<input type="checkbox" id="is_anon" name="is_anon" role="switch"
-							<%= contest.is_anon and "checked" or "" %>
-						>
-						Anonymized
-					</label>
+				<div class="field">
+					<div class="control">
+						<label class="checkbox">
+							<input type="checkbox" id="is_anon" name="is_anon" role="switch"
+								<%= contest.is_anon and "checked" or "" %>
+							>
+							Anonymized
+						</label>
+					</div>
 				</div>
-			</div>
-			<div id="edit_errors"></div>
+				<div id="edit_errors"></div>
 			</section>
 			<footer class="modal-card-foot">
 				<div class="buttons">
@@ -277,70 +276,108 @@ end
 <% end %>
 
 <% if add_track then %>
-<dialog id="modal_add_track" open>
-	<article>
-		<header>
-			<a href="/contests/<%= contest.id %>" aria-label="Close" class="close"></a>
-			Add track
+<div id="modal_add_track" class="modal is-active">
+	<div class="modal-background"></div>
+	<div class="modal-card">
+		<header class="modal-card-head">
+			<p class="modal-card-title">Add track</p>
+			<a href="/contests/<%= contest.id %>" aria-label="close" class="delete"></a>
 		</header>
 		<form hx-post="/contests/<%= contest.id %>/tracks" hx-encoding="multipart/form-data"
 			hx-swap="none"
 			_="on htmx:xhr:progress(loaded, total) set #track_progress.value to (loaded/total)*100"
 		>
-			<label for="file">Select .osz file</label>
-			<input type="file" id="file" name="file" required>
+			<section class="modal-card-body">
+				<div class="field">
+					<label class="label">Select .osz file</label>
+					<div class="control">
+						<input class="input" type="file" id="file" name="file" required>
+					</div>
+				</div>
 
-			<progress id="track_progress" value="0" max="100"></progress>
-
-			<button>Upload</button>
+				<progress class="progress" id="track_progress" value="0" max="100"></progress>
+			</section>
+			<footer class="modal-card-foot">
+				<div class="buttons">
+					<button class="button is-link">Upload</button>
+				</div>
+			</footer>
 		</form>
-	</article>
-</dialog>
+	</div>
+</div>
 <% end %>
 
 <% if submit_chart then %>
-<dialog id="modal_add_chart" open>
-	<article>
-		<header>
-			<a href="/contests/<%= contest.id %>" aria-label="Close" class="close"></a>
-			Add chart
+<div id="modal_add_chart" class="modal is-active">
+	<div class="modal-background"></div>
+	<div class="modal-card">
+		<header class="modal-card-head">
+			<p class="modal-card-title">Add chart</p>
+			<a href="/contests/<%= contest.id %>" aria-label="close" class="delete"></a>
 		</header>
 		<form hx-post="/contests/<%= contest.id %>/charts" hx-encoding="multipart/form-data"
 			hx-swap="none"
 			_="on htmx:xhr:progress(loaded, total) set #chart_progress.value to (loaded/total)*100"
 		>
-			<label for="file">Select .osz file</label>
-			<input type="file" id="file" name="file" required>
+			<section class="modal-card-body">
+				<div class="field">
+					<label class="label">Select .osz file</label>
+					<div class="control">
+						<input class="input" type="file" id="file" name="file" required>
+					</div>
+				</div>
 
-			<progress id="chart_progress" value="0" max="100"></progress>
-
-			<button>Upload</button>
+				<progress class="progress" id="chart_progress" value="0" max="100"></progress>
+			</section>
+			<footer class="modal-card-foot">
+				<div class="buttons">
+					<button class="button is-link">Upload</button>
+				</div>
+			</footer>
 		</form>
-	</article>
-</dialog>
+	</div>
+</div>
 <% end %>
 
 <% if create_section then %>
-<dialog id="modal_create_section" open>
-	<article>
-		<header>
-			<a href="/contests/<%= contest.id %>" aria-label="Close" class="close"></a>
-			Create section
+<div id="modal_create_section" class="modal is-active">
+	<div class="modal-background"></div>
+	<div class="modal-card">
+		<header class="modal-card-head">
+			<p class="modal-card-title">Create section</p>
+			<a href="/contests/<%= contest.id %>" aria-label="close" class="delete"></a>
 		</header>
 		<form hx-post="/contests/<%= contest.id %>/sections" hx-swap="none" autocomplete="off">
-			<label for="name">Name</label>
-			<input id="name" type="text" name="name" required>
+			<section class="modal-card-body">
+				<div class="field">
+					<label class="label">Name</label>
+					<div class="control">
+						<input class="input" id="name" type="text" name="name" required>
+					</div>
+				</div>
 
-			<label for="time_base">Base time (minutes)</label>
-			<input id="time_base" type="text" name="time_base" required>
+				<div class="field">
+					<label class="label">Base time (minutes)</label>
+					<div class="control">
+						<input class="input" id="time_base" type="text" name="time_base" required>
+					</div>
+				</div>
 
-			<label for="time_per_knote">Time per 1000 notes (minutes)</label>
-			<input id="time_per_knote" type="text" name="time_per_knote" required>
-
-			<button>Save</button>
+				<div class="field">
+					<label class="label">Time per 1000 notes (minutes)</label>
+					<div class="control">
+						<input class="input" id="time_per_knote" type="text" name="time_per_knote" required>
+					</div>
+				</div>
+			</section>
+			<footer class="modal-card-foot">
+				<div class="buttons">
+					<button class="button is-link">Save</button>
+				</div>
+			</footer>
 		</form>
-	</article>
-</dialog>
+	</div>
+</div>
 <% end %>
 
 <% if edit_section then %>
@@ -352,11 +389,12 @@ end
 	<% end %>
 <% end %>
 
-<dialog id="modal_edit_section" open>
-	<article>
-		<header>
-			<a href="/contests/<%= contest.id %>" aria-label="Close" class="close"></a>
-			Edit section
+<div id="modal_edit_section" class="modal is-active">
+	<div class="modal-background"></div>
+	<div class="modal-card">
+		<header class="modal-card-head">
+			<p class="modal-card-title">Edit section</p>
+			<a href="/contests/<%= contest.id %>" aria-label="close" class="delete"></a>
 		</header>
 		<form
 			hx-patch="/sections/<%= edit_section %>"
@@ -364,24 +402,41 @@ end
 			autocomplete="off"
 			hx-vals='{"contest_id":<%= contest.id %>}'
 		>
-			<label for="name">Name</label>
-			<input id="name" type="text" name="name" value="<%= section.name %>" required>
+			<section class="modal-card-body">
+				<div class="field">
+					<label class="label">Name</label>
+					<div class="control">
+						<input class="input" id="name" type="text" name="name" required>
+					</div>
+				</div>
 
-			<label for="time_base">Base time (minutes)</label>
-			<input id="time_base" type="text" name="time_base" value="<%= section.time_base %>" required>
+				<div class="field">
+					<label class="label">Base time (minutes)</label>
+					<div class="control">
+						<input class="input" id="time_base" type="text" name="time_base" required>
+					</div>
+				</div>
 
-			<label for="time_per_knote">Time per 1000 notes (minutes)</label>
-			<input id="time_per_knote" type="text" name="time_per_knote" value="<%= section.time_per_knote %>" required>
-
-			<button>Save</button>
+				<div class="field">
+					<label class="label">Time per 1000 notes (minutes)</label>
+					<div class="control">
+						<input class="input" id="time_per_knote" type="text" name="time_per_knote" required>
+					</div>
+				</div>
+			</section>
+			<footer class="modal-card-foot">
+				<div class="buttons">
+					<button class="button is-link">Save</button>
+					<button class="button contrast"
+						hx-delete="/sections/<%= edit_section %>"
+						hx-confirm="Delete this section?"
+						hx-vals='{"contest_id":<%= contest.id %>}'
+					>Delete</button>
+				</div>
+			</footer>
 		</form>
-		<button class="contrast"
-			hx-delete="/sections/<%= edit_section %>"
-			hx-confirm="Delete this section?"
-			hx-vals='{"contest_id":<%= contest.id %>}'
-		>Delete</button>
-	</article>
-</dialog>
+	</div>
+</div>
 <% end %>
 
 <% if contest_user then %>
