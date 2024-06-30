@@ -1,5 +1,17 @@
 <% local Roles = require("domain.Roles") %>
 
+<%
+local function get_role_class(changable, exist)
+	if changable and exist then
+		return "is-primary"
+	elseif changable and not exist then
+		return "is-white"
+	elseif not changable and exist then
+		return "is-dark"
+	end
+end
+%>
+
 <div id="users" hx-select="#users" hx-swap="outerHTML" hx-get hx-trigger="update_users">
 	<table
 		class="table is-narrow is-hoverable is-fullwidth is-bordered"
@@ -29,11 +41,9 @@
 							<% local exist = roles_map[role_name] %>
 							<% local changable = page:canChangeRole(role_name) %>
 							<% if not changable and exist then %>
-								<code
-									class="role_<%= changable and "ch" or "nc" %>_<%= exist and "ex" or "ne" %>"
-								>
+								<span class="tag <%= get_role_class(changable, exist) %>">
 									<%= role_name %>
-								</code>
+								</span>
 							<% end %>
 						<% end %>
 					</td>
@@ -42,14 +52,12 @@
 							<% local exist = roles_map[role_name] %>
 							<% local changable = page:canChangeRole(role_name) %>
 							<% if changable then %>
-								<a href="#" class="role_display"
+								<a
+									href="#"
+									class="tag <%= get_role_class(changable, exist) %>"
 									hx-<%= exist and "delete" or "put" %>="/users/<%= user.id %>/roles/<%= role_name %>"
 								>
-								<code
-									class="role_<%= changable and "ch" or "nc" %>_<%= exist and "ex" or "ne" %>"
-								>
 									<%= role_name %>
-								</code>
 								</a>
 							<% end %>
 						<% end %>

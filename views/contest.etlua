@@ -85,6 +85,21 @@
 </section>
 
 <% if page:canGetVotes() then %>
+
+<%
+local function get_vote_class(vote_allowed, is_voted)
+	if vote_allowed and is_voted then
+		return "is-primary"
+	elseif vote_allowed and not is_voted then
+		return ""
+	elseif not vote_allowed and is_voted then
+		return "is-dark"
+	elseif not vote_allowed and not is_voted then
+		return ""
+	end
+end
+%>
+
 <section class="section">
 	<% local Sections = require("domain.Sections") %>
 
@@ -143,23 +158,21 @@
 						<td>
 							<% for i, vote_name in ipairs(Votes.list) do %>
 								<% local vote_allowed = page:canUpdateVote(chart, vote_name) %>
-								<% if vote_allowed then %>
-									<a href="#" class="vote_counter"
+								<% local tag = vote_allowed and "a" or "span" %>
+								<<%= tag %>
+									class="tag <%= get_vote_class(vote_allowed, chart.is_voted[vote_name]) %>"
+									<% if vote_allowed then %>
+										href="#"
 										hx-patch="/contests/<%= contest.id %>/votes"
 										hx-vars='{"chart_id":<%= chart.id %>,"vote":"<%= vote_name %>"}'
 										hx-swap="none"
-									>
-								<% end %>
-								<% local tag = chart.is_voted[vote_name] and "kbd" or "code" %>
-								<<%= tag %> class="<%= vote_allowed and "" or "vote_inactive" %>">
+									<% end %>
+								>
 									<i class="fas fa-<%= vote_icons[i] %>"></i>
 									<% if not contest.is_anon then %>
-									<%= chart.votes_count[vote_name] %>
+									&nbsp;<%= chart.votes_count[vote_name] %>
 									<% end %>
 								</<%= tag %>>
-								<% if vote_allowed then %>
-									</a>
-								<% end %>
 							<% end %>
 						</td>
 						<td>
