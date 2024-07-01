@@ -22,5 +22,10 @@
 			<%- view:render("header") %>
 			<%- inner %>
 		</main>
+		<script>
+			const theme = localStorage.getItem("theme");
+			const html = document.querySelector("html");
+			html.setAttribute("data-theme", theme);
+		</script>
 	</body>
 </html>
