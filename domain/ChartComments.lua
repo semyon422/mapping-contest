@@ -16,6 +16,10 @@ function ChartComments:canCreateComment(user)
 	return true
 end
 
+function ChartComments:canDeleteComment(user, chart_comment)
+	return chart_comment.user_id == user.id
+end
+
 function ChartComments:createComment(user, chart_id, text)
 	if not self:canCreateComment(user) then
 		return
@@ -29,6 +33,17 @@ function ChartComments:createComment(user, chart_id, text)
 	})
 
 	return chart_comment
+end
+
+function ChartComments:deleteComment(user, chart_comment_id)
+	local chart_comment = self.chartCommentsRepo:findById(chart_comment_id)
+	if not chart_comment then
+		return
+	end
+	if not self:canDeleteComment(user, chart_comment) then
+		return
+	end
+	self.chartCommentsRepo:deleteById(chart_comment_id)
 end
 
 return ChartComments

@@ -223,7 +223,16 @@ end
 									<article class="media">
 										<div class="media-content">
 											<div class="content">
-												<strong><%= chart_comment.user.name %></strong>
+												<strong>
+													<%= chart_comment.user.name %>
+													<% if page:canDeleteComment(chart_comment) then %>
+														<button
+															hx-delete="/chart_comments/<%= chart_comment.id %>"
+														>
+															<i class="fas fa-times"></i>
+														</button>
+													<% end %>
+												</strong>
 												<br>
 												<%= chart_comment.text %>
 											</div>
@@ -251,6 +260,7 @@ end
 										<form
 											class="media-content"
 											hx-post="/charts/<%= chart.id %>/comments"
+											hx-swap="none"
 										>
 											<div class="field">
 												<p class="control">

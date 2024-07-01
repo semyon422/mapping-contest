@@ -185,4 +185,9 @@ return {
 			ok = {200, "File", download_headers},
 		}},
 	}},
+	{"/chart_comments/:chart_comment_id", {
+		DELETE = {"contests.delete_comment", {
+			ok = {200},
+		}},
+	}},
 }

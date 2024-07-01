@@ -106,4 +106,8 @@ function Contest:canCreateComment()
 	return self.domain.chartComments:canCreateComment(self.user)
 end
 
+function Contest:canDeleteComment(chart_comment)
+	return self.domain.chartComments:canDeleteComment(self.user, chart_comment)
+end
+
 return Contest
