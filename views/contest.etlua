@@ -50,7 +50,7 @@
 				<% end %>
 			</h6>
 			<table
-				class="table is-narrow is-hoverable is-fullwidth is-bordered"
+				class="table is-narrow is-hoverable is-fullwidth"
 				id="tracks"
 				hx-select="#tracks"
 				hx-swap="outerHTML"
@@ -110,79 +110,172 @@ end
 	<% if page:canCreateSection() then %>
 		<a href="/contests/<%= contest.id %>?create_section">Create section</a>
 	<% end %>
-	<table id="votes"
-		class="table is-narrow is-hoverable is-fullwidth is-bordered"
-		hx-select="#votes"
-		hx-get
-		hx-trigger="update_votes"
-	>
-		<tbody _="on htmx:afterRequest trigger update_votes">
+	<table class="table is-narrow is-hoverable is-fullwidth">
+		<tbody>
 			<% for j, section in ipairs(contest.sections) do %>
 				<tr>
-					<th colspan="2">
-						<b
-							data-tooltip="<%= section.time_base %> min + <%= section.time_per_knote %> min / 1000 notes">
-							<%= section.name %>
-						</b>
-						<% if page:canUpdateSection() then %>
-							<a href="/contests/<%= contest.id %>?edit_section=<%= section.id %>" hx-boost="false">
-								<i class="fas fa-edit"></i>
-							</a>
-						<% end %>
-					</th>
-					<td colspan="2">Max <i class="fas fa-heart"></i>: <%= page:getMaxHearts(j) %></td>
+					<td>
+					<div class="columns is-multiline">
+						<div class="column is-8">
+							<b
+								data-tooltip="<%= section.time_base %> min + <%= section.time_per_knote %> min / 1000 notes">
+								<%= section.name %>
+							</b>
+							<% if page:canUpdateSection() then %>
+								<a href="/contests/<%= contest.id %>?edit_section=<%= section.id %>" hx-boost="false">
+									<i class="fas fa-edit"></i>
+								</a>
+							<% end %>
+						</div>
+						<div class="column">
+							Max <i class="fas fa-heart"></i>: <%= page:getMaxHearts(j) %>
+						</div>
+					</div>
+					</td>
+				</tr>
 				<% for _, chart in ipairs(section_charts[j]) do %>
-					<tr>
-						<% chart.contest = contest %>
-						<td>
-							<% if contest.is_anon then %>
-								<%= chart.name %>
-							<% else %>
+					<% chart.contest = contest %>
+					<tr x-data="{expand: false}">
+						<td
+							id="chart-row-<%= chart.id %>"
+							hx-select="#chart-row-<%= chart.id %>"
+							hx-get
+							hx-swap="outerHTML"
+							hx-trigger="update_votes"
+						>
+						<div
+							class="columns is-multiline"
+							_="on htmx:afterRequest trigger update_votes"
+						>
+							<div class="column is-3">
+								<% if contest.is_anon then %>
+									<%= chart.name %>
+								<% else %>
+									<a
+										href="/users/<%= chart.charter.id %>"
+										data-tooltip="<%= chart.name %>"
+									><%= chart.charter.name %></a>
+								<% end %>
+							</div>
+							<div class="column is-5">
+								<% if page:canGetChartFile(chart) then %>
 								<a
-									href="/users/<%= chart.charter.id %>"
-									data-tooltip="<%= chart.name %>"
-								><%= chart.charter.name %></a>
-							<% end %>
-						</td>
-						<td>
-							<% if page:canGetChartFile(chart) then %>
-							<a
-								href="/charts/<%= chart.id %>/download"
-								hx-boost="false"
-								data-tooltip="<%= time_util.format(chart.submitted_at - chart.started_at) %>, <%= chart.notes %> notes"
-							><%= chart.track.title %></a>
-							<% else %>
-							<%= chart.track.title %>
-							<% end %>
-						</td>
-						<td>
-							<% for i, vote_name in ipairs(Votes.list) do %>
-								<% local vote_allowed = page:canUpdateVote(chart, vote_name) %>
-								<% local tag = vote_allowed and "a" or "span" %>
-								<<%= tag %>
-									class="tag <%= get_vote_class(vote_allowed, chart.is_voted[vote_name]) %>"
-									<% if vote_allowed then %>
-										href="#"
-										hx-patch="/contests/<%= contest.id %>/votes"
-										hx-vars='{"chart_id":<%= chart.id %>,"vote":"<%= vote_name %>"}'
-										hx-swap="none"
-									<% end %>
-								>
-									<i class="fas fa-<%= vote_icons[i] %>"></i>
-									<% if not contest.is_anon then %>
-									&nbsp;<%= chart.votes_count[vote_name] %>
-									<% end %>
-								</<%= tag %>>
-							<% end %>
-						</td>
-						<td>
-							<% if page:canDeleteChart(chart) then %>
-							<a href="#" class="delete"
-								hx-swap="none" hx-delete="/contests/<%= contest.id %>/charts/<%= chart.id %>"
-								hx-confirm="Are you sure you wish to delete this chart?"
-								_="on htmx:afterRequest trigger update_charts"
-							></a>
-							<% end %>
+									href="/charts/<%= chart.id %>/download"
+									hx-boost="false"
+									data-tooltip="<%= time_util.format(chart.submitted_at - chart.started_at) %>, <%= chart.notes %> notes"
+								><%= chart.track.title %></a>
+								<% else %>
+								<%= chart.track.title %>
+								<% end %>
+							</div>
+							<div class="column is-3">
+								<% for i, vote_name in ipairs(Votes.list) do %>
+									<% local vote_allowed = page:canUpdateVote(chart, vote_name) %>
+									<% local tag = vote_allowed and "a" or "span" %>
+									<<%= tag %>
+										class="tag <%= get_vote_class(vote_allowed, chart.is_voted[vote_name]) %>"
+										<% if vote_allowed then %>
+											href="#"
+											hx-patch="/contests/<%= contest.id %>/votes"
+											hx-vars='{"chart_id":<%= chart.id %>,"vote":"<%= vote_name %>"}'
+											hx-swap="none"
+										<% end %>
+									>
+										<i class="fas fa-<%= vote_icons[i] %>"></i>
+										<% if not contest.is_anon then %>
+										&nbsp;<%= chart.votes_count[vote_name] %>
+										<% end %>
+									</<%= tag %>>
+								<% end %>
+								<button class="tag" @click="expand = !expand">
+									<i class="fas fa-angle-down"></i>
+								</button>
+							</div>
+							<div class="column is-1 has-text-right">
+								<% if page:canDeleteChart(chart) then %>
+								<a href="#" class="delete"
+									hx-swap="none" hx-delete="/contests/<%= contest.id %>/charts/<%= chart.id %>"
+									hx-confirm="Are you sure you wish to delete this chart?"
+									_="on htmx:afterRequest trigger update_charts"
+								></a>
+								<% end %>
+							</div>
+							<div class="column is-3" x-show="expand" x-cloak>
+								<div class="card has-background-warning-light has-text-warning">
+									<header class="card-header">
+										<p class="card-header-title has-text-warning">
+											<i class="fas fa-heart"></i>
+											&nbsp;50%
+										</p>
+									</header>
+									<div class="card-content">
+										<div class="content is-warning">
+										Lorem<br>
+										ipsum<br>
+										dolor<br>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="column is-5" x-show="expand" x-cloak>
+								<h6 class="title is-6">Comments</h6>
+								<article class="media">
+									<div class="media-content">
+										<div class="content">
+											<p>
+												<strong>Lorem ipsum</strong>
+												<br>
+												Lorem ipsum dolor sit amet
+											</p>
+										</div>
+									</div>
+								</article>
+								<article class="media">
+									<div class="media-content">
+										<div class="content">
+											<p>
+												<strong>Lorem ipsum</strong>
+												<br>
+												Lorem ipsum dolor sit amet
+											</p>
+										</div>
+									</div>
+								</article>
+							</div>
+							<div class="column is-4" x-show="expand" x-cloak>
+								<div class="field">
+									<label class="label">Grade</label>
+									<div class="control has-icons-left has-icons-right">
+										<input class="input is-small" type="range" min="0" max="10" step="1" value="5">
+										<span class="icon is-small is-left">
+											<i class="fas fa-times"></i>
+										</span>
+										<span class="icon is-small is-right">
+											<i class="fas fa-check"></i>
+										</span>
+									</div>
+								</div>
+								<div class="field">
+									<label class="label">Comment</label>
+									<article class="media">
+										<div class="media-content">
+											<div class="field">
+												<p class="control">
+													<textarea class="textarea" placeholder="Add a comment..." rows="2"></textarea>
+												</p>
+											</div>
+											<nav class="level">
+												<div class="level-left">
+													<div class="level-item">
+														<button class="button is-info">Post</button>
+													</div>
+												</div>
+											</nav>
+										</div>
+									</article>
+								</div>
+							</div>
+						</div>
 						</td>
 					</tr>
 				<% end %>
