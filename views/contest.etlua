@@ -219,28 +219,17 @@ end
 							</div>
 							<div class="column is-5" x-show="expand" x-cloak>
 								<h6 class="title is-6">Comments</h6>
-								<article class="media">
-									<div class="media-content">
-										<div class="content">
-											<p>
-												<strong>Lorem ipsum</strong>
+								<% for _, chart_comment in ipairs(chart.chart_comments) do %>
+									<article class="media">
+										<div class="media-content">
+											<div class="content">
+												<strong><%= chart_comment.user.name %></strong>
 												<br>
-												Lorem ipsum dolor sit amet
-											</p>
+												<%= chart_comment.text %>
+											</div>
 										</div>
-									</div>
-								</article>
-								<article class="media">
-									<div class="media-content">
-										<div class="content">
-											<p>
-												<strong>Lorem ipsum</strong>
-												<br>
-												Lorem ipsum dolor sit amet
-											</p>
-										</div>
-									</div>
-								</article>
+									</article>
+								<% end %>
 							</div>
 							<div class="column is-4" x-show="expand" x-cloak>
 								<div class="field">
@@ -255,13 +244,22 @@ end
 										</span>
 									</div>
 								</div>
+								<% if page:canCreateComment() then %>
 								<div class="field">
 									<label class="label">Comment</label>
 									<article class="media">
-										<div class="media-content">
+										<form
+											class="media-content"
+											hx-post="/charts/<%= chart.id %>/comments"
+										>
 											<div class="field">
 												<p class="control">
-													<textarea class="textarea" placeholder="Add a comment..." rows="2"></textarea>
+													<textarea
+														class="textarea"
+														placeholder="Add a comment..."
+														rows="2"
+														name="text"
+													></textarea>
 												</p>
 											</div>
 											<nav class="level">
@@ -271,9 +269,10 @@ end
 													</div>
 												</div>
 											</nav>
-										</div>
+										</form>
 									</article>
 								</div>
+								<% end %>
 							</div>
 						</div>
 						</td>

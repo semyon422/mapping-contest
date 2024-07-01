@@ -97,3 +97,13 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"latest_activity" INTEGER NOT NULL,
 	"created_at" INTEGER NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS "chart_comments" (
+	"id" INTEGER NOT NULL PRIMARY KEY,
+	"chart_id" INTEGER NOT NULL,
+	"user_id" INTEGER NOT NULL,
+	"text" TEXT NOT NULL,
+	"created_at" INTEGER NOT NULL,
+	FOREIGN KEY (chart_id) references charts(id) ON DELETE CASCADE,
+	FOREIGN KEY (user_id) references users(id) ON DELETE CASCADE
+);

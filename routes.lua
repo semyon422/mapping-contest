@@ -170,6 +170,11 @@ return {
 			ok = {200, "File", download_headers},
 		}},
 	}},
+	{"/charts/:chart_id/comments", {
+		POST = {"contests.create_comment", {
+			ok = {200},
+		}, "www_form"},
+	}},
 	{"/tracks/:track_id/download", {
 		GET = {"contests.download_track", {
 			ok = {200, "File", download_headers},

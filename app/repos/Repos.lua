@@ -1,5 +1,6 @@
 local IRepos = require("domain.repos.IRepos")
 
+local ChartCommentsRepo = require("app.repos.ChartCommentsRepo")
 local ChartsRepo = require("app.repos.ChartsRepo")
 local ContestsRepo = require("app.repos.ContestsRepo")
 local ContestUsersRepo = require("app.repos.ContestUsersRepo")
@@ -16,6 +17,7 @@ local Repos = IRepos + {}
 
 ---@param appDatabase app.AppDatabase
 function Repos:new(appDatabase)
+	self.chartCommentsRepo = ChartCommentsRepo(appDatabase)
 	self.chartsRepo = ChartsRepo(appDatabase)
 	self.contestsRepo = ContestsRepo(appDatabase)
 	self.contestUsersRepo = ContestUsersRepo(appDatabase)

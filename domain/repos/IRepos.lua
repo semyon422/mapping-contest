@@ -2,6 +2,7 @@ local class = require("class")
 
 ---@class domain.IRepos
 ---@operator call: domain.IRepos
+---@field chartCommentsRepo domain.IChartCommentsRepo
 ---@field chartsRepo domain.IChartsRepo
 ---@field contestsRepo domain.IContestsRepo
 ---@field contestUsersRepo domain.IContestUsersRepo

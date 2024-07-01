@@ -1,4 +1,5 @@
 local class = require("class")
+local ChartComments = require("domain.ChartComments")
 local Contests = require("domain.Contests")
 local Sections = require("domain.Sections")
 local Users = require("domain.Users")
@@ -23,6 +24,7 @@ function Domain:new(repos, osuApiFactory, archiveFactory)
 	self.oszReader = OszReader(archiveFactory)
 
 	self.roles = Roles(repos.userRolesRepo)
+	self.chartComments = ChartComments(repos.chartCommentsRepo)
 	self.sections = Sections(repos.contestsRepo, repos.sectionsRepo)
 	self.contestUsers = ContestUsers(repos.contestUsersRepo)
 	self.contests = Contests(repos.contestsRepo, self.roles)

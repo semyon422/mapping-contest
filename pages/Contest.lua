@@ -21,7 +21,7 @@ function Contest:load()
 		"contest_users",
 		"tracks",
 		user_contest_chart_votes = "user",
-		charts = {"track", "charter", "file"},
+		charts = {"track", "charter", "file", chart_comments = "user"},
 	})
 
 	for _, chart in ipairs(params.contest.charts) do
@@ -100,6 +100,10 @@ end
 
 function Contest:canDeleteChart(chart)
 	return self.domain.charts:canDelete(self.user, chart, self.contest)
+end
+
+function Contest:canCreateComment()
+	return self.domain.chartComments:canCreateComment(self.user)
 end
 
 return Contest
