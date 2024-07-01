@@ -188,7 +188,7 @@ end
 									</<%= tag %>>
 								<% end %>
 								<button class="tag" @click="expand = !expand">
-									<i class="fas fa-angle-down"></i>
+									<i class="fas" :class="expand ? 'fa-angle-up' : 'fa-angle-down'"></i>
 								</button>
 							</div>
 							<div class="column is-1 has-text-right">
