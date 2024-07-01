@@ -29,8 +29,6 @@ function App:load()
 end
 
 function App:createTestDatabase()
-	self.appDatabase:createTables()
-
 	local user = self.domain.auth:register("admin", "password", "discord")
 	self.domain.roles:give(user.id, "admin")
 end

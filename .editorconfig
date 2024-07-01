@@ -2,7 +2,7 @@
 
 root = true
 
-[*.{lua,etlua,conf}]
+[*.{lua,etlua,conf,sql}]
 # charset = utf-8
 indent_style = tab
 # indent_size = 4
