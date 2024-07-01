@@ -217,10 +217,13 @@ end
 									</div>
 								</div>
 							</div>
-							<div class="column is-5" x-show="expand" x-cloak>
+							<div class="column is-5 block" x-show="expand" x-cloak>
 								<h6 class="title is-6">Comments</h6>
 								<% for _, chart_comment in ipairs(chart.chart_comments) do %>
 									<article class="media">
+										<figure class="media-left image is-48x48">
+											<img class="is-rounded" src="https://a.ppy.sh/<%= chart_comment.user.osu_id %>?0.jpeg"/>
+										</figure>
 										<div class="media-content">
 											<div class="content">
 												<strong>
