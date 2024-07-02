@@ -85,21 +85,6 @@
 </section>
 
 <% if page:canGetVotes() then %>
-
-<%
-local function get_vote_class(vote_allowed, is_voted)
-	if vote_allowed and is_voted then
-		return "is-primary"
-	elseif vote_allowed and not is_voted then
-		return ""
-	elseif not vote_allowed and is_voted then
-		return "is-dark"
-	elseif not vote_allowed and not is_voted then
-		return ""
-	end
-end
-%>
-
 <section class="section">
 	<% local Sections = require("domain.Sections") %>
 
@@ -169,27 +154,7 @@ end
 								<% end %>
 							</div>
 							<div class="column is-3">
-								<% for i, vote_name in ipairs(Votes.list) do %>
-									<% local vote_allowed = page:canUpdateVote(chart, vote_name) %>
-									<% local tag = vote_allowed and "a" or "span" %>
-									<<%= tag %>
-										class="tag <%= get_vote_class(vote_allowed, chart.is_voted[vote_name]) %>"
-										<% if vote_allowed then %>
-											href="#"
-											hx-patch="/contests/<%= contest.id %>/votes"
-											hx-vars='{"chart_id":<%= chart.id %>,"vote":"<%= vote_name %>"}'
-											hx-swap="none"
-										<% end %>
-									>
-										<i class="fas fa-<%= vote_icons[i] %>"></i>
-										<% if not contest.is_anon then %>
-										&nbsp;<%= chart.votes_count[vote_name] %>
-										<% end %>
-									</<%= tag %>>
-								<% end %>
-								<button class="tag" @click="expand = !expand">
-									<i class="fas" :class="expand ? 'fa-angle-up' : 'fa-angle-down'"></i>
-								</button>
+								<%- view({chart = chart}):render("votes_block") %>
 							</div>
 							<div class="column is-1 has-text-right">
 								<% if page:canDeleteChart(chart) then %>
@@ -247,7 +212,18 @@ end
 								<div class="field">
 									<label class="label">Grade</label>
 									<div class="control has-icons-left has-icons-right">
-										<input class="input is-small" type="range" min="0" max="10" step="1" value="5">
+										<input
+											hx-patch="/contests/<%= contest.id %>/votes"
+											hx-swap="none"
+											hx-vars='{"chart_id":<%= chart.id %>,"vote":"grade"}'
+											name="value"
+											class="input is-small"
+											type="range"
+											min="0"
+											max="1"
+											step="0.1"
+											value="<%= chart.votes.grade.voted or 0.5 %>"
+										>
 										<span class="icon is-small is-left">
 											<i class="fas fa-times"></i>
 										</span>

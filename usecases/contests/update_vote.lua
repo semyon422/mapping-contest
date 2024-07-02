@@ -5,7 +5,13 @@ local Usecase = require("http.Usecase")
 local UpdateVote = Usecase + {}
 
 function UpdateVote:handle(params)
-	self.domain.votes:updateVote(params.session_user, params.contest_id, params.chart_id, params.vote)
+	self.domain.votes:updateVote(
+		params.session_user,
+		params.contest_id,
+		params.chart_id,
+		params.vote,
+		params.value
+	)
 	return "ok"
 end
 

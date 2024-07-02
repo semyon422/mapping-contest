@@ -1,6 +1,7 @@
 local enum = require("util.enum")
 local class = require("class")
 local Sections = require("domain.Sections")
+local ChartVotes = require("domain.votes.ChartVotes")
 
 ---@class domain.Votes
 ---@operator call: domain.Votes
@@ -20,14 +21,12 @@ function Votes:new(votesRepo, sectionsRepo, contestUsersRepo, chartsRepo, contes
 end
 
 Votes.enum = enum({
-	yes = 0,
-	no = 1,
-	heart = 2,
+	grade = 0,
+	heart = 1,
 })
 
 Votes.list = {
-	"yes",
-	"no",
+	"grade",
 	"heart",
 }
 
@@ -64,28 +63,15 @@ function Votes:assign_section(charts, sections, contest_users)
 	end
 end
 
-local function assign_votes(chart, uccvs, user)
-	local votes_count, is_voted = {}, {}
-	for _, vote in ipairs(Votes.list) do
-		votes_count[vote] = 0
-		is_voted[vote] = false
-	end
-	chart.votes_count, chart.is_voted = votes_count, is_voted
-
-	for _, uccv in ipairs(uccvs) do
-		if uccv.chart_id == chart.id then
-			local vote = uccv.vote
-			votes_count[vote] = votes_count[vote] + 1
-			if uccv.user_id == user.id then
-				is_voted[vote] = true
-			end
-		end
-	end
-end
-
 function Votes:assign_votes(charts, uccvs, user)
 	for _, chart in ipairs(charts) do
-		assign_votes(chart, uccvs, user)
+		local votes = ChartVotes(user.id)
+		chart.votes = votes
+		for _, uccv in ipairs(uccvs) do
+			if uccv.chart_id == chart.id then
+				votes:add(uccv)
+			end
+		end
 	end
 end
 
@@ -96,7 +82,7 @@ function Votes:canUpdateVote(user, contest, chart, vote)
 		user.id ~= chart.charter_id
 end
 
-function Votes:updateVote(user, contest_id, chart_id, vote)
+function Votes:updateVote(user, contest_id, chart_id, vote, value)
 	local contest = self.contestsRepo:findById(contest_id)
 	local chart = self.chartsRepo:findById(chart_id)
 	if not self:canUpdateVote(user, contest, chart, vote) then
@@ -108,15 +94,16 @@ function Votes:updateVote(user, contest_id, chart_id, vote)
 		user_id = user.id,
 		chart_id = chart_id,
 		vote = vote,
+		value = value,
 	}
 	if self.votesRepo:delete(uccv)[1] then
 		return
 	end
 
-	if vote == "yes" or vote == "no" then
-		uccv.vote = vote == "yes" and "no" or "yes"
+	if vote == "grade" then
+		uccv.value = nil
 		self.votesRepo:delete(uccv)
-		uccv.vote = vote
+		uccv.value = value
 		self.votesRepo:create(uccv)
 		return
 	end

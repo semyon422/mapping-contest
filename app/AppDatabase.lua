@@ -8,7 +8,7 @@ local autoload = require("autoload")
 ---@operator call: app.AppDatabase
 local AppDatabase = class()
 
-local user_version = 0
+local user_version = 1
 
 ---@param migrations table?
 function AppDatabase:new(migrations)

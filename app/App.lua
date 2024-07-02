@@ -1,4 +1,5 @@
 local class = require("class")
+local autoread = require("autoread")
 local AppDatabase = require("app.AppDatabase")
 local WebApp = require("http.WebApp")
 local Domain = require("domain.Domain")
@@ -14,7 +15,7 @@ local App = class()
 function App:new()
 	local config = require("lapis.config").get()
 
-	self.appDatabase = AppDatabase()
+	self.appDatabase = AppDatabase(autoread("app/migrate/%s.sql"))
 	self.osuApiFactory = OsuApiFactory(config.osu_oauth)
 	self.archiveFactory = ArchiveFactory()
 
