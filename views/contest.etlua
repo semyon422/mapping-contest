@@ -212,12 +212,17 @@
 								<div class="field">
 									<label class="label">Grade</label>
 									<div class="control has-icons-left has-icons-right">
+										<div class="ticks">
+											<% for i = 0, 10 do %>
+												<span class="tick <%= i == 5 and "tick-large" or "" %>"></span>
+											<% end %>
+										</div>
 										<input
 											hx-patch="/contests/<%= contest.id %>/votes"
 											hx-swap="none"
 											hx-vars='{"chart_id":<%= chart.id %>,"vote":"grade"}'
 											name="value"
-											class="input is-small"
+											class="input is-small range"
 											type="range"
 											min="0"
 											max="1"

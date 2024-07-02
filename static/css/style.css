@@ -1,0 +1,40 @@
+.input.range {
+    background-color: transparent;
+}
+
+.ticks {
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding-left: calc(var(--bulma-input-height) - 4px);
+    padding-right: calc(var(--bulma-input-height) - 4px);
+}
+.tick {
+    position: relative;
+    display: inline-flex;
+    
+    line-height: 8px;
+
+    height: 8px;
+    width: 8px;
+    border-radius: 50%;
+    background-color: var(--bulma-input-icon-color);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+.tick-large {
+    height: 12px;
+    width: 12px;
+}
+
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    border: none;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: var(--bulma-primary);
+}
