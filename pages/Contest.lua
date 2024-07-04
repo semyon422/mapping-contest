@@ -31,6 +31,12 @@ function Contest:load()
 	self.domain.votes:assign_section(contest.charts, contest.sections, contest.contest_users)
 	self.domain.votes:assign_votes(contest.charts, contest.user_contest_chart_votes, params.session_user)
 
+	local total_noms = 0
+	for _, chart in ipairs(params.contest.charts) do
+		total_noms = total_noms + #chart.votes.heart.nom_users
+	end
+	params.total_noms = total_noms
+
 	local section_charts = {}
 	params.section_charts = section_charts
 	for i = 1, #contest.sections do

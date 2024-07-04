@@ -47,22 +47,21 @@ function IRepo:insert(values_array)
 	return {}
 end
 
----@param values table
+---@param obj table
 ---@return table
-function IRepo:create(values)
+function IRepo:create(obj)
 	return {}
 end
 
----@param values table
----@param conds table?
+---@param obj table
 ---@return table
-function IRepo:update(values, conds)
+function IRepo:update(obj)
 	return {}
 end
 
----@param conds table?
+---@param obj table?
 ---@return table
-function IRepo:delete(conds)
+function IRepo:delete(obj)
 	return {}
 end
 

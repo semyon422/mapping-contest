@@ -89,6 +89,14 @@ function Votes:updateVote(user, contest_id, chart_id, vote, value)
 		return
 	end
 
+	if vote == "grade" then
+		self:updateGradeVote(user, contest_id, chart_id, vote, value)
+	elseif vote == "heart" then
+		self:updateHeartVote(user, contest_id, chart_id, vote, value)
+	end
+end
+
+function Votes:updateGradeVote(user, contest_id, chart_id, vote, value)
 	local uccv = {
 		contest_id = contest_id,
 		user_id = user.id,
@@ -100,11 +108,38 @@ function Votes:updateVote(user, contest_id, chart_id, vote, value)
 		return
 	end
 
-	if vote == "grade" then
-		uccv.value = nil
-		self.votesRepo:delete(uccv)
-		uccv.value = value
-		self.votesRepo:create(uccv)
+	uccv.value = nil
+	self.votesRepo:delete(uccv)
+	uccv.value = value
+	self.votesRepo:create(uccv)
+end
+
+function Votes:updateHeartVote(user, contest_id, chart_id, vote, value)
+	local found_uccv = self.votesRepo:find({
+		contest_id = contest_id,
+		user_id = user.id,
+		chart_id = chart_id,
+		vote = vote,
+	})
+
+	if found_uccv then
+		if found_uccv.value == 0 then
+			found_uccv.value = 1
+			self.votesRepo:update(found_uccv)
+		elseif found_uccv.value == 1 then
+			self.votesRepo:delete(found_uccv)
+		end
+		return
+	end
+
+	local uccv = {
+		contest_id = contest_id,
+		user_id = user.id,
+		chart_id = chart_id,
+		vote = vote,
+		value = value,
+	}
+	if self.votesRepo:delete(uccv)[1] then
 		return
 	end
 

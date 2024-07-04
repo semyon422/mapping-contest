@@ -166,21 +166,23 @@
 								<% end %>
 							</div>
 							<div class="column is-3" x-show="expand" x-cloak>
+								<% if chart.votes.heart.nom_users[1] then %>
 								<div class="card has-background-warning-light has-text-warning">
 									<header class="card-header">
 										<p class="card-header-title has-text-warning">
 											<i class="fas fa-heart"></i>
-											&nbsp;50%
+											&nbsp;<%= ("%d%%"):format(#chart.votes.heart.nom_users / total_noms * 100) %>
 										</p>
 									</header>
 									<div class="card-content">
 										<div class="content is-warning">
-										Lorem<br>
-										ipsum<br>
-										dolor<br>
+										<% for _, user in ipairs(chart.votes.heart.nom_users) do %>
+											<%= user.name %><br>
+										<% end %>
 										</div>
 									</div>
 								</div>
+								<% end %>
 							</div>
 							<div class="column is-5 block" x-show="expand" x-cloak>
 								<h6 class="title is-6">Comments</h6>
@@ -227,7 +229,7 @@
 											min="0"
 											max="1"
 											step="0.1"
-											value="<%= chart.votes.grade.voted or 0.5 %>"
+											value="<%= chart.votes.grade.value or 0.5 %>"
 										>
 										<span class="icon is-small is-left">
 											<i class="fas fa-times"></i>

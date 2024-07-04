@@ -41,15 +41,27 @@ local function get_grade_class(vote_allowed, value, inv)
 end
 %>
 <%
-local function get_heart_class(vote_allowed, is_voted)
-	if vote_allowed and is_voted then
-		return "is-primary"
-	elseif vote_allowed and not is_voted then
-		return ""
-	elseif not vote_allowed and is_voted then
-		return "is-dark"
-	elseif not vote_allowed and not is_voted then
-		return ""
+local function get_heart_class(vote_allowed, value)
+	if vote_allowed then
+		if value then
+			if value == 0 then
+				return "is-primary"
+			elseif value == 1 then
+				return "has-background-warning-light has-text-warning"
+			end
+		else
+			return ""
+		end
+	else
+		if value then
+			if value == 0 then
+				return "is-dark"
+			elseif value == 1 then
+				return ""
+			end
+		else
+			return ""
+		end
 	end
 end
 %>
@@ -59,7 +71,7 @@ end
 <% local vote_allowed = page:canUpdateVote(chart, "grade") %>
 <% local tag = vote_allowed and "a" or "span" %>
 <<%= tag %>
-	class="tag <%= get_grade_class(vote_allowed, votes.grade.voted, true) %>"
+	class="tag <%= get_grade_class(vote_allowed, votes.grade.value, true) %>"
 	<% if tag == "a" then %>
 		href="#"
 		hx-patch="/contests/<%= contest.id %>/votes"
@@ -75,7 +87,7 @@ end
 
 <% local tag = vote_allowed and "a" or "span" %>
 <<%= tag %>
-	class="tag <%= get_grade_class(vote_allowed, votes.grade.voted) %>"
+	class="tag <%= get_grade_class(vote_allowed, votes.grade.value) %>"
 	<% if tag == "a" then %>
 		href="#"
 		hx-patch="/contests/<%= contest.id %>/votes"
@@ -92,7 +104,7 @@ end
 <% local vote_allowed = page:canUpdateVote(chart, "heart") %>
 <% local tag = vote_allowed and "a" or "span" %>
 <<%= tag %>
-	class="tag <%= get_heart_class(vote_allowed, votes.heart.voted) %>"
+	class="tag <%= get_heart_class(vote_allowed, votes.heart.value) %>"
 	<% if tag == "a" then %>
 		href="#"
 		hx-patch="/contests/<%= contest.id %>/votes"
