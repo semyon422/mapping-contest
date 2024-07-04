@@ -134,9 +134,17 @@ function Votes:updateHeartVote(user, contest_id, chart_id, vote, value)
 		vote = vote,
 	})
 
+	local found_gold_uccv = self.votesRepo:find({
+		contest_id = contest_id,
+		user_id = user.id,
+		chart_id__ne = chart_id,
+		vote = vote,
+		value = 1,
+	})
+
 	local is_elite = self.roles:hasRole(user, "elite-mapper")
 	if found_uccv then
-		if is_elite and found_uccv.value == 0 then
+		if is_elite and found_uccv.value == 0 and not found_gold_uccv then
 			found_uccv.value = 1
 			self.votesRepo:update(found_uccv)
 		else
