@@ -25,8 +25,11 @@ function Register:handle(params)
 		end
 	end
 
-	local user = self.domain.auth:register(params.name, params.password, params.discord)
-	assert(user)
+	local user, err = self.domain.auth:register(params.name, params.password, params.discord)
+	if not user then
+		params.errors = {err}
+		return "validation"
+	end
 
 	params.session.user_id = user.id
 

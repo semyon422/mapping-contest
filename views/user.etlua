@@ -66,13 +66,13 @@ end
 </div>
 
 <% if session.user_id == user.id then %>
-	<a href="#" role="button" hx-post="/logout" hx-swap="none" _="on htmx:afterRequest call location.reload()">
+	<a href="#" class="button" hx-post="/logout" hx-swap="none" _="on htmx:afterRequest call location.reload()">
 		Log out
 	</a>
 <% end %>
 
 <% if page:canUpdateUser() then %>
-	<a href="#" role="button" _="on click toggle @open on #modal_edit_user">
+	<a href="#" class="button" _="on click toggle @open on #modal_edit_user">
 		Edit
 	</a>
 <% end %>
@@ -80,7 +80,7 @@ end
 <% if user.id ~= session.user_id and page:canLoginAs() then %>
 	<a
 		href="#"
-		role="button"
+		class="button"
 		hx-post="/login_as"
 		hx-vals='{"user_id":<%= user.id %>}'
 		hx-swap="none"

@@ -11,25 +11,26 @@
 	</h4>
 	<div class="grid">
 		<div class="cell">
-			<p>
+			<div class="block">
 				<%- contest.description %>
-			</p>
+			</div>
 			<% if page:canSubmitChart() then %>
-				<a role="button" href="/contests/<%= contest.id %>?submit_chart">
+			<div class="block">
+				<a class="button is-primary" href="/contests/<%= contest.id %>?submit_chart">
 					Submit chart
 				</a>
+			</div>
 			<% end %>
 			<% if contest.is_submission_open then %>
+			<div class="block">
 				<% if contest_user then %>
-					<p>
-						<span
-							data-tooltip="Started at <%= datetime:to_text(contest_user.started_at) %>">
-							Time passed:
-						</span>
-						<span id="charting_timer"></span>
-					</p>
+					<span
+						data-tooltip="Started at <%= datetime:to_text(contest_user.started_at) %>">
+						Time passed:
+					</span>
+					<span id="charting_timer"></span>
 				<% elseif page:canJoinContest() then %>
-					<a role="button" href="#"
+					<a class="button is-primary" href="#"
 						hx-swap="none"
 						hx-confirm="The timer will start. Are you sure?"
 						hx-post="/contests/<%= contest.id %>/users"
@@ -37,6 +38,7 @@
 						Join contest
 					</a>
 				<% end %>
+			</div>
 			<% end %>
 		</div>
 		<div class="cell">
