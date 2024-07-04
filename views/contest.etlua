@@ -222,6 +222,7 @@
 												<span class="tick <%= i == 5 and "tick-large" or "" %>"></span>
 											<% end %>
 										</div>
+										<% local vote_allowed = page:canUpdateVote(chart, "grade") %>
 										<input
 											hx-patch="/contests/<%= contest.id %>/votes"
 											hx-swap="none"
@@ -233,7 +234,7 @@
 											max="1"
 											step="0.1"
 											value="<%= chart.votes.grade.value or 0.5 %>"
-											<%= contest.is_voting_open and "" or "disabled" %>
+											<%= contest.is_voting_open and vote_allowed and "" or "disabled" %>
 										>
 										<span class="icon is-small is-left">
 											<i class="fas fa-times"></i>
