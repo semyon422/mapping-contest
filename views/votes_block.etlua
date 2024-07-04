@@ -9,7 +9,39 @@ local vote_icons = {
 %>
 
 <%
-local function get_vote_class(vote_allowed, is_voted)
+local function get_grade_class(vote_allowed, value, inv)
+	if value and inv then
+		value = 1 - value
+	end
+	if vote_allowed then
+		if value then
+			if value == 1 then
+				return "is-primary"
+			elseif value > 0 and value < 1 then
+				return "is-primary"
+			elseif value == 0 then
+				return ""
+			end
+		else
+			return ""
+		end
+	else
+		if value then
+			if value == 1 then
+				return "is-dark"
+			elseif value > 0 and value < 1 then
+				return "is-dark"
+			elseif value == 0 then
+				return ""
+			end
+		else
+			return ""
+		end
+	end
+end
+%>
+<%
+local function get_heart_class(vote_allowed, is_voted)
 	if vote_allowed and is_voted then
 		return "is-primary"
 	elseif vote_allowed and not is_voted then
@@ -27,7 +59,7 @@ end
 <% local vote_allowed = page:canUpdateVote(chart, "grade") %>
 <% local tag = vote_allowed and "a" or "span" %>
 <<%= tag %>
-	class="tag <%= get_vote_class(vote_allowed, votes.grade.voted == 0) %>"
+	class="tag <%= get_grade_class(vote_allowed, votes.grade.voted, true) %>"
 	<% if tag == "a" then %>
 		href="#"
 		hx-patch="/contests/<%= contest.id %>/votes"
@@ -35,29 +67,15 @@ end
 		hx-swap="none"
 	<% end %>
 >
-	<i class="fas fa-times"></i>
+	<i class="fas fa-times square-char"></i>
 	<% if not contest.is_anon then %>
-	&nbsp;<%= votes.grade.no_count %>
+	&nbsp;<%= ("%.1f"):format(votes.grade.no_count) %>
 	<% end %>
-</<%= tag %>>
-
-<% local middle = votes.grade.voted and votes.grade.voted > 0 and votes.grade.voted < 1 %>
-<% local tag = vote_allowed and middle and "a" or "span" %>
-<<%= tag %>
-	class="tag <%= get_vote_class(vote_allowed, middle) %>"
-	<% if tag == "a" then %>
-		href="#"
-		hx-patch="/contests/<%= contest.id %>/votes"
-		hx-vars='{"chart_id":<%= chart.id %>,"vote":"grade"}'
-		hx-swap="none"
-	<% end %>
->
-	<%= votes.grade.voted or "." %>
 </<%= tag %>>
 
 <% local tag = vote_allowed and "a" or "span" %>
 <<%= tag %>
-	class="tag <%= get_vote_class(vote_allowed, votes.grade.voted == 1) %>"
+	class="tag <%= get_grade_class(vote_allowed, votes.grade.voted) %>"
 	<% if tag == "a" then %>
 		href="#"
 		hx-patch="/contests/<%= contest.id %>/votes"
@@ -65,16 +83,16 @@ end
 		hx-swap="none"
 	<% end %>
 >
-	<i class="fas fa-check"></i>
+	<i class="fas fa-check square-char"></i>
 	<% if not contest.is_anon then %>
-	&nbsp;<%= votes.grade.yes_count %>
+	&nbsp;<%= ("%.1f"):format(votes.grade.yes_count) %>
 	<% end %>
 </<%= tag %>>
 
 <% local vote_allowed = page:canUpdateVote(chart, "heart") %>
 <% local tag = vote_allowed and "a" or "span" %>
 <<%= tag %>
-	class="tag <%= get_vote_class(vote_allowed, votes.heart.voted) %>"
+	class="tag <%= get_heart_class(vote_allowed, votes.heart.voted) %>"
 	<% if tag == "a" then %>
 		href="#"
 		hx-patch="/contests/<%= contest.id %>/votes"
@@ -82,7 +100,7 @@ end
 		hx-swap="none"
 	<% end %>
 >
-	<i class="fas fa-heart"></i>
+	<i class="fas fa-heart square-char"></i>
 	<% if not contest.is_anon then %>
 	&nbsp;<%= votes.heart.count %>
 	<% end %>

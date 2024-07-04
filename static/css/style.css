@@ -38,3 +38,9 @@ input[type=range]::-webkit-slider-thumb {
     border-radius: 50%;
     background: var(--bulma-primary);
 }
+
+.square-char {
+    aspect-ratio: 1 / 1;
+    height: 1em;
+    text-align: center;
+}
