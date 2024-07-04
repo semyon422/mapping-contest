@@ -45,7 +45,8 @@ function Domain:new(repos, osuApiFactory, archiveFactory)
 		repos.usersRepo,
 		self.oszReader,
 		archiveFactory,
-		self.contests
+		self.contests,
+		self.roles
 	)
 	self.votes = Votes(
 		repos.votesRepo,

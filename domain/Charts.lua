@@ -18,7 +18,8 @@ local Charts = class()
 ---@param oszReader domain.OszReader
 ---@param archiveFactory domain.IArchiveFactory
 ---@param contests domain.Contests
-function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, contestUsersRepo, usersRepo, oszReader, archiveFactory, contests)
+---@param roles domain.Roles
+function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, contestUsersRepo, usersRepo, oszReader, archiveFactory, contests, roles)
 	self.chartsRepo = chartsRepo
 	self.contestsRepo = contestsRepo
 	self.filesRepo = filesRepo
@@ -28,6 +29,7 @@ function Charts:new(chartsRepo, contestsRepo, filesRepo, tracksRepo, contestUser
 	self.oszReader = oszReader
 	self.archiveFactory = archiveFactory
 	self.contests = contests
+	self.roles = roles
 	self.nameGenerator = ChartNameGenerator()
 	self.chartAnoner = ChartAnoner()
 	self.chartFormatter = ChartFormatter()
@@ -180,6 +182,10 @@ function Charts:submit(user, _file, contest_id)
 		notes = osz.HitObjects,
 		submitted_at = os.time(),
 	})
+
+	if not self.roles:hasRole(user, "mapper") then
+		self.roles:give(user.id, "mapper")
+	end
 
 	return chart
 end
