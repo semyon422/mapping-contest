@@ -24,10 +24,12 @@
 			<% if contest.is_submission_open then %>
 			<div class="block">
 				<% if contest_user then %>
-					<span
-						data-tooltip="Started at <%= datetime:to_text(contest_user.started_at) %>">
+					<div class="tooltip">
 						Time passed:
-					</span>
+						<span class="tooltiptext tag is-info">
+							Started at <%= datetime:to_text(contest_user.started_at) %>
+						</span>
+					</div>
 					<span id="charting_timer"></span>
 				<% elseif page:canJoinContest() then %>
 					<a class="button is-primary" href="#"
@@ -104,10 +106,12 @@
 					<td>
 					<div class="columns is-multiline">
 						<div class="column is-8">
-							<b
-								data-tooltip="<%= section.time_base %> min + <%= section.time_per_knote %> min / 1000 notes">
-								<%= section.name %>
-							</b>
+							<div class="tooltip">
+								<b><%= section.name %></b>
+								<span class="tooltiptext tag is-info">
+									<%= section.time_base %> min + <%= section.time_per_knote %> min / 1000 notes
+								</span>
+							</div>
 							<% if page:canUpdateSection() then %>
 								<a href="/contests/<%= contest.id %>?edit_section=<%= section.id %>" hx-boost="false">
 									<i class="fas fa-edit"></i>
@@ -138,19 +142,25 @@
 								<% if contest.is_anon then %>
 									<%= chart.name %>
 								<% else %>
-									<a
-										href="/users/<%= chart.charter.id %>"
-										data-tooltip="<%= chart.name %>"
-									><%= chart.charter.name %></a>
+									<div class="tooltip">
+										<a href="/users/<%= chart.charter.id %>"><%= chart.charter.name %></a>
+										<span class="tooltiptext tag is-info">
+											<%= chart.name %>
+										</span>
+									</div>
 								<% end %>
 							</div>
 							<div class="column is-5">
 								<% if page:canGetChartFile(chart) then %>
-								<a
-									href="/charts/<%= chart.id %>/download"
-									hx-boost="false"
-									data-tooltip="<%= time_util.format(chart.submitted_at - chart.started_at) %>, <%= chart.notes %> notes"
-								><%= chart.track.title %></a>
+								<div class="tooltip">
+									<a
+										href="/charts/<%= chart.id %>/download"
+										hx-boost="false"
+									><%= chart.track.title %></a>
+									<span class="tooltiptext tag is-info">
+										<%= time_util.format(chart.submitted_at - chart.started_at) %>, <%= chart.notes %> notes
+									</span>
+								</div>
 								<% else %>
 								<%= chart.track.title %>
 								<% end %>

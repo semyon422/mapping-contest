@@ -44,3 +44,22 @@ input[type=range]::-webkit-slider-thumb {
     height: 1em;
     text-align: center;
 }
+
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    text-align: left;
+
+    left: calc(100% + 0.5em);
+
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}
