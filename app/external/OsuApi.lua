@@ -1,5 +1,5 @@
 local http = require("lapis.nginx.http")
-local lapis_util = require("lapis.util")
+local json = require("cjson")
 local IOsuApi = require("domain.external.IOsuApi")
 
 ---@class app.OsuApi: domain.IOsuApi
@@ -27,7 +27,7 @@ function OsuApi:oauth(code)
 		return nil, body
 	end
 
-	local res = lapis_util.from_json(body)
+	local res = json.decode(body)
 	self.access_token = res.access_token
 
 	return true
@@ -46,7 +46,7 @@ function OsuApi:me()
 		return nil, body
 	end
 
-	return lapis_util.from_json(body)
+	return json.decode(body)
 end
 
 return OsuApi
