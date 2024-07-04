@@ -28,9 +28,9 @@ local function get_grade_class(vote_allowed, value, inv)
 	else
 		if value then
 			if value == 1 then
-				return "is-dark"
+				return "is-info"
 			elseif value > 0 and value < 1 then
-				return "is-dark"
+				return "is-info"
 			elseif value == 0 then
 				return ""
 			end
@@ -55,9 +55,9 @@ local function get_heart_class(vote_allowed, value)
 	else
 		if value then
 			if value == 0 then
-				return "is-dark"
+				return "is-info"
 			elseif value == 1 then
-				return ""
+				return "has-background-warning-light has-text-warning"
 			end
 		else
 			return ""
