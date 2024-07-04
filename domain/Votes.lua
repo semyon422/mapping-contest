@@ -12,12 +12,16 @@ local Votes = class()
 ---@param contestUsersRepo domain.IContestUsersRepo
 ---@param chartsRepo domain.IChartsRepo
 ---@param contestsRepo domain.IContestsRepo
-function Votes:new(votesRepo, sectionsRepo, contestUsersRepo, chartsRepo, contestsRepo)
+---@param sections domain.Sections
+---@param roles domain.Roles
+function Votes:new(votesRepo, sectionsRepo, contestUsersRepo, chartsRepo, contestsRepo, sections, roles)
 	self.votesRepo = votesRepo
 	self.sectionsRepo = sectionsRepo
 	self.contestUsersRepo = contestUsersRepo
 	self.chartsRepo = chartsRepo
 	self.contestsRepo = contestsRepo
+	self.sections = sections
+	self.roles = roles
 end
 
 Votes.enum = enum({
@@ -75,6 +79,10 @@ function Votes:assign_votes(charts, uccvs, user)
 	end
 end
 
+function Votes:canDecimalGrade(user)
+	return self.roles:hasRole(user, "pro-mapper")
+end
+
 function Votes:canUpdateVote(user, contest, chart, vote)
 	return
 		user.id > 0 and
@@ -97,6 +105,10 @@ function Votes:updateVote(user, contest_id, chart_id, vote, value)
 end
 
 function Votes:updateGradeVote(user, contest_id, chart_id, vote, value)
+	if value > 0 and value < 1 and not self:canDecimalGrade(user) then
+		return
+	end
+
 	local uccv = {
 		contest_id = contest_id,
 		user_id = user.id,
@@ -122,11 +134,12 @@ function Votes:updateHeartVote(user, contest_id, chart_id, vote, value)
 		vote = vote,
 	})
 
+	local is_elite = self.roles:hasRole(user, "elite-mapper")
 	if found_uccv then
-		if found_uccv.value == 0 then
+		if is_elite and found_uccv.value == 0 then
 			found_uccv.value = 1
 			self.votesRepo:update(found_uccv)
-		elseif found_uccv.value == 1 then
+		else
 			self.votesRepo:delete(found_uccv)
 		end
 		return
@@ -173,7 +186,8 @@ function Votes:updateHeartVote(user, contest_id, chart_id, vote, value)
 
 	local user_hearts = #heart_uccvs
 
-	if user_hearts >= Sections:get_max_heart_votes(#charts_in_section) then
+
+	if user_hearts >= self.sections:get_max_heart_votes(user, #charts_in_section) then
 		return
 	end
 

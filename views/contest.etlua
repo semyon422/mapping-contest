@@ -211,6 +211,7 @@
 								<% end %>
 							</div>
 							<div class="column is-4" x-show="expand" x-cloak>
+								<% if page:canDecimalGrade() then %>
 								<div class="field">
 									<label class="label">Grade</label>
 									<div class="control has-icons-left has-icons-right">
@@ -239,6 +240,7 @@
 										</span>
 									</div>
 								</div>
+								<% end %>
 								<% if page:canCreateComment() then %>
 								<div class="field">
 									<label class="label">Comment</label>

@@ -17,9 +17,9 @@ function HeartVote:add(uccv)
 	self.count = self.count + 1
 	if uccv.user_id == self.user_id then
 		self.value = uccv.value
-		if uccv.value == 1 then
-			table.insert(self.nom_users, uccv.user)
-		end
+	end
+	if uccv.value == 1 then
+		table.insert(self.nom_users, uccv.user)
 	end
 end
 

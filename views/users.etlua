@@ -39,7 +39,7 @@ end
 					<td>
 						<% for i, role_name in ipairs(Roles.list) do %>
 							<% local exist = roles_map[role_name] %>
-							<% local changable = page:canChangeRole(role_name) %>
+							<% local changable = page:canChangeRole(user, role_name) %>
 							<% if not changable and exist then %>
 								<span class="tag <%= get_role_class(changable, exist) %>">
 									<%= role_name %>
@@ -50,7 +50,7 @@ end
 					<td>
 						<% for i, role_name in ipairs(Roles.list) do %>
 							<% local exist = roles_map[role_name] %>
-							<% local changable = page:canChangeRole(role_name) %>
+							<% local changable = page:canChangeRole(user, role_name) %>
 							<% if changable then %>
 								<a
 									href="#"

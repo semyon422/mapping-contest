@@ -10,7 +10,7 @@ function UpdateVote:handle(params)
 		params.contest_id,
 		params.chart_id,
 		params.vote,
-		params.value
+		tonumber(params.value)
 	)
 	return "ok"
 end

@@ -6,13 +6,16 @@ local Sections = class()
 
 ---@param contestsRepo domain.IContestsRepo
 ---@param sectionsRepo domain.ISectionsRepo
-function Sections:new(contestsRepo, sectionsRepo)
+---@param roles domain.Roles
+function Sections:new(contestsRepo, sectionsRepo, roles)
 	self.contestsRepo = contestsRepo
 	self.sectionsRepo = sectionsRepo
+	self.roles = roles
 end
 
-function Sections:get_max_heart_votes(charts_count)
-	return math.ceil(charts_count / 6)
+function Sections:get_max_heart_votes(user, charts_count)
+	local more_hearts = self.roles:hasRole(user, "pro-mapper") and 1 or 0
+	return math.ceil(charts_count / 6) + more_hearts
 end
 
 function Sections:canCreateSection(user, contest)

@@ -60,7 +60,7 @@ function Contest:load()
 end
 
 function Contest:getMaxHearts(section_index)
-	return self.domain.sections:get_max_heart_votes(#self.params.section_charts[section_index])
+	return self.domain.sections:get_max_heart_votes(self.user, #self.params.section_charts[section_index])
 end
 
 function Contest:canSubmitChart()
@@ -114,6 +114,10 @@ end
 
 function Contest:canDeleteComment(chart_comment)
 	return self.domain.chartComments:canDeleteComment(self.user, chart_comment)
+end
+
+function Contest:canDecimalGrade()
+	return self.domain.votes:canDecimalGrade(self.user)
 end
 
 return Contest

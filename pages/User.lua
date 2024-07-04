@@ -6,8 +6,8 @@ local User = Page + {}
 
 User.view = {layout = "user"}
 
-function User:canChangeRole(role)
-	return self.domain.auth:canChangeRole(self.user, role)
+function User:canChangeRole(user, role)
+	return self.domain.auth:canChangeRole(self.user, user, role)
 end
 
 function User:canUpdateUser()

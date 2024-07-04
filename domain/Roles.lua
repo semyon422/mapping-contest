@@ -15,6 +15,9 @@ Roles.enum = enum({
 	moderator = 1,
 	host = 2,
 	verified = 3,
+	mapper = 4,
+	["pro-mapper"] = 5,
+	["elite-mapper"] = 6,
 })
 
 Roles.list = {  -- see enums.roles
@@ -22,11 +25,16 @@ Roles.list = {  -- see enums.roles
 	"moderator",
 	"host",
 	"verified",
+	"mapper",
+	"pro-mapper",
+	"elite-mapper",
 }
 
 Roles.below = {
 	admin = {"moderator", "host"},
-	moderator = {"verified"},
+	moderator = {"verified", "elite-mapper"},
+	["elite-mapper"] = {"pro-mapper"},
+	["pro-mapper"] = {"mapper"},
 }
 
 Roles.above = {}

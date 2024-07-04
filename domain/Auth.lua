@@ -6,12 +6,10 @@ local bcrypt = require("bcrypt")
 local Auth = class()
 
 ---@param usersRepo domain.IUsersRepo
----@param userRolesRepo domain.IUserRolesRepo
 ---@param roles domain.Roles
 ---@param osuApiFactory domain.IOsuApiFactory
-function Auth:new(usersRepo, userRolesRepo, roles, osuApiFactory)
+function Auth:new(usersRepo, roles, osuApiFactory)
 	self.usersRepo = usersRepo
-	self.userRolesRepo = userRolesRepo
 	self.roles = roles
 	self.osuApiFactory = osuApiFactory
 end
@@ -20,7 +18,7 @@ function Auth:isLoggedIn(user)
 	return user ~= nil
 end
 
-function Auth:canChangeRole(user, role)
+function Auth:canChangeRole(user, target_user, role)
 	for _, user_role in ipairs(user.user_roles) do
 		if self.roles:belongs("below", user_role.role, role) then
 			return true
@@ -101,10 +99,7 @@ function Auth:oauth(code)
 		created_at = time,
 	})
 
-	self.userRolesRepo:create({
-		user_id = user.id,
-		role = "verified",
-	})
+	self.roles:give(user.id, "verified")
 
 	return user
 end

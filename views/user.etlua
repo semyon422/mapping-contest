@@ -44,7 +44,7 @@ end
 				<td>
 					<% for i, role_name in ipairs(Roles.list) do %>
 						<% local exist = roles_map[role_name] %>
-						<% local changable = page:canChangeRole(role_name) %>
+						<% local changable = page:canChangeRole(user, role_name) %>
 						<% if changable or exist then %>
 							<% local role_tag = changable and "a" or "span" %>
 

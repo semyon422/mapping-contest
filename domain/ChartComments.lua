@@ -13,11 +13,11 @@ function ChartComments:new(chartCommentsRepo, roles)
 end
 
 function ChartComments:canCreateComment(user)
-	return true
+	return self.roles:hasRole(user, "mapper")
 end
 
 function ChartComments:canDeleteComment(user, chart_comment)
-	return chart_comment.user_id == user.id
+	return chart_comment.user_id == user.id or self.roles:hasRole(user, "moderator")
 end
 
 function ChartComments:createComment(user, chart_id, text)
