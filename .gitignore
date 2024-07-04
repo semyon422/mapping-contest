@@ -7,3 +7,4 @@ db.sqlite
 config.lua
 luacov.*
 lcov.info
+nginx.conf
