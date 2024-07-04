@@ -3,4 +3,5 @@ cd "$(dirname "$0")"
 mkdir -p logs
 mkdir -p temp
 . ./setenv
+luajit nginx_conf.lua > nginx.conf
 openresty -p $(pwd) -c nginx.conf

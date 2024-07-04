@@ -1,4 +1,5 @@
 #!/bin/bash
 cd "$(dirname "$0")"
 . ./setenv
+luajit nginx_conf.lua > nginx.conf
 openresty -p $(pwd) -c nginx.conf -s stop

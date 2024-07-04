@@ -1,4 +1,7 @@
 return {
+	listen = 8180,
+	lua_code_cache = "off",
+
 	secret = "please-change-me",
 	hmac_digest = "sha256",
 	session_name = "mapping-contest",

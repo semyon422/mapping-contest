@@ -30,8 +30,8 @@ http {
 	include mime.types;
 
 	server {
-		listen 8180;
-		lua_code_cache off;
+		listen <%= listen %>;
+		lua_code_cache <%= lua_code_cache %>;
 
 		location / {
 			set $_url "";
