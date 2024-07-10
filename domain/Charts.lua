@@ -87,7 +87,7 @@ function Charts:getChartFile(user, chart_id, path_out)
 		return file.name, path
 	end
 
-	local paths = {{path, {track.meta, name}}}
+	local paths = {{path, {meta = track.meta, hashname = name}}}
 	self.chartAnonRepacker:repack(paths, path_out)
 
 	return ("%s - %s (%s).osz"):format(track.meta.Artist, track.meta.Title, name), path_out
