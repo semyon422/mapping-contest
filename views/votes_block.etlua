@@ -82,6 +82,8 @@ end
 	<i class="fas fa-times square-char"></i>
 	<% if not contest.is_anon then %>
 	&nbsp;<%= ("%.1f"):format(votes.grade.no_count) %>
+	<% else %>
+	&nbsp;<%= ("%.1f"):format(1 - (votes.grade.value or 1)) %>
 	<% end %>
 </<%= tag %>>
 
@@ -98,6 +100,8 @@ end
 	<i class="fas fa-check square-char"></i>
 	<% if not contest.is_anon then %>
 	&nbsp;<%= ("%.1f"):format(votes.grade.yes_count) %>
+	<% else %>
+	&nbsp;<%= ("%.1f"):format(votes.grade.value or 0) %>
 	<% end %>
 </<%= tag %>>
 
