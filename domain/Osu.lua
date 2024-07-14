@@ -4,6 +4,10 @@ local class = require("class")
 ---@operator call: domain.Osu
 local Osu = class()
 
+function Osu:new()
+	self.background = "bg.jpg"
+end
+
 function Osu:decode(s)
 	self.sections = {}
 	local sections = self.sections
