@@ -14,7 +14,7 @@
     ],
     "Lua.workspace.library": [
         "${3rd}/OpenResty/library",
-        "/home/semyon422/.vscode/extensions/sumneko.lua-3.6.20-linux-x64/server/meta/3574ff3e"
+        "~/.config/Code/User/globalStorage/sumneko.lua/addonManager/addons/luasocket/module/library"
     ],
     "Lua.workspace.ignoreDir": [
         ".vscode",
