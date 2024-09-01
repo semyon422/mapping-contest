@@ -21,7 +21,7 @@ function App:new()
 	self.repos = Repos(self.appDatabase)
 	self.domain = Domain(self.repos, self.osuApiFactory, self.archiveFactory)
 
-	self.webApp = WebApp(config, self.domain, self.appDatabase.models)
+	self.webApp = WebApp(config, self.domain)
 end
 
 function App:load()
