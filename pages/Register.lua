@@ -1,6 +1,6 @@
-local Page = require("http.Page")
+local Page = require("web.page.Page")
 
----@class pages.Register: http.Page
+---@class pages.Register: web.Page
 ---@operator call: pages.Register
 local Register = Page + {}
 

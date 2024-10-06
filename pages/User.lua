@@ -1,6 +1,6 @@
-local Page = require("http.Page")
+local Page = require("web.page.Page")
 
----@class pages.User: http.Page
+---@class pages.User: web.Page
 ---@operator call: pages.User
 local User = Page + {}
 

@@ -1,7 +1,7 @@
 local Recaptcha = require("util.Recaptcha")
-local Usecase = require("http.Usecase")
+local Usecase = require("web.usecase.Usecase")
 
----@class usecases.Login: http.Usecase
+---@class usecases.Login: web.Usecase
 ---@operator call: usecases.Login
 local Login = Usecase + {}
 

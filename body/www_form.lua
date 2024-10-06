@@ -1,10 +1,14 @@
-local http_util = require("http_util")
+local FormParser = require("web.body.FormParser")
 
-return function(content_type)
+---@param reader web.IBodyReader
+---@param content_type string
+---@return table
+local function form(reader, content_type)
 	if content_type ~= "application/x-www-form-urlencoded" then
 		return {}
 	end
-	ngx.req.read_body()
-	local body = ngx.req.get_body_data()
-	return http_util.decode_query_string(body)
+	local parser = FormParser(reader)
+	return parser:read()
 end
+
+return form

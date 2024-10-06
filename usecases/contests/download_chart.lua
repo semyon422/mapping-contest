@@ -1,6 +1,6 @@
-local Usecase = require("http.Usecase")
+local Usecase = require("web.usecase.Usecase")
 
----@class usecases.DownloadChart: http.Usecase
+---@class usecases.DownloadChart: web.Usecase
 ---@operator call: usecases.DownloadChart
 local DownloadChart = Usecase + {}
 

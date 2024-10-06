@@ -1,7 +1,7 @@
 local Errors = require("domain.Errors")
-local Usecase = require("http.Usecase")
+local Usecase = require("web.usecase.Usecase")
 
----@class usecases.GetContest: http.Usecase
+---@class usecases.GetContest: web.Usecase
 ---@operator call: usecases.GetContest
 local GetContest = Usecase + {}
 

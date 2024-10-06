@@ -1,7 +1,7 @@
 local relations = require("rdb.relations")
-local Usecase = require("http.Usecase")
+local Usecase = require("web.usecase.Usecase")
 
----@class usecases.GetUser: http.Usecase
+---@class usecases.GetUser: web.Usecase
 ---@operator call: usecases.GetUser
 local GetUser = Usecase + {}
 

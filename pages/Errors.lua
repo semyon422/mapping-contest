@@ -1,6 +1,6 @@
-local Page = require("http.Page")
+local Page = require("web.page.Page")
 
----@class pages.Errors: http.Page
+---@class pages.Errors: web.Page
 ---@operator call: pages.Errors
 local Errors = Page + {}
 

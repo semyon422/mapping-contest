@@ -1,7 +1,7 @@
 local bcrypt = require("bcrypt")
-local Usecase = require("http.Usecase")
+local Usecase = require("web.usecase.Usecase")
 
----@class usecases.UpdateUser: http.Usecase
+---@class usecases.UpdateUser: web.Usecase
 ---@operator call: usecases.UpdateUser
 local UpdateUser = Usecase + {}
 

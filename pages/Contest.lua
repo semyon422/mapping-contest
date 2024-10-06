@@ -1,8 +1,8 @@
-local Page = require("http.Page")
+local Page = require("web.page.Page")
 local relations = require("rdb.relations")
 local Datetime = require("util.Datetime")
 
----@class pages.Contest: http.Page
+---@class pages.Contest: web.Page
 ---@operator call: pages.Contest
 local Contest = Page + {}
 

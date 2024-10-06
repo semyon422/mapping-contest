@@ -1,7 +1,7 @@
 local http_util = require("http_util")
-local Usecase = require("http.Usecase")
+local Usecase = require("web.usecase.Usecase")
 
----@class usecases.GetLogin: http.Usecase
+---@class usecases.GetLogin: web.Usecase
 ---@operator call: usecases.GetLogin
 local GetLogin = Usecase + {}
 

@@ -1,0 +1,3 @@
+#!/bin/bash
+. ./setenv
+luajit server_ls.lua

@@ -10,183 +10,189 @@ local function download_headers(result)
 	}
 end
 
+local uctx = require("web.UsecasePageContext")
+local Static = require("web.StaticContext")
+
 return {
+	{"/css/:filename", {
+		GET = Static("static/css"),
+	}},
 	{"/test", {
-		GET = {"ok", {
+		GET = uctx {"ok", {
 			ok = {200, "json"},
 		}},
 	}},
 	{"/", {
-		GET = {"ok", {
+		GET = uctx {"ok", {
 			ok = {302, nil, {["Location"] = "/contests"}},
 		}},
 	}},
 	-- auth
 	{"/login_options", {
-		GET = {"auth.get_login", {
+		GET = uctx {"auth.get_login", {
 			ok = {200, "LoginOptions"},
 		}},
 	}},
 	{"/login", {
-		GET = {"auth.get_login", {
+		GET = uctx {"auth.get_login", {
 			ok = {200, "Login"},
 			validation = {200, "Login"},
 		}},
-		POST = {"auth.login", {
+		POST = uctx {"auth.login", {
 			ok = {302, nil, {["Location"] = "/"}},
 			validation = {200, "Login"},
 		}, "www_form"},
 	}},
 	{"/login_as", {
-		POST = {"auth.login_as", {
+		POST = uctx {"auth.login_as", {
 			ok = {200},
 		}, "www_form", "tonumber_id"},
 	}},
 	{"/register", {
-		GET = {"auth.get_register", {
+		GET = uctx {"auth.get_register", {
 			ok = {200, "Register"},
 		}},
-		POST = {"auth.register", {
+		POST = uctx {"auth.register", {
 			ok = {302, nil, {["Location"] = "/"}},
 			validation = {200, "Register"},
 		}, "www_form"},
 	}},
 	{"/logout", {
-		POST = {"auth.logout", {
+		POST = uctx {"auth.logout", {
 			ok = {200},
 		}},
 	}},
 	{"/oauth", {
-		GET = {"auth.oauth", {
+		GET = uctx {"auth.oauth", {
 			ok = {302, nil, {["Location"] = "/"}},
 			error = {400, "Errors"},
 		}},
 	}},
 	-- users
 	{"/users", {
-		GET = {"users.get_users", {
+		GET = uctx {"users.get_users", {
 			ok = {200, "Users"},
 		}},
 	}},
 	{"/users/:user_id", {
-		GET = {"users.get_user", {
+		GET = uctx {"users.get_user", {
 			ok = {200, "User"},
 		}},
-		PATCH = {"users.update_user", {
+		PATCH = uctx {"users.update_user", {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/users/" .. params.user.id}
 			end},
 		}, "www_form", "update_user"},
 	}},
 	{"/users/:user_id/roles/:role", {
-		PUT = {"auth.give_role", {
+		PUT = uctx {"auth.give_role", {
 			ok = {200},
 		}},
-		DELETE = {"auth.remove_role", {
+		DELETE = uctx {"auth.remove_role", {
 			ok = {200},
 		}},
 	}},
 	-- contests
 	{"/contests", {
-		GET = {"contests.get_contests", {
+		GET = uctx {"contests.get_contests", {
 			ok = {200, "Contests"},
 		}},
-		POST = {"contests.create_contest", {
+		POST = uctx {"contests.create_contest", {
 			created = {200, nil, function(result)
 				return {["HX-Location"] = "/contests/" .. result.contest.id}
 			end},
 		}, "www_form"},
 	}},
 	{"/contests/:contest_id", {
-		GET = {"contests.get_contest", {
+		GET = uctx {"contests.get_contest", {
 			ok = {200, "Contest"},
 		}},
-		DELETE = {"contests.delete_contest", {
+		DELETE = uctx {"contests.delete_contest", {
 			deleted = {302, nil, {["HX-Location"] = "/contests"}},
 		}},
-		PATCH = {"contests.update_contest", {
+		PATCH = uctx {"contests.update_contest", {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest_id}
 			end},
 		}, "www_form", "update_contest"},
 	}},
 	{"/contests/:contest_id/votes", {
-		PATCH = {"contests.update_vote", {
+		PATCH = uctx {"contests.update_vote", {
 			ok = {200},
 		}, "www_form", "tonumber_id"},
 	}},
 	{"/contests/:contest_id/sections", {
-		POST = {"contests.create_section", {
+		POST = uctx {"contests.create_section", {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest_id}
 			end},
 		}, "www_form", "update_section"},
 	}},
 	{"/contests/:contest_id/tracks", {
-		POST = {"contests.submit_track", {
+		POST = uctx {"contests.submit_track", {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest_id}
 			end},
 		}, "multipart_file"},
 	}},
 	{"/contests/:contest_id/tracks/:track_id", {
-		DELETE = {"contests.delete_track", {
+		DELETE = uctx {"contests.delete_track", {
 			deleted = {204},
 		}},
 	}},
 	{"/contests/:contest_id/charts", {
-		POST = {"contests.submit_chart", {
+		POST = uctx {"contests.submit_chart", {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest_id}
 			end},
 		}, "multipart_file"},
 	}},
 	{"/contests/:contest_id/users", {
-		POST = {"contests.join_contest", {
+		POST = uctx {"contests.join_contest", {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest_id}
 			end},
 		}},
 	}},
 	{"/contests/:contest_id/charts/:chart_id", {
-		DELETE = {"contests.delete_chart", {
+		DELETE = uctx {"contests.delete_chart", {
 			deleted = {204},
 		}},
 	}},
 	{"/sections/:section_id", {
-		PATCH = {"contests.update_section", {
+		PATCH = uctx {"contests.update_section", {
 			ok = {200, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest_id}
 			end},
 		}, "www_form", "update_section"},
-		DELETE = {"contests.delete_section", {
+		DELETE = uctx {"contests.delete_section", {
 			deleted = {204, nil, function(params)
 				return {["HX-Location"] = "/contests/" .. params.contest_id}
 			end},
 		}, "www_form"},
 	}},
 	{"/charts/:chart_id/download", {
-		GET = {"contests.download_chart", {
+		GET = uctx {"contests.download_chart", {
 			ok = {200, "File", download_headers},
 		}},
 	}},
 	{"/charts/:chart_id/comments", {
-		POST = {"contests.create_comment", {
+		POST = uctx {"contests.create_comment", {
 			ok = {200},
 		}, "www_form"},
 	}},
 	{"/tracks/:track_id/download", {
-		GET = {"contests.download_track", {
+		GET = uctx {"contests.download_track", {
 			ok = {200, "File", download_headers},
 		}},
 	}},
 	{"/contests/:contest_id/download_pack", {
-		GET = {"contests.download_pack", {
+		GET = uctx {"contests.download_pack", {
 			ok = {200, "File", download_headers},
 		}},
 	}},
 	{"/chart_comments/:chart_comment_id", {
-		DELETE = {"contests.delete_comment", {
+		DELETE = uctx {"contests.delete_comment", {
 			ok = {200},
 		}},
 	}},

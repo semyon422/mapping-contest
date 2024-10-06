@@ -3,7 +3,7 @@ local resty_md5 = require("resty.md5")
 local resty_string = require("resty.string")
 
 local attachment_name = "file"
-return function(content_type)
+return function(reader, content_type)
 	if not content_type or not content_type:find("^multipart") then
 		ngx.log(ngx.ERR, content_type)
 		return
