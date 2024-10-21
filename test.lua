@@ -5,28 +5,27 @@ local socket = require("socket")
 local luacov_runner = require("luacov.runner")
 luacov_runner.init()
 
-local testing = require("testing")
+local Testing = require("testing.Testing")
+local BaseTestingIO = require("testing.BaseTestingIO")
 
-testing.blacklist = {
+local tio = BaseTestingIO()
+tio.blacklist = {
 	".git",
-	"aqua",
+	-- "aqua",
 	"tree",
 	"glue",
 	"minizip",
 }
 
-testing.get_time = socket.gettime
+function tio:getTime()
+	return socket.gettime()
+end
 
-testing.test()
+local testing = Testing(tio)
 
-local configuration = {
-	reporter = "lcov",
-	reportfile = "lcov.info",
-	exclude = {
-		"glue",
-	},
-	include = {},
-}
+local file_pattern, method_pattern = arg[3], arg[4]
+testing:test(file_pattern, method_pattern)
+
 debug.sethook(nil)
 luacov_runner.save_stats()
-luacov_runner.run_report(configuration)
+require("luacov.reporter.lcov").report()
