@@ -7,5 +7,6 @@ luarocks install bcrypt
 luarocks install luautf8
 luarocks install luacov
 luarocks install luacov-reporter-lcov
+luarocks install luasec
 mkdir temp
 mkdir storages
