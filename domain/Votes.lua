@@ -87,7 +87,8 @@ function Votes:canUpdateVote(user, contest, chart, vote)
 	return
 		user.id > 0 and
 		contest.is_voting_open and
-		user.id ~= chart.charter_id
+		user.id ~= chart.charter_id and
+		self.roles:hasRole(user, "verified")
 end
 
 function Votes:updateVote(user, contest_id, chart_id, vote, value)
