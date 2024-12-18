@@ -1,17 +1,12 @@
-package.loaded.utf8 = require("lua-utf8")
+local app = require("app")
 
-local etlua_util = require("web.page.etlua_util")
 local NginxRequest = require("web.nginx.NginxRequest")
-local NginxResponse = require("web.nginx.NginxResponse")
-local App = require("app.App")
-
-local app = App()
-app:load()
-
-table.insert(package.loaders, etlua_util.loader)
+local NginxReqSocket = require("web.nginx.NginxReqSocket")
+local Response = require("web.http.Response")
 
 return function()
-	local req = NginxRequest()
-	local res = NginxResponse()
+	local soc = NginxReqSocket()
+	local req = NginxRequest(soc)
+	local res = Response(soc)
 	app.webApp:handle(req, res, {})
 end
