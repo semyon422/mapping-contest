@@ -1,5 +1,5 @@
 local http_util = require("http_util")
-local Usecase = require("web.usecase.Usecase")
+local Usecase = require("web.framework.usecase.Usecase")
 
 ---@class usecases.GetLogin: web.Usecase
 ---@operator call: usecases.GetLogin

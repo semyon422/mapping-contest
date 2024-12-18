@@ -10,8 +10,8 @@ local function download_headers(result)
 	}
 end
 
-local uctx = require("web.UsecasePageContext")
-local Static = require("web.StaticContext")
+local uctx = require("web.framework.UsecasePageContext")
+local Static = require("web.framework.StaticContext")
 
 return {
 	{"/css/:filename", {

@@ -1,5 +1,5 @@
 local Errors = require("domain.Errors")
-local Usecase = require("web.usecase.Usecase")
+local Usecase = require("web.framework.usecase.Usecase")
 
 ---@class usecases.GetContest: web.Usecase
 ---@operator call: usecases.GetContest

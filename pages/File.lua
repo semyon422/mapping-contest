@@ -1,4 +1,4 @@
-local Page = require("web.page.Page")
+local Page = require("web.framework.page.Page")
 
 ---@class pages.File: web.Page
 ---@operator call: pages.File

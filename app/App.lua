@@ -1,7 +1,7 @@
 local class = require("class")
 local autoread = require("autoread")
 local AppDatabase = require("app.AppDatabase")
-local WebApp = require("web.WebApp")
+local WebApp = require("web.framework.WebApp")
 local Domain = require("domain.Domain")
 
 local Repos = require("app.repos.Repos")

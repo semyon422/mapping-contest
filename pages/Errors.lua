@@ -1,4 +1,4 @@
-local Page = require("web.page.Page")
+local Page = require("web.framework.page.Page")
 
 ---@class pages.Errors: web.Page
 ---@operator call: pages.Errors

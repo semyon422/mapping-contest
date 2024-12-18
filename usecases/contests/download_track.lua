@@ -1,4 +1,4 @@
-local Usecase = require("web.usecase.Usecase")
+local Usecase = require("web.framework.usecase.Usecase")
 
 ---@class usecases.DownloadTrack: web.Usecase
 ---@operator call: usecases.DownloadTrack

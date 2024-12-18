@@ -1,4 +1,4 @@
-local Page = require("web.page.Page")
+local Page = require("web.framework.page.Page")
 local relations = require("rdb.relations")
 local Datetime = require("util.Datetime")
 

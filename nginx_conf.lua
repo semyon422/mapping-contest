@@ -1,6 +1,6 @@
 local pkg_config = require("pkg_config")
 local config = require("config")
-local etlua_util = require("web.page.etlua_util")
+local etlua_util = require("web.framework.page.etlua_util")
 
 local path = "nginx.conf.template"
 local f = assert(io.open(path, "r"))
