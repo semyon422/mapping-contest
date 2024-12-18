@@ -10,6 +10,8 @@ events {
 }
 
 http {
+	resolver 8.8.8.8;
+
 	client_body_temp_path temp/client_body;
 	proxy_temp_path temp/proxy;
 	fastcgi_temp_path temp/fastcgi;
